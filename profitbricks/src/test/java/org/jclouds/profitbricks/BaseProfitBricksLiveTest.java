@@ -26,10 +26,6 @@ import org.jclouds.util.Predicates2;
 
 import com.google.common.base.Predicate;
 
-/**
- *
- * @author Reijhanniel Jearl Campos
- */
 public abstract class BaseProfitBricksLiveTest extends BaseApiLiveTest<ProfitBricksApi> {
 
    protected Predicate<String> dcWaitingPredicate;

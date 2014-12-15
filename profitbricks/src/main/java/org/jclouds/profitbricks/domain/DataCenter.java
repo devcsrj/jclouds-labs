@@ -96,7 +96,7 @@ public abstract class DataCenter {
    public static final class Request {
 
       @AutoValue
-      public static abstract class CreatePayload {
+      public abstract static class CreatePayload {
 
 	 public abstract String name();
 

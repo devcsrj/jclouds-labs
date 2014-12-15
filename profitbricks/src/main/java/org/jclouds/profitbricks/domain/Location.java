@@ -16,10 +16,6 @@
  */
 package org.jclouds.profitbricks.domain;
 
-/**
- *
- * @author Reijhanniel Jearl Campos
- */
 public enum Location {
 
    DE_FKB("de/fkb"),
