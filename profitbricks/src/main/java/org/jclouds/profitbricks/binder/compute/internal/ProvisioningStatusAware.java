@@ -14,15 +14,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.profitbricks;
+package org.jclouds.profitbricks.binder.compute.internal;
 
-import java.io.Closeable;
+/**
+ * An enumeration of ProfitBricks domain classes containing a property 'ProvisioningState'.
+ *
+ * @see ProvisioningStatusPollingPredicate
+ */
+public enum ProvisioningStatusAware {
 
-import org.jclouds.profitbricks.features.DataCenterApi;
-import org.jclouds.rest.annotations.Delegate;
-
-public interface ProfitBricksApi extends Closeable {
-
-   @Delegate
-   DataCenterApi getDataCenterApi();
+   DATACENTER;
 }

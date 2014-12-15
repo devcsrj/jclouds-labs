@@ -14,15 +14,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.profitbricks;
+package org.jclouds.profitbricks.domain;
 
-import java.io.Closeable;
+/**
+ *
+ * @author Reijhanniel Jearl Campos
+ */
+public enum Location {
 
-import org.jclouds.profitbricks.features.DataCenterApi;
-import org.jclouds.rest.annotations.Delegate;
+   DE_FKB("de/fkb"),
+   DE_FRA("de/fra"),
+   US_LAS("us/las"),
+   UNRECOGNIZED("unknown");
 
-public interface ProfitBricksApi extends Closeable {
+   private final String id;
 
-   @Delegate
-   DataCenterApi getDataCenterApi();
+   Location(String id) {
+      this.id = id;
+   }
+
+   public String value() {
+      return id;
+   }
+
+   public static Location fromValue(String v) {
+      try {
+	 return valueOf(v);
+      } catch (IllegalArgumentException ex) {
+	 return UNRECOGNIZED;
+      }
+   }
 }

@@ -14,15 +14,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.profitbricks;
+package org.jclouds.profitbricks.domain;
 
-import java.io.Closeable;
+public enum ProvisioningState {
 
-import org.jclouds.profitbricks.features.DataCenterApi;
-import org.jclouds.rest.annotations.Delegate;
+   INACTIVE, INPROCESS, AVAILABLE, DELETED, ERROR, UNRECOGNIZED;
 
-public interface ProfitBricksApi extends Closeable {
-
-   @Delegate
-   DataCenterApi getDataCenterApi();
+   public static ProvisioningState fromValue(String value) {
+      try {
+	 return valueOf(value);
+      } catch (IllegalArgumentException e) {
+	 return UNRECOGNIZED;
+      }
+   }
 }

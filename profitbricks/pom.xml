@@ -35,7 +35,7 @@
         <test.profitbricks.endpoint>http://localhost/api</test.profitbricks.endpoint>
         <test.profitbricks.identity>FIXME</test.profitbricks.identity>
         <test.profitbricks.credential>FIXME</test.profitbricks.credential>
-        <test.profitbricks-c2.api-version>1.3</test.profitbricks-c2.api-version>
+        <test.profitbricks.api-version>1.3</test.profitbricks.api-version>
         <test.profitbricks.template />
         <jclouds.osgi.export>org.jclouds.profitbricks*;version="${project.version}"</jclouds.osgi.export>
         <jclouds.osgi.import>
