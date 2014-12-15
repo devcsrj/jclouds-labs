@@ -78,6 +78,7 @@
     <module>joyent-cloudapi</module>
     <module>joyentcloud</module>
     <module>abiquo</module>
+    <module>profitbricks</module>
   </modules>
 
   <build>
@@ -152,6 +153,7 @@
             <exclude>**/.gitattributes</exclude>
             <exclude>.repository/**</exclude>
             <exclude>.java-version</exclude>
+            <exclude>nb-configuration.xml</exclude>
 
             <!-- Temporary files generated on CloudBees slaves -->
             <exclude>.repository/**</exclude>
