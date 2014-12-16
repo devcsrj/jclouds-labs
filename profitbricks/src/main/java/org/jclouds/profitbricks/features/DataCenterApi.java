@@ -121,6 +121,4 @@ public interface DataCenterApi {
    @POST
    @Payload("<ws:deleteDataCenter><dataCenterId>{id}</dataCenterId></ws:deleteDataCenter>")
    void deleteDataCenter(@PayloadParam("id") String identifier) throws HttpResponseException;
-
-   public void updateDataCenter();
 }

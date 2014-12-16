@@ -154,6 +154,7 @@
             <exclude>.repository/**</exclude>
             <exclude>.java-version</exclude>
             <exclude>nb-configuration.xml</exclude>
+            <exclude>nbactions.xml</exclude>
 
             <!-- Temporary files generated on CloudBees slaves -->
             <exclude>.repository/**</exclude>
