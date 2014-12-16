@@ -41,6 +41,7 @@ public abstract class BaseProfitBricksRequestBinder<T> implements MapBinder {
    public <R extends HttpRequest> R bindToRequest(R request, Map<String, Object> postParams) {
       checkNotNull(request, "request");
 
+      checkNotNull(paramName, "Initialize 'paramName' in constructor");
       Object obj = checkNotNull(postParams.get(paramName), format("Param '%s' cannot be null.", paramName));
       T payload = (T) obj;
 

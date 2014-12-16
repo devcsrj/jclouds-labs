@@ -16,38 +16,47 @@
  */
 package org.jclouds.profitbricks.http.parser.datacenter;
 
-import java.util.List;
-
 import org.jclouds.date.DateCodecFactory;
 import org.jclouds.profitbricks.domain.DataCenter;
+import org.jclouds.profitbricks.domain.Location;
+import org.jclouds.profitbricks.domain.ProvisioningState;
 import org.xml.sax.SAXException;
 
-import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 
-public class GetAllDataCentersResponseHandler extends BaseDataCenterResponseHandler<List<DataCenter>> {
+public class DataCenterInfoResponseHandler extends BaseDataCenterResponseHandler<DataCenter> {
 
-   private final List<DataCenter> dataCenters;
+   private boolean done = false;
 
    @Inject
-   public GetAllDataCentersResponseHandler(DateCodecFactory dateCodec) {
-      super(dateCodec);
-      this.dataCenters = Lists.newArrayList();
-      this.builder = DataCenter.builder();
+   public DataCenterInfoResponseHandler(DateCodecFactory dateCodecFactory) {
+      super(dateCodecFactory);
    }
 
    @Override
-   public List<DataCenter> getResult() {
-      return dataCenters;
+   protected void setPropertyOnEndTag(String qName) {
+      super.setPropertyOnEndTag(qName);
+      if ("dataCenterName".equals(qName))
+	 builder.name(textToStringValue());
+      else if ("location".equals(qName))
+	 builder.location(Location.fromValue(textToStringValue()));
+      else if ("provisioningState".equals(qName))
+	 builder.state(ProvisioningState.fromValue(textToStringValue()));
    }
 
    @Override
    public void endElement(String uri, String localName, String qName) throws SAXException {
+      if (done)
+	 return;
       setPropertyOnEndTag(qName);
-      if ("return".equals(qName)) {
-	 dataCenters.add(builder.build());
-	 builder = DataCenter.builder();
-      }
+      if ("return".equals(qName))
+	 done = true;
       clearTextBuffer();
    }
+
+   @Override
+   public DataCenter getResult() {
+      return builder.build();
+   }
+
 }

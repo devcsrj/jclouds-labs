@@ -73,11 +73,34 @@ public class DataCenterApiLiveTest extends BaseProfitBricksLiveTest {
       assertNotNull(state);
    }
 
-   // FIXME Fails. see ProfitBricksHttpErrorHandler line 42
-   @Test(dependsOnMethods = "testGetDataCenter", expectedExceptions = ResourceNotFoundException.class)
-   public void testDeleteDataCenter() {
+   @Test(dependsOnMethods = "testGetDataCenter")
+   public void testUpdateDataCenter() {
       assertNotNull(dcId, "No available datacenter found.");
 
+      final String newName = "Apache";
+      DataCenter dataCenter = api.getDataCenterApi().updateDataCenter(
+	      DataCenter.Request.UpdatePayload.create(dcId, newName)
+      );
+
+      assertNotNull(dataCenter);
+      dcWaitingPredicate.apply(dcId);
+
+      DataCenter fetchedDc = api.getDataCenterApi().getDataCenter(dcId);
+
+      assertNotNull(fetchedDc);
+      assertEquals(newName, fetchedDc.name());
+   }
+
+   @Test(dependsOnMethods = "testUpdateDataCenter")
+   public void testClearDataCenter() {
+      DataCenter dataCenter = api.getDataCenterApi().clearDataCenter(dcId);
+
+      assertNotNull(dataCenter);
+   }
+
+   // FIXME Fails. see ProfitBricksHttpErrorHandler line 42
+   @Test(dependsOnMethods = "testClearDataCenter", expectedExceptions = ResourceNotFoundException.class)
+   public void testDeleteDataCenter() {
       api.getDataCenterApi().deleteDataCenter(dcId);
 
       api.getDataCenterApi().getDataCenter(dcId);

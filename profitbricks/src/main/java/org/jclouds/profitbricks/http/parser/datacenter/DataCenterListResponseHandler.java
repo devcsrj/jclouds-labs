@@ -16,44 +16,50 @@
  */
 package org.jclouds.profitbricks.http.parser.datacenter;
 
+import java.util.List;
+
 import org.jclouds.date.DateCodecFactory;
 import org.jclouds.profitbricks.domain.DataCenter;
 import org.jclouds.profitbricks.domain.Location;
+import org.jclouds.profitbricks.domain.ProvisioningState;
 import org.xml.sax.SAXException;
 
+import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 
-public class GetDataCenterResponseHandler extends BaseDataCenterResponseHandler<DataCenter> {
+public class DataCenterListResponseHandler extends BaseDataCenterResponseHandler<List<DataCenter>> {
 
-   private boolean done = false;
+   private final List<DataCenter> dataCenters;
 
    @Inject
-   public GetDataCenterResponseHandler(DateCodecFactory dateCodec) {
+   public DataCenterListResponseHandler(DateCodecFactory dateCodec) {
       super(dateCodec);
-      this.builder = DataCenter.builder();
+      this.dataCenters = Lists.newArrayList();
+   }
+
+   @Override
+   public List<DataCenter> getResult() {
+      return dataCenters;
    }
 
    @Override
    protected void setPropertyOnEndTag(String qName) {
       super.setPropertyOnEndTag(qName);
-      if ("location".equals(qName))
-	 builder.location(Location.fromValue(qName));
-      // TODO Servers, Storages, LoadBalancers are also retrieved here. Maybe cache 'em for later?
-   }
-
-   @Override
-   public DataCenter getResult() {
-      return builder.build();
+      if ("dataCenterName".equals(qName))
+	 builder.name(textToStringValue());
+      else if ("location".equals(qName))
+	 builder.location(Location.fromValue(textToStringValue()));
+      else if ("provisioningState".equals(qName))
+	 builder.state(ProvisioningState.fromValue(textToStringValue()));
    }
 
    @Override
    public void endElement(String uri, String localName, String qName) throws SAXException {
-      if (done)
-	 return;
       setPropertyOnEndTag(qName);
-      if ("return".equals(qName))
-	 done = true;
+      if ("return".equals(qName)) {
+	 dataCenters.add(builder.build());
+	 builder = DataCenter.builder();
+      }
       clearTextBuffer();
    }
-
 }

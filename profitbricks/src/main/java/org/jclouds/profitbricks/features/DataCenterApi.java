@@ -27,12 +27,12 @@ import org.jclouds.Fallbacks;
 import org.jclouds.http.HttpResponseException;
 import org.jclouds.http.filters.BasicAuthentication;
 import org.jclouds.profitbricks.binder.datacenter.CreateDataCenterRequestBinder;
+import org.jclouds.profitbricks.binder.datacenter.UpdateDataCenterRequestBinder;
 import org.jclouds.profitbricks.domain.DataCenter;
 import org.jclouds.profitbricks.domain.ProvisioningState;
 import org.jclouds.profitbricks.http.filters.ProfitBricksSoapMessageEnvelope;
-import org.jclouds.profitbricks.http.parser.datacenter.CreateDataCenterResponseHandler;
-import org.jclouds.profitbricks.http.parser.datacenter.GetAllDataCentersResponseHandler;
-import org.jclouds.profitbricks.http.parser.datacenter.GetDataCenterResponseHandler;
+import org.jclouds.profitbricks.http.parser.datacenter.DataCenterInfoResponseHandler;
+import org.jclouds.profitbricks.http.parser.datacenter.DataCenterListResponseHandler;
 import org.jclouds.profitbricks.http.parser.state.GetProvisioningStateResponseHandler;
 import org.jclouds.rest.annotations.Fallback;
 import org.jclouds.rest.annotations.MapBinder;
@@ -51,7 +51,7 @@ public interface DataCenterApi {
     */
    @POST
    @Payload("<ws:getAllDataCenters/>")
-   @XMLResponseParser(GetAllDataCentersResponseHandler.class)
+   @XMLResponseParser(DataCenterListResponseHandler.class)
    @Fallback(Fallbacks.EmptyListOnNotFoundOr404.class)
    List<DataCenter> getAllDataCenters();
 
@@ -61,7 +61,7 @@ public interface DataCenterApi {
     */
    @POST
    @Payload("<ws:getDataCenter><dataCenterId>{id}</dataCenterId></ws:getDataCenter>")
-   @XMLResponseParser(GetDataCenterResponseHandler.class)
+   @XMLResponseParser(DataCenterInfoResponseHandler.class)
    DataCenter getDataCenter(@PayloadParam("id") String identifier) throws HttpResponseException;
 
    /**
@@ -85,8 +85,31 @@ public interface DataCenterApi {
     */
    @POST
    @MapBinder(CreateDataCenterRequestBinder.class)
-   @XMLResponseParser(CreateDataCenterResponseHandler.class)
+   @XMLResponseParser(DataCenterInfoResponseHandler.class)
    DataCenter createDataCenter(@PayloadParam("dataCenter") DataCenter.Request.CreatePayload createRequest) throws HttpResponseException;
+
+   /**
+    * Updates the information associated to an existing Virtual Data Center.
+    *
+    * @param updateRequest
+    * @return
+    * @throws HttpResponseException
+    */
+   @POST
+   @MapBinder(UpdateDataCenterRequestBinder.class)
+   @XMLResponseParser(DataCenterInfoResponseHandler.class)
+   DataCenter updateDataCenter(@PayloadParam("dataCenter") DataCenter.Request.UpdatePayload updateRequest) throws HttpResponseException;
+
+   /**
+    * Removes all components from an existing Virtual Data Center.
+    *
+    * @param identifier Identifier of the virtual data center
+    * @return Version response
+    */
+   @POST
+   @Payload("<ws:clearDataCenter><dataCenterId>{id}</dataCenterId></ws:clearDataCenter>")
+   @XMLResponseParser(DataCenterInfoResponseHandler.class)
+   DataCenter clearDataCenter(@PayloadParam("id") String identifier) throws HttpResponseException;
 
    /**
     * Deletes an Virtual Data Center. If a previous request on the target data center is still in progress, the data
@@ -98,4 +121,6 @@ public interface DataCenterApi {
    @POST
    @Payload("<ws:deleteDataCenter><dataCenterId>{id}</dataCenterId></ws:deleteDataCenter>")
    void deleteDataCenter(@PayloadParam("id") String identifier) throws HttpResponseException;
+
+   public void updateDataCenter();
 }

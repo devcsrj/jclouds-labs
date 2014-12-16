@@ -14,30 +14,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.profitbricks.http.parser.datacenter;
+package org.jclouds.profitbricks.binder.datacenter;
 
-import javax.inject.Inject;
+import static java.lang.String.format;
 
-import org.jclouds.date.DateCodecFactory;
+import org.jclouds.profitbricks.binder.BaseProfitBricksRequestBinder;
 import org.jclouds.profitbricks.domain.DataCenter;
-import org.jclouds.profitbricks.http.parser.BaseProfitBricksResponseHandler;
 
-public abstract class BaseDataCenterResponseHandler<T> extends BaseProfitBricksResponseHandler<T> {
+public class UpdateDataCenterRequestBinder extends BaseProfitBricksRequestBinder<DataCenter.Request.UpdatePayload> {
 
-   protected DataCenter.Builder builder;
-
-   @Inject
-   public BaseDataCenterResponseHandler(DateCodecFactory dateCodecFactory) {
-      super(dateCodecFactory);
-      this.builder = DataCenter.builder();
+   public UpdateDataCenterRequestBinder() {
+      this.paramName = "dataCenter";
    }
 
    @Override
-   protected void setPropertyOnEndTag(String qName) {
-      if ("dataCenterId".equals(qName))
-	 builder.id(textToStringValue());
-      else if ("dataCenterVersion".equals(qName))
-	 builder.version(textToIntValue());
+   protected String createPayload(DataCenter.Request.UpdatePayload payload) {
+      requestBuilder.append("<ws:updateDataCenter>")
+	      .append("<request>")
+	      .append(format("<dataCenterId>%s</dataCenterId>", payload.id()))
+	      .append(format("<dataCenterName>%s</dataCenterName>", payload.name()))
+	      .append("</request>")
+	      .append("</ws:updateDataCenter>");
+      return requestBuilder.toString();
    }
 
 }

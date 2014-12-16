@@ -107,5 +107,17 @@ public abstract class DataCenter {
 	 }
 
       }
+
+      @AutoValue
+      public abstract static class UpdatePayload {
+
+	 public abstract String id();
+
+	 public abstract String name();
+
+	 public static UpdatePayload create(String id, String name) {
+	    return new AutoValue_DataCenter_Request_UpdatePayload(id, name);
+	 }
+      }
    }
 }
