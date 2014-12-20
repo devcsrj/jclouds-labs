@@ -17,6 +17,7 @@
 package org.jclouds.profitbricks.features;
 
 import java.util.List;
+import javax.inject.Named;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -24,7 +25,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import org.jclouds.Fallbacks;
-import org.jclouds.http.HttpResponseException;
 import org.jclouds.http.filters.BasicAuthentication;
 import org.jclouds.profitbricks.binder.datacenter.CreateDataCenterRequestBinder;
 import org.jclouds.profitbricks.binder.datacenter.UpdateDataCenterRequestBinder;
@@ -50,29 +50,30 @@ public interface DataCenterApi {
     * @return Returns a list of all Virtual Data Centers created by the user, including ID, name and version number.
     */
    @POST
+   @Named("datacenter:getall")
    @Payload("<ws:getAllDataCenters/>")
    @XMLResponseParser(DataCenterListResponseHandler.class)
    @Fallback(Fallbacks.EmptyListOnNotFoundOr404.class)
    List<DataCenter> getAllDataCenters();
 
    /**
-    * @param identifier Virtual Data Center identifier
+    * @param identifier Data Center identifier
     * @return Returns information about an existing virtual data center's state and configuration.
     */
    @POST
+   @Named("datacenter:get")
    @Payload("<ws:getDataCenter><dataCenterId>{id}</dataCenterId></ws:getDataCenter>")
    @XMLResponseParser(DataCenterInfoResponseHandler.class)
-   DataCenter getDataCenter(@PayloadParam("id") String identifier) throws HttpResponseException;
+   DataCenter getDataCenter(@PayloadParam("id") String identifier);
 
    /**
-    * This is a lightweight function for polling the current provisioning state of the Virtual Data Center. It is
-    * recommended to use this function for large Virtual Data Centers to query request results.
+    * This is a lightweight function for polling the current provisioning state of the Virtual Data Center. It is recommended to use this
+    * function for large Virtual Data Centers to query request results.
     *
-    * @param identifier
-    * @return Provisioning state
-    * @throws HttpResponseException
+    * @param identifier Data Center identifier
     */
    @POST
+   @Named("datacenter:getstate")
    @Payload("<ws:getDataCenterState><dataCenterId>{id}</dataCenterId></ws:getDataCenterState>")
    @XMLResponseParser(GetProvisioningStateResponseHandler.class)
    ProvisioningState getDataCenterState(@PayloadParam("id") String identifier);
@@ -80,45 +81,49 @@ public interface DataCenterApi {
    /**
     * Creates and saves a new, empty Virtual Data Center. Returns its identifier for further reference.
     *
-    * @param createRequest VDC payload containing dataCenterName, region (both optional)
-    * @return Version response
+    * @param createRequest VDC payload containing dataCenterName, region
+    * @return Response containing requestId, dataCenterId, version, and location
     */
    @POST
+   @Named("datacenter:create")
    @MapBinder(CreateDataCenterRequestBinder.class)
    @XMLResponseParser(DataCenterInfoResponseHandler.class)
-   DataCenter createDataCenter(@PayloadParam("dataCenter") DataCenter.Request.CreatePayload createRequest) throws HttpResponseException;
+   DataCenter createDataCenter(@PayloadParam("dataCenter") DataCenter.Request.CreatePayload createRequest);
 
    /**
     * Updates the information associated to an existing Virtual Data Center.
     *
-    * @param updateRequest
-    * @return
-    * @throws HttpResponseException
+    * @param updateRequest VDC payload containing dataCenterId, and name
+    * @return Response containing requestId, dataCenterId, version
     */
    @POST
+   @Named("datacenter:update")
    @MapBinder(UpdateDataCenterRequestBinder.class)
    @XMLResponseParser(DataCenterInfoResponseHandler.class)
-   DataCenter updateDataCenter(@PayloadParam("dataCenter") DataCenter.Request.UpdatePayload updateRequest) throws HttpResponseException;
+   DataCenter updateDataCenter(@PayloadParam("dataCenter") DataCenter.Request.UpdatePayload updateRequest);
 
    /**
     * Removes all components from an existing Virtual Data Center.
     *
     * @param identifier Identifier of the virtual data center
-    * @return Version response
+    * @return Response containing requestId, dataCenterId, version
     */
    @POST
+   @Named("datacenter:clear")
    @Payload("<ws:clearDataCenter><dataCenterId>{id}</dataCenterId></ws:clearDataCenter>")
    @XMLResponseParser(DataCenterInfoResponseHandler.class)
-   DataCenter clearDataCenter(@PayloadParam("id") String identifier) throws HttpResponseException;
+   DataCenter clearDataCenter(@PayloadParam("id") String identifier);
 
    /**
-    * Deletes an Virtual Data Center. If a previous request on the target data center is still in progress, the data
-    * center is going to be deleted after this request has been completed. Once a Data Center has been deleted, no
-    * further request can be performed on it.
+    * Deletes an Virtual Data Center. If a previous request on the target data center is still in progress, the data center is going to be
+    * deleted after this request has been completed. Once a Data Center has been deleted, no further request can be performed on it.
     *
     * @param identifier Identifier of the virtual data center
+    * @return Returns a boolean indicating whether delete operation was made
     */
    @POST
+   @Named("datacenter:delete")
    @Payload("<ws:deleteDataCenter><dataCenterId>{id}</dataCenterId></ws:deleteDataCenter>")
-   void deleteDataCenter(@PayloadParam("id") String identifier) throws HttpResponseException;
+   @Fallback(CustomFallbacks.FalseOnNotFoundOr404.class)
+   Boolean deleteDataCenter(@PayloadParam("id") String identifier);
 }

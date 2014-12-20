@@ -23,18 +23,21 @@ import org.jclouds.profitbricks.domain.DataCenter;
 
 public class UpdateDataCenterRequestBinder extends BaseProfitBricksRequestBinder<DataCenter.Request.UpdatePayload> {
 
+   protected final StringBuilder requestBuilder;
+
    public UpdateDataCenterRequestBinder() {
-      this.paramName = "dataCenter";
+      super("dataCenter");
+      this.requestBuilder = new StringBuilder(128);
    }
 
    @Override
    protected String createPayload(DataCenter.Request.UpdatePayload payload) {
       requestBuilder.append("<ws:updateDataCenter>")
-	      .append("<request>")
-	      .append(format("<dataCenterId>%s</dataCenterId>", payload.id()))
-	      .append(format("<dataCenterName>%s</dataCenterName>", payload.name()))
-	      .append("</request>")
-	      .append("</ws:updateDataCenter>");
+              .append("<request>")
+              .append(format("<dataCenterId>%s</dataCenterId>", payload.id()))
+              .append(format("<dataCenterName>%s</dataCenterName>", payload.name()))
+              .append("</request>")
+              .append("</ws:updateDataCenter>");
       return requestBuilder.toString();
    }
 

@@ -17,7 +17,6 @@
 package org.jclouds.profitbricks.binder;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static java.lang.String.format;
 
 import java.util.Map;
 
@@ -27,22 +26,23 @@ import org.jclouds.http.HttpRequest;
 import org.jclouds.rest.MapBinder;
 
 import com.google.common.base.Strings;
+import org.jclouds.io.ContentMetadata;
+import org.jclouds.io.ContentMetadataBuilder;
+import org.jclouds.io.MutableContentMetadata;
 
 public abstract class BaseProfitBricksRequestBinder<T> implements MapBinder {
 
-   protected final StringBuilder requestBuilder;
-   protected String paramName;
+   protected final String paramName;
 
-   public BaseProfitBricksRequestBinder() {
-      this.requestBuilder = new StringBuilder(255);
+   public BaseProfitBricksRequestBinder(String paramName) {
+      this.paramName = checkNotNull(paramName, "Initialize 'paramName' in constructor");
    }
 
    @Override
    public <R extends HttpRequest> R bindToRequest(R request, Map<String, Object> postParams) {
       checkNotNull(request, "request");
 
-      checkNotNull(paramName, "Initialize 'paramName' in constructor");
-      Object obj = checkNotNull(postParams.get(paramName), format("Param '%s' cannot be null.", paramName));
+      Object obj = checkNotNull(postParams.get(paramName), "Param '%s' cannot be null.", paramName);
       T payload = (T) obj;
 
       return createRequest(request, createPayload(payload));
@@ -55,21 +55,22 @@ public abstract class BaseProfitBricksRequestBinder<T> implements MapBinder {
 
    protected abstract String createPayload(T payload);
 
-   protected String ifNotEmpty(String pattern, Object param) {
-      try {
-	 return Strings.isNullOrEmpty((String) param) ? "" : String.format(pattern, param);
-      } catch (ClassCastException ex) {
-	 return Strings.isNullOrEmpty(param.toString()) ? "" : String.format(pattern, param);
-      }
+   protected String formatIfNotEmpty(String pattern, Object param) {
+      return Strings.isNullOrEmpty(param.toString()) ? "" : String.format(pattern, param);
    }
 
-   protected String ifNotNull(Object object) {
+   protected String nullableToString(Object object) {
       return object == null ? "" : object.toString();
    }
 
    protected <R extends HttpRequest> R createRequest(R fromRequest, String payload) {
+      ContentMetadata metadata = ContentMetadataBuilder.create()
+              .contentType(MediaType.TEXT_XML)
+              .contentLength(Long.valueOf(payload.length()))
+              .build();
+
       fromRequest.setPayload(payload);
-      fromRequest.getPayload().getContentMetadata().setContentType(MediaType.TEXT_XML);
+      fromRequest.getPayload().setContentMetadata((MutableContentMetadata) metadata);
       return fromRequest;
    }
 }

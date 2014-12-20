@@ -32,7 +32,7 @@ public class DataCenterListResponseHandler extends BaseDataCenterResponseHandler
    private final List<DataCenter> dataCenters;
 
    @Inject
-   public DataCenterListResponseHandler(DateCodecFactory dateCodec) {
+   DataCenterListResponseHandler(DateCodecFactory dateCodec) {
       super(dateCodec);
       this.dataCenters = Lists.newArrayList();
    }

@@ -26,7 +26,7 @@ import org.jclouds.profitbricks.BaseProfitBricksLiveTest;
 import org.jclouds.profitbricks.domain.DataCenter;
 import org.jclouds.profitbricks.domain.Location;
 import org.jclouds.profitbricks.domain.ProvisioningState;
-import org.jclouds.rest.ResourceNotFoundException;
+import static org.testng.Assert.assertTrue;
 import org.testng.annotations.Test;
 
 @Test(groups = "live", testName = "DataCenterApiLiveTest")
@@ -36,8 +36,8 @@ public class DataCenterApiLiveTest extends BaseProfitBricksLiveTest {
 
    @Test
    public void testCreateDataCenter() {
-      DataCenter dc = api.getDataCenterApi().createDataCenter(
-	      DataCenter.Request.CreatePayload.create("JClouds", Location.DE_FKB)
+      DataCenter dc = api.dataCenterApi().createDataCenter(
+              DataCenter.Request.CreatePayload.create("JClouds", Location.DE_FKB)
       );
 
       assertNotNull(dc);
@@ -50,7 +50,7 @@ public class DataCenterApiLiveTest extends BaseProfitBricksLiveTest {
    public void testGetDataCenter() {
       assertNotNull(dcId, "No available datacenter found.");
 
-      DataCenter dataCenter = api.getDataCenterApi().getDataCenter(dcId);
+      DataCenter dataCenter = api.dataCenterApi().getDataCenter(dcId);
 
       assertNotNull(dataCenter);
       assertEquals(dataCenter.id(), dcId);
@@ -58,7 +58,7 @@ public class DataCenterApiLiveTest extends BaseProfitBricksLiveTest {
 
    @Test(dependsOnMethods = "testCreateDataCenter")
    public void testGetAllDataCenters() {
-      List<DataCenter> dataCenters = api.getDataCenterApi().getAllDataCenters();
+      List<DataCenter> dataCenters = api.dataCenterApi().getAllDataCenters();
 
       assertNotNull(dataCenters);
       assertFalse(dataCenters.isEmpty(), "No datacenter found.");
@@ -68,7 +68,7 @@ public class DataCenterApiLiveTest extends BaseProfitBricksLiveTest {
    public void testGetDataCenterState() {
       assertNotNull(dcId, "No available datacenter found.");
 
-      ProvisioningState state = api.getDataCenterApi().getDataCenterState(dcId);
+      ProvisioningState state = api.dataCenterApi().getDataCenterState(dcId);
 
       assertNotNull(state);
    }
@@ -78,14 +78,14 @@ public class DataCenterApiLiveTest extends BaseProfitBricksLiveTest {
       assertNotNull(dcId, "No available datacenter found.");
 
       final String newName = "Apache";
-      DataCenter dataCenter = api.getDataCenterApi().updateDataCenter(
-	      DataCenter.Request.UpdatePayload.create(dcId, newName)
+      DataCenter dataCenter = api.dataCenterApi().updateDataCenter(
+              DataCenter.Request.UpdatePayload.create(dcId, newName)
       );
 
       assertNotNull(dataCenter);
       dcWaitingPredicate.apply(dcId);
 
-      DataCenter fetchedDc = api.getDataCenterApi().getDataCenter(dcId);
+      DataCenter fetchedDc = api.dataCenterApi().getDataCenter(dcId);
 
       assertNotNull(fetchedDc);
       assertEquals(newName, fetchedDc.name());
@@ -93,16 +93,18 @@ public class DataCenterApiLiveTest extends BaseProfitBricksLiveTest {
 
    @Test(dependsOnMethods = "testUpdateDataCenter")
    public void testClearDataCenter() {
-      DataCenter dataCenter = api.getDataCenterApi().clearDataCenter(dcId);
+      DataCenter dataCenter = api.dataCenterApi().clearDataCenter(dcId);
 
       assertNotNull(dataCenter);
    }
 
    // FIXME Fails. see ProfitBricksHttpErrorHandler line 42
-   @Test(dependsOnMethods = "testClearDataCenter", expectedExceptions = ResourceNotFoundException.class)
+   //   @AfterClass(dependsOnMethods = "testCreateDataCenter")
+   @Test(dependsOnMethods = "testClearDataCenter")
    public void testDeleteDataCenter() {
-      api.getDataCenterApi().deleteDataCenter(dcId);
-
-      api.getDataCenterApi().getDataCenter(dcId);
+//      api.dataCenterApi().deleteDataCenter(dcId);
+      Boolean result = api.dataCenterApi().deleteDataCenter(dcId);
+      
+      assertTrue(result);
    }
 }

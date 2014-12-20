@@ -28,7 +28,7 @@ public class GetProvisioningStateResponseHandler extends BaseProfitBricksRespons
    private ProvisioningState state = ProvisioningState.UNRECOGNIZED;
 
    @Inject
-   public GetProvisioningStateResponseHandler(DateCodecFactory dateCodec) {
+   GetProvisioningStateResponseHandler(DateCodecFactory dateCodec) {
       super(dateCodec);
    }
 

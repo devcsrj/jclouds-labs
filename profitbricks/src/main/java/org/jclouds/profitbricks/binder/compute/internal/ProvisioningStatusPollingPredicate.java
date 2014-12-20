@@ -40,7 +40,7 @@ public class ProvisioningStatusPollingPredicate implements Predicate<String> {
       checkNotNull(input, "Virtual item id can't be null.");
       switch (domain) {
 	 case DATACENTER:
-	    return expect == api.getDataCenterApi().getDataCenterState(input);
+	    return expect == api.dataCenterApi().getDataCenterState(input);
 	 default:
 	    throw new IllegalArgumentException("Unknown domain '" + domain + "'");
       }

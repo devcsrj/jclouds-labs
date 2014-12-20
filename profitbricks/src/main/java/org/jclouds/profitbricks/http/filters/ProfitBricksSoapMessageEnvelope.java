@@ -18,11 +18,11 @@ package org.jclouds.profitbricks.http.filters;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import javax.ws.rs.core.MediaType;
-
 import org.jclouds.http.HttpException;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpRequestFilter;
+import org.jclouds.http.HttpUtils;
+import org.jclouds.io.ContentMetadata;
 import org.jclouds.io.Payload;
 import org.jclouds.io.Payloads;
 
@@ -32,9 +32,9 @@ import org.jclouds.io.Payloads;
 public class ProfitBricksSoapMessageEnvelope implements HttpRequestFilter {
 
    private final String SOAP_PREFIX
-	   = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:ws=\"http://ws.api.profitbricks.com/\">"
-	   + "<soapenv:Header/>"
-	   + "<soapenv:Body>";
+           = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:ws=\"http://ws.api.profitbricks.com/\">"
+           + "<soapenv:Header/>"
+           + "<soapenv:Body>";
 
    private final String SOAP_SUFFIX = "</soapenv:Body></soapenv:Envelope>";
 
@@ -45,12 +45,14 @@ public class ProfitBricksSoapMessageEnvelope implements HttpRequestFilter {
    }
 
    private HttpRequest createSoapRequest(HttpRequest request) {
-      final String body = request.getPayload().getRawContent().toString();
+      Payload oldPayload = request.getPayload();
+      ContentMetadata oldMetadata = oldPayload.getContentMetadata();
+      String body = oldPayload.getRawContent().toString();
 
-      final Payload payload = Payloads.newStringPayload(SOAP_PREFIX.concat(body).concat(SOAP_SUFFIX));
-      payload.getContentMetadata().setContentType(MediaType.TEXT_XML);
+      Payload newPayload = Payloads.newStringPayload(SOAP_PREFIX.concat(body).concat(SOAP_SUFFIX));
+      HttpUtils.copy(oldMetadata, newPayload.getContentMetadata());
 
-      return request.toBuilder().payload(payload).build();
+      return request.toBuilder().payload(newPayload).build();
    }
 
 }

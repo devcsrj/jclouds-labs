@@ -14,30 +14,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.profitbricks.http.parser.datacenter;
+package org.jclouds.profitbricks.features;
 
-import javax.inject.Inject;
+import static com.google.common.base.Throwables.propagate;
+import org.jclouds.Fallback;
+import org.jclouds.http.HttpResponseException;
 
-import org.jclouds.date.DateCodecFactory;
-import org.jclouds.profitbricks.domain.DataCenter;
-import org.jclouds.profitbricks.http.parser.BaseProfitBricksResponseHandler;
+final class CustomFallbacks {
 
-public abstract class BaseDataCenterResponseHandler<T> extends BaseProfitBricksResponseHandler<T> {
+   static final class FalseOnNotFoundOr404 implements Fallback<Boolean> {
 
-   protected DataCenter.Builder builder;
+      @Override
+      public Boolean createOrPropagate(Throwable t) throws Exception {
+         if (!(t instanceof HttpResponseException))
+            throw propagate(t);
+         return Boolean.FALSE;
+      }
 
-   @Inject
-   BaseDataCenterResponseHandler(DateCodecFactory dateCodecFactory) {
-      super(dateCodecFactory);
-      this.builder = DataCenter.builder();
-   }
-
-   @Override
-   protected void setPropertyOnEndTag(String qName) {
-      if ("dataCenterId".equals(qName))
-	 builder.id(textToStringValue());
-      else if ("dataCenterVersion".equals(qName))
-	 builder.version(textToIntValue());
    }
 
 }

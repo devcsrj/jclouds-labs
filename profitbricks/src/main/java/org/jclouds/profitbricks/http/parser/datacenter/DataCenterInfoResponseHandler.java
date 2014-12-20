@@ -29,7 +29,7 @@ public class DataCenterInfoResponseHandler extends BaseDataCenterResponseHandler
    private boolean done = false;
 
    @Inject
-   public DataCenterInfoResponseHandler(DateCodecFactory dateCodecFactory) {
+   DataCenterInfoResponseHandler(DateCodecFactory dateCodecFactory) {
       super(dateCodecFactory);
    }
 
