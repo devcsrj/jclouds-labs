@@ -39,7 +39,7 @@ public class DataCenterInfoResponseHandler extends BaseDataCenterResponseHandler
       if ("dataCenterName".equals(qName))
 	 builder.name(textToStringValue());
       else if ("location".equals(qName))
-	 builder.location(Location.fromValue(textToStringValue()));
+	 builder.location(Location.fromId(textToStringValue()));
       else if ("provisioningState".equals(qName))
 	 builder.state(ProvisioningState.fromValue(textToStringValue()));
    }

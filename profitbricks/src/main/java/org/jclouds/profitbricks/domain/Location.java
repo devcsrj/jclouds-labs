@@ -40,4 +40,11 @@ public enum Location {
 	 return UNRECOGNIZED;
       }
    }
+
+   public static Location fromId(String id) {
+      for (Location location : values())
+	 if (location.id.equals(id))
+	    return location;
+      return UNRECOGNIZED;
+   }
 }
