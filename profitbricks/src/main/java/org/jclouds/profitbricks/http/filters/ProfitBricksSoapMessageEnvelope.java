@@ -32,9 +32,9 @@ import org.jclouds.io.Payloads;
 public class ProfitBricksSoapMessageEnvelope implements HttpRequestFilter {
 
    private final String SOAP_PREFIX
-           = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:ws=\"http://ws.api.profitbricks.com/\">"
-           + "<soapenv:Header/>"
-           + "<soapenv:Body>";
+	   = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:ws=\"http://ws.api.profitbricks.com/\">"
+	   + "<soapenv:Header/>"
+	   + "<soapenv:Body>";
 
    private final String SOAP_SUFFIX = "</soapenv:Body></soapenv:Envelope>";
 
@@ -47,10 +47,11 @@ public class ProfitBricksSoapMessageEnvelope implements HttpRequestFilter {
    private HttpRequest createSoapRequest(HttpRequest request) {
       Payload oldPayload = request.getPayload();
       ContentMetadata oldMetadata = oldPayload.getContentMetadata();
-      String body = oldPayload.getRawContent().toString();
 
-      Payload newPayload = Payloads.newStringPayload(SOAP_PREFIX.concat(body).concat(SOAP_SUFFIX));
+      String body = SOAP_PREFIX.concat(oldPayload.getRawContent().toString()).concat(SOAP_SUFFIX);
+      Payload newPayload = Payloads.newStringPayload(body);
       HttpUtils.copy(oldMetadata, newPayload.getContentMetadata());
+      newPayload.getContentMetadata().setContentLength(Long.valueOf(body.length())); // resize, add prefix/suffix length
 
       return request.toBuilder().payload(newPayload).build();
    }

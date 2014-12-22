@@ -26,9 +26,9 @@ import org.jclouds.http.HttpRequest;
 import org.jclouds.rest.MapBinder;
 
 import com.google.common.base.Strings;
-import org.jclouds.io.ContentMetadata;
-import org.jclouds.io.ContentMetadataBuilder;
+
 import org.jclouds.io.MutableContentMetadata;
+import org.jclouds.io.payloads.BaseMutableContentMetadata;
 
 public abstract class BaseProfitBricksRequestBinder<T> implements MapBinder {
 
@@ -64,13 +64,12 @@ public abstract class BaseProfitBricksRequestBinder<T> implements MapBinder {
    }
 
    protected <R extends HttpRequest> R createRequest(R fromRequest, String payload) {
-      ContentMetadata metadata = ContentMetadataBuilder.create()
-              .contentType(MediaType.TEXT_XML)
-              .contentLength(Long.valueOf(payload.length()))
-              .build();
+      MutableContentMetadata metadata = new BaseMutableContentMetadata();
+      metadata.setContentType(MediaType.TEXT_XML);
+      metadata.setContentLength(Long.valueOf(payload.getBytes().length));
 
       fromRequest.setPayload(payload);
-      fromRequest.getPayload().setContentMetadata((MutableContentMetadata) metadata);
+      fromRequest.getPayload().setContentMetadata(metadata);
       return fromRequest;
    }
 }

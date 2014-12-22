@@ -26,7 +26,10 @@ import org.jclouds.profitbricks.BaseProfitBricksLiveTest;
 import org.jclouds.profitbricks.domain.DataCenter;
 import org.jclouds.profitbricks.domain.Location;
 import org.jclouds.profitbricks.domain.ProvisioningState;
+
 import static org.testng.Assert.assertTrue;
+
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.Test;
 
 @Test(groups = "live", testName = "DataCenterApiLiveTest")
@@ -37,7 +40,7 @@ public class DataCenterApiLiveTest extends BaseProfitBricksLiveTest {
    @Test
    public void testCreateDataCenter() {
       DataCenter dc = api.dataCenterApi().createDataCenter(
-              DataCenter.Request.CreatePayload.create("JClouds", Location.DE_FKB)
+	      DataCenter.Request.CreatePayload.create("JClouds", Location.DE_FKB)
       );
 
       assertNotNull(dc);
@@ -79,7 +82,7 @@ public class DataCenterApiLiveTest extends BaseProfitBricksLiveTest {
 
       final String newName = "Apache";
       DataCenter dataCenter = api.dataCenterApi().updateDataCenter(
-              DataCenter.Request.UpdatePayload.create(dcId, newName)
+	      DataCenter.Request.UpdatePayload.create(dcId, newName)
       );
 
       assertNotNull(dataCenter);
@@ -99,12 +102,10 @@ public class DataCenterApiLiveTest extends BaseProfitBricksLiveTest {
    }
 
    // FIXME Fails. see ProfitBricksHttpErrorHandler line 42
-   //   @AfterClass(dependsOnMethods = "testCreateDataCenter")
-   @Test(dependsOnMethods = "testClearDataCenter")
+   @AfterClass
    public void testDeleteDataCenter() {
-//      api.dataCenterApi().deleteDataCenter(dcId);
       Boolean result = api.dataCenterApi().deleteDataCenter(dcId);
-      
+
       assertTrue(result);
    }
 }
