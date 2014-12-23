@@ -29,7 +29,6 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
-import javax.ws.rs.core.Response;
 
 import org.jclouds.http.HttpResponse;
 import org.jclouds.http.HttpUtils;
@@ -52,8 +51,8 @@ import com.google.inject.Inject;
 /**
  * Custom implementation of the HTTP driver to read actual http status and message from SOAP Fault.
  * <br/>
- * ProfitBricks API errors are always returned with 500 HTTP code. This class parses and reads the SOAP response to map
- * the actual http code and message
+ * ProfitBricks API errors are always returned with 500 HTTP code. This class parses and reads the SOAP response to map the actual http code
+ * and message
  */
 @Singleton
 public class ResponseStatusFromPayloadHttpCommandExecutorService extends JavaUrlHttpCommandExecutorService {
@@ -62,10 +61,10 @@ public class ResponseStatusFromPayloadHttpCommandExecutorService extends JavaUrl
 
    @Inject
    ResponseStatusFromPayloadHttpCommandExecutorService(HttpUtils utils, ContentMetadataCodec contentMetadataCodec,
-	   DelegatingRetryHandler retryHandler, IOExceptionRetryHandler ioRetryHandler,
-	   DelegatingErrorHandler errorHandler, HttpWire wire, @Named("untrusted") HostnameVerifier verifier,
-	   @Named("untrusted") Supplier<SSLContext> untrustedSSLContextProvider, Function<URI, Proxy> proxyForURI,
-	   ParseSax<ServiceFault> faultHandler) {
+           DelegatingRetryHandler retryHandler, IOExceptionRetryHandler ioRetryHandler,
+           DelegatingErrorHandler errorHandler, HttpWire wire, @Named("untrusted") HostnameVerifier verifier,
+           @Named("untrusted") Supplier<SSLContext> untrustedSSLContextProvider, Function<URI, Proxy> proxyForURI,
+           ParseSax<ServiceFault> faultHandler) {
       super(utils, contentMetadataCodec, retryHandler, ioRetryHandler, errorHandler, wire, verifier, untrustedSSLContextProvider, proxyForURI);
       this.faultHandler = faultHandler;
    }
@@ -76,40 +75,44 @@ public class ResponseStatusFromPayloadHttpCommandExecutorService extends JavaUrl
       HttpResponse.Builder<?> responseBuilder = originalResponse.toBuilder();
 
       if (hasPayload(originalResponse) && hasServerError(originalResponse)) {
-	 InputStream in = null;
-	 InputStream originalInputStream = originalResponse.getPayload().openStream();
-	 if (originalInputStream instanceof ByteArrayInputStream)
-	    in = originalInputStream;
-	 else
-	    try {
-	       in = new ByteArrayInputStream(ByteStreams.toByteArray(originalInputStream));
-	    } finally {
-	       closeQuietly(originalInputStream);
-	    }
+         // As we need to read the response body to determine if there are errors, but we may need to process the body
+         // again later in the response parsers if everything is OK, we buffer the body into an InputStream we can reset
+         InputStream in = null;
+         InputStream originalInputStream = originalResponse.getPayload().openStream();
+         if (originalInputStream instanceof ByteArrayInputStream)
+            in = originalInputStream;
+         else
+            try {
+               in = new ByteArrayInputStream(ByteStreams.toByteArray(originalInputStream));
+            } finally {
+               closeQuietly(originalInputStream);
+            }
 
-	 try {
-	    ServiceFault fault = faultHandler.parse(in);
-	    if (fault != null)
-	       responseBuilder
-		       .statusCode(fault.httpCode())
-		       .message(fault.message());
-	 } catch (Exception ex) {
-	    // ignore
-	 } finally {
-	    if (in != null) {
-	       in.reset();
-	       Payload payload = Payloads.newInputStreamPayload(in);
-	       contentMetadataCodec.fromHeaders(payload.getContentMetadata(), originalResponse.getHeaders());
-	       responseBuilder.payload(payload);
-	    }
-	 }
+         try {
+            ServiceFault fault = faultHandler.parse(in);
+            if (fault != null)
+               responseBuilder
+                       .statusCode(fault.httpCode())
+                       .message(fault.message());
+         } catch (Exception ex) {
+            // ignore
+         } finally {
+            // Reset the input stream and set the payload, so it can be read again
+            // by the response and error parsers
+            if (in != null) {
+               in.reset();
+               Payload payload = Payloads.newInputStreamPayload(in);
+               contentMetadataCodec.fromHeaders(payload.getContentMetadata(), originalResponse.getHeaders());
+               responseBuilder.payload(payload);
+            }
+         }
       }
 
       return responseBuilder.build();
    }
 
    private static boolean hasServerError(final HttpResponse response) {
-      return Response.Status.fromStatusCode(response.getStatusCode()) == Response.Status.INTERNAL_SERVER_ERROR;
+      return response.getStatusCode() >= 500;
    }
 
    private static boolean hasPayload(final HttpResponse response) {

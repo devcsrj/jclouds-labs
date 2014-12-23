@@ -41,7 +41,7 @@ public class DataCenterListResponseHandlerTest extends BaseResponseHandlerTest<L
    public void testParseResponseFromGetAllDataCenter() {
       ParseSax<List<DataCenter>> parser = createParser();
 
-      List<DataCenter> actual = parser.parse(sampleResponse);
+      List<DataCenter> actual = parser.parse(payloadFromResource("/datacenter/datacenters.xml"));
       assertNotNull(actual, "Parsed content returned null");
 
       List<DataCenter> expected = ImmutableList.<DataCenter>of(
@@ -50,24 +50,4 @@ public class DataCenterListResponseHandlerTest extends BaseResponseHandlerTest<L
       );
       assertEquals(expected, actual);
    }
-
-   private final String sampleResponse = "<S:Envelope xmlns:S=\"http://schemas.xmlsoap.org/soap/envelope/\">\n"
-	   + "   <S:Body>\n"
-	   + "      <ns2:getAllDataCentersResponse xmlns:ns2=\"http://ws.api.profitbricks.com/\">\n"
-	   + "         <return>\n"
-	   + "            <dataCenterId>aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee</dataCenterId>\n"
-	   + "            <dataCenterName>JClouds-DC</dataCenterName>\n"
-	   + "            <dataCenterVersion>10</dataCenterVersion>\n"
-	   + "            <provisioningState>AVAILABLE</provisioningState>\n"
-	   + "         </return>\n"
-	   + "         <return>\n"
-	   + "            <dataCenterId>qqqqqqqq-wwww-rrrr-tttt-yyyyyyyyyyyy</dataCenterId>\n"
-	   + "            <dataCenterName>Random DC</dataCenterName>\n"
-	   + "            <dataCenterVersion>238</dataCenterVersion>\n"
-	   + "            <provisioningState>INPROCESS</provisioningState>\n"
-	   + "         </return>\n"
-	   + "      </ns2:getAllDataCentersResponse>\n"
-	   + "   </S:Body>\n"
-	   + "</S:Envelope>";
-
 }

@@ -16,12 +16,17 @@
  */
 package org.jclouds.profitbricks.http.parser;
 
+import static org.jclouds.util.Strings2.toStringAndClose;
+
+import java.io.IOException;
+
 import org.jclouds.http.functions.ParseSax;
 import org.jclouds.http.functions.config.SaxParserModule;
 import org.jclouds.rest.internal.GeneratedHttpRequest;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 
+import com.google.common.base.Throwables;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 
@@ -38,6 +43,14 @@ public abstract class BaseResponseHandlerTest<T> {
       injector = Guice.createInjector(new SaxParserModule());
       factory = injector.getInstance(ParseSax.Factory.class);
       assert factory != null;
+   }
+
+   protected String payloadFromResource(String resource) {
+      try {
+	 return toStringAndClose(getClass().getResourceAsStream(resource));
+      } catch (IOException e) {
+	 throw Throwables.propagate(e);
+      }
    }
 
    @AfterTest

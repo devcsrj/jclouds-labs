@@ -34,7 +34,7 @@ public abstract class BaseProfitBricksRequestBinder<T> implements MapBinder {
 
    protected final String paramName;
 
-   public BaseProfitBricksRequestBinder(String paramName) {
+   protected BaseProfitBricksRequestBinder(String paramName) {
       this.paramName = checkNotNull(paramName, "Initialize 'paramName' in constructor");
    }
 

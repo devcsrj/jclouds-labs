@@ -34,7 +34,7 @@ public class ServiceFaultResponseHandlerTest extends BaseResponseHandlerTest<Ser
    @Test
    public void testParseSoapServiceFault() {
       ParseSax<ServiceFault> parser = createParser();
-      ServiceFault actual = parser.parse(sampleResponse);
+      ServiceFault actual = parser.parse(payloadFromResource("/fault-404.xml"));
       assertNotNull(actual, "Parsed content returned null");
 
       ServiceFault expected = ServiceFault.builder()
@@ -46,22 +46,4 @@ public class ServiceFaultResponseHandlerTest extends BaseResponseHandlerTest<Ser
 
       assertEquals(expected, actual);
    }
-
-   private final String sampleResponse
-	   = "<S:Envelope xmlns:S=\"http://schemas.xmlsoap.org/soap/envelope/\">\n"
-	   + "   <S:Body>\n"
-	   + "      <S:Fault xmlns:ns4=\"http://www.w3.org/2003/05/soap-envelope\">\n"
-	   + "         <faultcode>S:Server</faultcode>\n"
-	   + "         <faultstring>The requested resource could not be found. Please refer to Request Id : 11122416. [VDC-6-404] The requested data center does not exist or already deleted by the users. ResourceId 123123</faultstring>\n"
-	   + "         <detail>\n"
-	   + "            <ns2:ProfitbricksServiceFault xmlns:ns2=\"http://ws.api.profitbricks.com/\">\n"
-	   + "               <faultCode>RESOURCE_NOT_FOUND</faultCode>\n"
-	   + "               <httpCode>404</httpCode>\n"
-	   + "               <message>The requested resource could not be found. Please refer to Request Id : 11122416. [VDC-6-404] The requested data center does not exist or already deleted by the users. ResourceId 123123</message>\n"
-	   + "               <requestId>11122416</requestId>\n"
-	   + "            </ns2:ProfitbricksServiceFault>\n"
-	   + "         </detail>\n"
-	   + "      </S:Fault>\n"
-	   + "   </S:Body>\n"
-	   + "</S:Envelope>";
 }

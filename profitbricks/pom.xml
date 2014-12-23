@@ -30,7 +30,7 @@
     <name>jclouds ProfitBricks api</name>
     <description>jclouds components to access an implementation of ProfitBricks</description>
     <packaging>bundle</packaging>
-  
+
     <properties>
         <test.profitbricks.endpoint>https://api.profitbricks.com/1.3</test.profitbricks.endpoint>
         <test.profitbricks.identity>FIXME</test.profitbricks.identity>
@@ -81,6 +81,18 @@
             <artifactId>jclouds-sshj</artifactId>
             <version>${jclouds.version}</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.squareup.okhttp</groupId>
+            <artifactId>mockwebserver</artifactId>
+            <scope>test</scope>
+            <exclusions>
+                <!-- Already provided by jclouds-sshj -->
+                <exclusion>
+                    <groupId>org.bouncycastle</groupId>
+                    <artifactId>bcprov-jdk15on</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.apache.jclouds.driver</groupId>

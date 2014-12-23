@@ -124,6 +124,6 @@ public interface DataCenterApi {
    @POST
    @Named("datacenter:delete")
    @Payload("<ws:deleteDataCenter><dataCenterId>{id}</dataCenterId></ws:deleteDataCenter>")
-   @Fallback(CustomFallbacks.FalseOnNotFoundOr404.class)
+   @Fallback(Fallbacks.FalseOnNotFoundOr404.class)
    Boolean deleteDataCenter(@PayloadParam("id") String identifier);
 }

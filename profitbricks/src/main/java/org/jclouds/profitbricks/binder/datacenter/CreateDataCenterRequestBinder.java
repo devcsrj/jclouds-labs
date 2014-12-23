@@ -25,7 +25,7 @@ public class CreateDataCenterRequestBinder extends BaseProfitBricksRequestBinder
 
    protected final StringBuilder requestBuilder;
 
-   public CreateDataCenterRequestBinder() {
+   CreateDataCenterRequestBinder() {
       super("dataCenter");
       this.requestBuilder = new StringBuilder(128);
    }

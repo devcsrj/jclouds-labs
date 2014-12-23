@@ -41,7 +41,7 @@ public class DataCenterApiLiveTest extends BaseProfitBricksLiveTest {
    @Test
    public void testCreateDataCenter() {
       DataCenter dc = api.dataCenterApi().createDataCenter(
-	      DataCenter.Request.CreatePayload.create("JClouds", Location.DE_FKB)
+              DataCenter.Request.CreatePayload.create("JClouds", Location.DE_FKB)
       );
 
       assertNotNull(dc);
@@ -83,7 +83,7 @@ public class DataCenterApiLiveTest extends BaseProfitBricksLiveTest {
 
       final String newName = "Apache";
       DataCenter dataCenter = api.dataCenterApi().updateDataCenter(
-	      DataCenter.Request.UpdatePayload.create(dcId, newName)
+              DataCenter.Request.UpdatePayload.create(dcId, newName)
       );
 
       assertNotNull(dataCenter);
@@ -114,12 +114,12 @@ public class DataCenterApiLiveTest extends BaseProfitBricksLiveTest {
       assertFalse(result);
    }
 
-   @AfterClass
+   @AfterClass(alwaysRun = true)
    public void testDeleteDataCenter() {
       if (dcId != null) {
-	 Boolean result = api.dataCenterApi().deleteDataCenter(dcId);
+         Boolean result = api.dataCenterApi().deleteDataCenter(dcId);
 
-	 assertTrue(result, "Created test data center was not deleted.");
+         assertTrue(result, "Created test data center was not deleted.");
       }
    }
 }
