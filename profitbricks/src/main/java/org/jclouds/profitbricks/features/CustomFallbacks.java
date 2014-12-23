@@ -17,8 +17,9 @@
 package org.jclouds.profitbricks.features;
 
 import static com.google.common.base.Throwables.propagate;
+
 import org.jclouds.Fallback;
-import org.jclouds.http.HttpResponseException;
+import org.jclouds.rest.ResourceNotFoundException;
 
 final class CustomFallbacks {
 
@@ -26,9 +27,9 @@ final class CustomFallbacks {
 
       @Override
       public Boolean createOrPropagate(Throwable t) throws Exception {
-         if (!(t instanceof HttpResponseException))
-            throw propagate(t);
-         return Boolean.FALSE;
+	 if (!(t instanceof ResourceNotFoundException))
+	    throw propagate(t);
+	 return Boolean.FALSE;
       }
 
    }

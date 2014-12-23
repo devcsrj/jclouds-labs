@@ -52,7 +52,8 @@ public class DataCenterInfoResponseHandlerTest extends BaseResponseHandlerTest<D
       assertEquals(expected, actual);
    }
 
-   private final String sampleResponse = "<S:Envelope xmlns:S=\"http://schemas.xmlsoap.org/soap/envelope/\">\n"
+   private final String sampleResponse 
+	   = "<S:Envelope xmlns:S=\"http://schemas.xmlsoap.org/soap/envelope/\">\n"
 	   + "   <S:Body>\n"
 	   + "      <ns2:getDataCenterResponse xmlns:ns2=\"http://ws.api.profitbricks.com/\">\n"
 	   + "         <return>\n"

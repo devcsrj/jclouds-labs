@@ -29,6 +29,9 @@ import org.jclouds.rest.ResourceNotFoundException;
 
 /**
  * Parse ProfitBricks API errors and set the appropriate exception.
+ *
+ * @see org.jclouds.profitbricks.http.ResponseStatusFromPayloadHttpCommandExecutorService
+ *
  */
 @Singleton
 public class ProfitBricksHttpErrorHandler implements HttpErrorHandler {
@@ -37,30 +40,26 @@ public class ProfitBricksHttpErrorHandler implements HttpErrorHandler {
    public void handleError(final HttpCommand command, final HttpResponse response) {
       Exception exception = null;
       try {
-	 String message = String.format("%s -> %s", command.getCurrentRequest().getRequestLine(),
-		 response.getStatusLine());
-	 // TODO: Actual API response codes are known after parsing the SOAP response body. 
-	 // Current impl always returns 500
 	 switch (response.getStatusCode()) {
 	    case 400:
 	    case 405:
-	       exception = new IllegalArgumentException(message, exception);
+	       exception = new IllegalArgumentException(response.getMessage(), exception);
 	       break;
 	    case 401:
-	       exception = new AuthorizationException(message, exception);
+	       exception = new AuthorizationException(response.getMessage(), exception);
 	       break;
 	    case 402:
 	    case 409:
-	       exception = new IllegalStateException(message, exception);
+	       exception = new IllegalStateException(response.getMessage(), exception);
 	       break;
 	    case 404:
 	    case 410:
 	       if (!command.getCurrentRequest().getMethod().equals("DELETE"))
-		  exception = new ResourceNotFoundException(message, exception);
+		  exception = new ResourceNotFoundException(response.getMessage(), exception);
 	       break;
 	    case 413:
 	    case 503:
-	       exception = new InsufficientResourcesException(message, exception);
+	       exception = new InsufficientResourcesException(response.getMessage(), exception);
 	       break;
 	 }
       } finally {

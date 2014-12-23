@@ -21,6 +21,7 @@ import java.util.Properties;
 
 import org.jclouds.profitbricks.config.ProfitBricksHttpApiModule;
 import org.jclouds.apis.ApiMetadata;
+import org.jclouds.profitbricks.config.ProfitBricksHttpApiModule.ProfitBricksHttpCommandExecutorServiceModule;
 import org.jclouds.rest.internal.BaseHttpApiMetadata;
 
 import com.google.common.collect.ImmutableSet;
@@ -61,7 +62,10 @@ public class ProfitBricksApiMetadata extends BaseHttpApiMetadata<ProfitBricksApi
 		 .version("1.3")
 		 // .view(ComputeServiceContext.class)
 		 .defaultProperties(ProfitBricksApiMetadata.defaultProperties())
-		 .defaultModules(ImmutableSet.<Class<? extends Module>>of(ProfitBricksHttpApiModule.class));
+		 .defaultModules(ImmutableSet.<Class<? extends Module>>of(
+				 ProfitBricksHttpApiModule.class,
+				 ProfitBricksHttpCommandExecutorServiceModule.class
+			 ));
       }
 
       @Override

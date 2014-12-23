@@ -29,10 +29,11 @@ import org.jclouds.profitbricks.domain.ProvisioningState;
 
 import static org.testng.Assert.assertTrue;
 
+import org.jclouds.rest.ResourceNotFoundException;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.Test;
 
-@Test(groups = "live", testName = "DataCenterApiLiveTest")
+@Test(groups = "live", testName = "DataCenterApiLiveTest", singleThreaded = true)
 public class DataCenterApiLiveTest extends BaseProfitBricksLiveTest {
 
    private String dcId;
@@ -101,11 +102,24 @@ public class DataCenterApiLiveTest extends BaseProfitBricksLiveTest {
       assertNotNull(dataCenter);
    }
 
-   // FIXME Fails. see ProfitBricksHttpErrorHandler line 42
+   @Test(expectedExceptions = ResourceNotFoundException.class)
+   public void testGetNonExistingDataCenter() {
+      api.dataCenterApi().getDataCenter("random-non-existing-id");
+   }
+
+   @Test
+   public void testDeleteNonExistingDataCenterMustReturnFalse() {
+      Boolean result = api.dataCenterApi().deleteDataCenter("random-non-existing-id");
+
+      assertFalse(result);
+   }
+
    @AfterClass
    public void testDeleteDataCenter() {
-      Boolean result = api.dataCenterApi().deleteDataCenter(dcId);
+      if (dcId != null) {
+	 Boolean result = api.dataCenterApi().deleteDataCenter(dcId);
 
-      assertTrue(result);
+	 assertTrue(result, "Created test data center was not deleted.");
+      }
    }
 }
