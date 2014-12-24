@@ -19,8 +19,8 @@ package org.jclouds.profitbricks;
 import java.util.concurrent.TimeUnit;
 
 import org.jclouds.apis.BaseApiLiveTest;
-import org.jclouds.profitbricks.binder.compute.internal.ProvisioningStatusAware;
-import org.jclouds.profitbricks.binder.compute.internal.ProvisioningStatusPollingPredicate;
+import org.jclouds.profitbricks.compute.internal.ProvisioningStatusAware;
+import org.jclouds.profitbricks.compute.internal.ProvisioningStatusPollingPredicate;
 import org.jclouds.profitbricks.domain.ProvisioningState;
 import org.jclouds.util.Predicates2;
 

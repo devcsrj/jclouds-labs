@@ -103,6 +103,7 @@
             <exclude>**/src/test/resources/**/*.txt</exclude>
             <exclude>**/src/test/resources/**/*.gz</exclude>
             <exclude>**/src/test/resources/**/*.xml</exclude>
+            <exclude>**/src/test/resources/**/*.html</exclude>
             <exclude>**/src/test/resources/**/*.iso</exclude>
             
             <!-- prevent duplicating license -->

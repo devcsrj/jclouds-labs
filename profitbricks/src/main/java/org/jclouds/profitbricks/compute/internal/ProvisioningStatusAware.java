@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.profitbricks.binder.compute.internal;
+package org.jclouds.profitbricks.compute.internal;
 
 /**
  * An enumeration of ProfitBricks domain classes containing a property 'ProvisioningState'.

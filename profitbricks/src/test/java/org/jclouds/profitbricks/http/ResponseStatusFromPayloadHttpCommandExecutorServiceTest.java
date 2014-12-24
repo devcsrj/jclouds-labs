@@ -80,7 +80,7 @@ public class ResponseStatusFromPayloadHttpCommandExecutorServiceTest extends Bas
    @Test
    public void testUnauthorized() throws Exception {
       MockWebServer server = mockWebServer();
-      server.enqueue(new MockResponse().setResponseCode(401).setBody(payloadFromResource("/fault-401.xhtml")));
+      server.enqueue(new MockResponse().setResponseCode(401).setBody(payloadFromResource("/fault-401.html")));
 
       ProfitBricksApi pbApi = api(server.getUrl("/"));
       DataCenterApi api = pbApi.dataCenterApi();
