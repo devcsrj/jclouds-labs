@@ -20,6 +20,7 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.fail;
 
 import java.util.List;
 
@@ -138,6 +139,18 @@ public class DataCenterApiMockTest extends BaseProfitBricksMockTest {
          pbApi.close();
          server.shutdown();
       }
+   }
+
+   @Test
+   public void testCreateDataCenterWithIllegalArguments() throws Exception {
+      String[] names = {"JCl@ouds", "JC|ouds", "^clouds", ""};
+      for (String name : names)
+         try {
+            DataCenter.Request.CreatePayload.create(name, Location.US_LAS);
+            fail("Should have failed for name: ".concat(name));
+         } catch (Exception ex) {
+            assertTrue(ex instanceof IllegalArgumentException);
+         }
    }
 
    @Test

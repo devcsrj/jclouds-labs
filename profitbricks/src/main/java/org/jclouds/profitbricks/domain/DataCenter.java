@@ -16,6 +16,11 @@
  */
 package org.jclouds.profitbricks.domain;
 
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Strings.isNullOrEmpty;
+
+import java.util.regex.Pattern;
+
 import org.jclouds.javax.annotation.Nullable;
 
 import com.google.auto.value.AutoValue;
@@ -94,7 +99,7 @@ public abstract class DataCenter {
    }
 
    public static final class Request {
-
+      
       @AutoValue
       public abstract static class CreatePayload {
 
@@ -103,6 +108,7 @@ public abstract class DataCenter {
 	 public abstract Location location();
 
 	 public static CreatePayload create(String name, Location location) {
+            checkInvalidChars(name);
 	    return new AutoValue_DataCenter_Request_CreatePayload(name, location);
 	 }
 
@@ -116,8 +122,16 @@ public abstract class DataCenter {
 	 public abstract String name();
 
 	 public static UpdatePayload create(String id, String name) {
+            checkInvalidChars(name);
 	    return new AutoValue_DataCenter_Request_UpdatePayload(id, name);
 	 }
+      }
+      
+      private static final Pattern INVALID_CHARS = Pattern.compile("^.*[@/\\|'`’^].*$");
+      
+      private static void checkInvalidChars(String name){
+         checkArgument(!isNullOrEmpty(name), "Name is required.");
+         checkArgument(!INVALID_CHARS.matcher(name).matches(), "Name must not contain any of: @ / \\ | ' ` ’ ^");
       }
    }
 }

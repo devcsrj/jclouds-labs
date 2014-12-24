@@ -67,9 +67,9 @@ public interface DataCenterApi {
    DataCenter getDataCenter(@PayloadParam("id") String identifier);
 
    /**
-    * This is a lightweight function for polling the current provisioning state of the Virtual Data Center. It is recommended to use this
-    * function for large Virtual Data Centers to query request results.
-    *
+    * This is a lightweight function for polling the current provisioning state of the Virtual Data Center. It is
+    * recommended to use this function for large Virtual Data Centers to query request results.
+    * <p>
     * @param identifier Data Center identifier
     */
    @POST
@@ -80,7 +80,9 @@ public interface DataCenterApi {
 
    /**
     * Creates and saves a new, empty Virtual Data Center. Returns its identifier for further reference.
-    *
+    * <p>
+    * <b>Note: </b>Data center names cannot start with or contain (@, /, \, |, ‘’, ‘)
+    * <p>
     * @param createRequest VDC payload containing dataCenterName, region
     * @return Response containing requestId, dataCenterId, version, and location
     */
@@ -92,7 +94,7 @@ public interface DataCenterApi {
 
    /**
     * Updates the information associated to an existing Virtual Data Center.
-    *
+    * <p>
     * @param updateRequest VDC payload containing dataCenterId, and name
     * @return Response containing requestId, dataCenterId, version
     */
@@ -104,7 +106,7 @@ public interface DataCenterApi {
 
    /**
     * Removes all components from an existing Virtual Data Center.
-    *
+    * <p>
     * @param identifier Identifier of the virtual data center
     * @return Response containing requestId, dataCenterId, version
     */
@@ -115,9 +117,10 @@ public interface DataCenterApi {
    DataCenter clearDataCenter(@PayloadParam("id") String identifier);
 
    /**
-    * Deletes an Virtual Data Center. If a previous request on the target data center is still in progress, the data center is going to be
-    * deleted after this request has been completed. Once a Data Center has been deleted, no further request can be performed on it.
-    *
+    * Deletes an Virtual Data Center. If a previous request on the target data center is still in progress, the data
+    * center is going to be deleted after this request has been completed. Once a Data Center has been deleted, no
+    * further request can be performed on it.
+    * <p>
     * @param identifier Identifier of the virtual data center
     * @return Returns a boolean indicating whether delete operation was made
     */
