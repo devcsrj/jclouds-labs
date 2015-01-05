@@ -79,6 +79,7 @@
     <module>joyentcloud</module>
     <module>abiquo</module>
     <module>profitbricks</module>
+    <module>profitbricks-c2</module>
   </modules>
 
   <build>
