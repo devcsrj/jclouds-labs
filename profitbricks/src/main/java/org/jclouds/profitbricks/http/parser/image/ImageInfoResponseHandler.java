@@ -14,19 +14,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.profitbricks;
+package org.jclouds.profitbricks.http.parser.image;
 
-import java.io.Closeable;
+import com.google.inject.Inject;
+import org.jclouds.date.DateCodecFactory;
+import org.jclouds.profitbricks.domain.Image;
+import org.xml.sax.SAXException;
 
-import org.jclouds.profitbricks.features.DataCenterApi;
-import org.jclouds.profitbricks.features.ImageApi;
-import org.jclouds.rest.annotations.Delegate;
+public class ImageInfoResponseHandler extends BaseImageResponseHandler<Image> {
 
-public interface ProfitBricksApi extends Closeable {
+   private boolean done = false;
 
-   @Delegate
-   DataCenterApi dataCenterApi();
+   @Inject
+   ImageInfoResponseHandler(DateCodecFactory dateCodecFactory) {
+      super(dateCodecFactory);
+   }
 
-   @Delegate
-   ImageApi imageApi();
+   @Override
+   public void endElement(String uri, String localName, String qName) throws SAXException {
+      if (done)
+         return;
+      setPropertyOnEndTag(qName);
+      if ("return".equals(qName))
+         done = true;
+      clearTextBuffer();
+   }
+
+   @Override
+   public Image getResult() {
+      return builder.build();
+   }
+
 }
