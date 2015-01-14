@@ -52,6 +52,10 @@ public abstract class BaseProfitBricksResponseHandler<T> extends ParseSax.Handle
    protected Float textToFloatValue() {
       return Float.valueOf(textToStringValue());
    }
+   
+   protected Double textToDoubleValue(){
+      return Double.valueOf( textToStringValue());
+   }
 
    protected int textToIntValue() {
       return Integer.parseInt(textToStringValue());

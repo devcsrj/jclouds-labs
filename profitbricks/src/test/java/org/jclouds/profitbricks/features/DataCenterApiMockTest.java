@@ -101,7 +101,7 @@ public class DataCenterApiMockTest extends BaseProfitBricksMockTest {
    @Test
    public void testGetNonExistingDataCenter() throws Exception {
       MockWebServer server = mockWebServer();
-      server.enqueue(new MockResponse().setResponseCode(500).setBody(payloadFromResource("/fault-404.xml")));
+      server.enqueue(new MockResponse().setResponseCode(500).setBody(payloadFromResource("/datacenter/datacenter-not-found.xml")));
 
       ProfitBricksApi pbApi = api(server.getUrl(rootUrl));
       DataCenterApi api = pbApi.dataCenterApi();

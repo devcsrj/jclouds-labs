@@ -22,6 +22,7 @@ import org.jclouds.date.DateCodecFactory;
 import org.jclouds.profitbricks.domain.Image;
 import org.jclouds.profitbricks.domain.Image.Type;
 import org.jclouds.profitbricks.domain.Location;
+import org.jclouds.profitbricks.domain.OsType;
 import org.jclouds.profitbricks.http.parser.BaseProfitBricksResponseHandler;
 
 public abstract class BaseImageResponseHandler<T> extends BaseProfitBricksResponseHandler<T> {
@@ -47,7 +48,7 @@ public abstract class BaseImageResponseHandler<T> extends BaseProfitBricksRespon
       else if ("location".equals(qName))
          builder.location(Location.fromId(textToStringValue()));
       else if ("osType".equals(qName))
-         builder.osType(Image.OsType.fromValue(textToStringValue()));
+         builder.osType(OsType.fromValue(textToStringValue()));
       else if ("public".equals(qName))
          builder.isPublic(textToBooleanValue());
       else if ("writeable".equals(qName))

@@ -47,7 +47,7 @@ public class ImageApiMockTest extends BaseProfitBricksMockTest {
          List<Image> images = api.getAllImages();
          assertRequestHasCommonProperties(server.takeRequest());
          assertNotNull(images);
-         assertTrue(images.size() > 10);
+         assertTrue(images.size() == 7);
       } finally {
          pbApi.close();
          server.shutdown();

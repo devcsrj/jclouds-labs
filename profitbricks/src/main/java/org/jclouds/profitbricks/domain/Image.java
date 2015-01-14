@@ -34,19 +34,6 @@ public abstract class Image {
       }
    }
 
-   public enum OsType {
-
-      WINDOWS, LINUX, OTHER, UNRECOGNIZED;
-
-      public static OsType fromValue(String v) {
-         try {
-            return valueOf(v);
-         } catch (IllegalArgumentException ex) {
-            return UNRECOGNIZED;
-         }
-      }
-   }
-
    public abstract String id();
 
    public abstract String name();
