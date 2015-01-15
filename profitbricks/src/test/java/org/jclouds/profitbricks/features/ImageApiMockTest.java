@@ -45,7 +45,7 @@ public class ImageApiMockTest extends BaseProfitBricksMockTest {
 
       try {
          List<Image> images = api.getAllImages();
-         assertRequestHasCommonProperties(server.takeRequest());
+         assertRequestHasCommonProperties(server.takeRequest(), "getAllImages");
          assertNotNull(images);
          assertTrue(images.size() == 7);
       } finally {
@@ -83,7 +83,7 @@ public class ImageApiMockTest extends BaseProfitBricksMockTest {
       String id = "5ad99c9e-9166-11e4-9d74-52540066fee9";
       try {
          Image image = api.getImage(id);
-         assertRequestHasCommonProperties(server.takeRequest());
+         assertRequestHasCommonProperties(server.takeRequest(), "getImage");
          assertNotNull(image);
          assertEquals(image.id(), id);
       } finally {
@@ -96,7 +96,7 @@ public class ImageApiMockTest extends BaseProfitBricksMockTest {
    @Test
    public void testGetNonExistingImage() throws Exception {
       MockWebServer server = mockWebServer();
-      server.enqueue(new MockResponse().setResponseCode(500).setBody(payloadFromResource("/image/image-not-found.xml")));
+      server.enqueue(new MockResponse().setResponseCode(404));
 
       ProfitBricksApi pbApi = api(server.getUrl(rootUrl));
       ImageApi api = pbApi.imageApi();

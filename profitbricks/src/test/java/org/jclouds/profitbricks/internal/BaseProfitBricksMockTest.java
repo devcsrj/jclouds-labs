@@ -37,6 +37,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.inject.Module;
 import com.squareup.okhttp.mockwebserver.MockWebServer;
 import com.squareup.okhttp.mockwebserver.RecordedRequest;
+import static org.testng.Assert.assertTrue;
 
 /**
  * Base class for all ProfitBricks mock test
@@ -84,5 +85,10 @@ public class BaseProfitBricksMockTest {
       assertEquals(request.getPath(), rootUrl);
       assertEquals(request.getHeader(HttpHeaders.AUTHORIZATION), authHeader);
       assertEquals(request.getHeader(HttpHeaders.ACCEPT), MediaType.TEXT_XML);
+   }
+   
+   protected static void assertRequestHasCommonProperties(final RecordedRequest request, String containsInPayload){
+      assertTrue(new String(request.getBody()).contains( containsInPayload ));
+      assertRequestHasCommonProperties( request );
    }
 }

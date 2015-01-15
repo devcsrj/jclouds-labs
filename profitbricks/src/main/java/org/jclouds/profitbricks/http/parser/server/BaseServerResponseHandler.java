@@ -51,7 +51,7 @@ public abstract class BaseServerResponseHandler<T> extends BaseProfitBricksRespo
       else if ( "osType".equals( qName ) )
          builder.osType( OsType.fromValue( textToStringValue() ) );
       else if ( "availabilityZone".equals( qName ) )
-         builder.zone( AvailabilityZone.fromValue( textToStringValue() ) );
+         builder.availabilityZone( AvailabilityZone.fromValue( textToStringValue() ) );
       else if ( "creationTime".equals( qName ) )
          builder.creationTime( textToIso8601Date() );
       else if ( "lastModificationTime".equals( qName ) )

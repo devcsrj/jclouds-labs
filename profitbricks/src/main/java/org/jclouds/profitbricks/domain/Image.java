@@ -38,7 +38,7 @@ public abstract class Image {
 
    public abstract String name();
 
-   public abstract Float size(); // MB
+   public abstract float size(); // MB
 
    public abstract Type type();
 
@@ -68,7 +68,7 @@ public abstract class Image {
 
    public abstract boolean isDiscVirtioHotUnPlug();
 
-   public static Image create(String id, String name, Float size, Type type, Location location, OsType osType,
+   public static Image create(String id, String name, float size, Type type, Location location, OsType osType,
            boolean isPublic, boolean isWriteable, boolean isBootable, boolean cpuHotPlug, boolean cpuHotUnPlug,
            boolean ramHotPlug, boolean ramHotUnPlug, boolean nicHotPlug, boolean nicHotUnPlug,
            boolean discVirtioHotPlug, boolean discVirtioHotUnPlug) {
@@ -88,7 +88,7 @@ public abstract class Image {
 
       private String id;
       private String name;
-      private Float size;
+      private float size;
       private Type type;
       private Location location;
       private OsType osType;
@@ -114,7 +114,7 @@ public abstract class Image {
          return this;
       }
 
-      public Builder size(Float size) {
+      public Builder size(float size) {
          this.size = size;
          return this;
       }

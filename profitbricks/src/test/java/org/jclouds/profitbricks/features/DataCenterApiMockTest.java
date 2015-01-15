@@ -51,7 +51,7 @@ public class DataCenterApiMockTest extends BaseProfitBricksMockTest {
 
       try {
          List<DataCenter> dataCenters = api.getAllDataCenters();
-         assertRequestHasCommonProperties(server.takeRequest());
+         assertRequestHasCommonProperties(server.takeRequest(), "getAllDataCenters");
          assertNotNull(dataCenters);
          assertEquals(dataCenters.size(), 2);
       } finally {
@@ -89,7 +89,7 @@ public class DataCenterApiMockTest extends BaseProfitBricksMockTest {
       String id = "12345678-abcd-efgh-ijkl-987654321000";
       try {
          DataCenter dataCenter = api.getDataCenter(id);
-         assertRequestHasCommonProperties(server.takeRequest());
+         assertRequestHasCommonProperties(server.takeRequest(), "getDataCenter");
          assertNotNull(dataCenter);
          assertEquals(dataCenter.id(), id);
       } finally {
@@ -101,7 +101,7 @@ public class DataCenterApiMockTest extends BaseProfitBricksMockTest {
    @Test
    public void testGetNonExistingDataCenter() throws Exception {
       MockWebServer server = mockWebServer();
-      server.enqueue(new MockResponse().setResponseCode(500).setBody(payloadFromResource("/datacenter/datacenter-not-found.xml")));
+      server.enqueue(new MockResponse().setResponseCode(404));
 
       ProfitBricksApi pbApi = api(server.getUrl(rootUrl));
       DataCenterApi api = pbApi.dataCenterApi();
@@ -128,7 +128,7 @@ public class DataCenterApiMockTest extends BaseProfitBricksMockTest {
       String id = "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee";
       try {
          ProvisioningState state = api.getDataCenterState(id);
-         assertRequestHasCommonProperties(server.takeRequest());
+         assertRequestHasCommonProperties(server.takeRequest(), "getDataCenterState");
          assertNotNull(state);
          assertEquals(state, ProvisioningState.AVAILABLE);
       } finally {
@@ -149,7 +149,7 @@ public class DataCenterApiMockTest extends BaseProfitBricksMockTest {
          DataCenter dataCenter = api.createDataCenter(
                  DataCenter.Request.CreatePayload.create("JClouds-DC", Location.DE_FRA)
          );
-         assertRequestHasCommonProperties(server.takeRequest());
+         assertRequestHasCommonProperties(server.takeRequest(), "createDataCenter");
          assertNotNull(dataCenter);
          assertEquals(dataCenter.id(), "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee");
          assertEquals(dataCenter.version(), 1);
@@ -185,7 +185,7 @@ public class DataCenterApiMockTest extends BaseProfitBricksMockTest {
          DataCenter dataCenter = api.updateDataCenter(
                  DataCenter.Request.UpdatePayload.create(id, "Apache")
          );
-         assertRequestHasCommonProperties(server.takeRequest());
+         assertRequestHasCommonProperties(server.takeRequest(), "updateDataCenter");
          assertNotNull(dataCenter);
          assertEquals(dataCenter.id(), id);
          assertEquals(dataCenter.version(), 2);
@@ -207,7 +207,7 @@ public class DataCenterApiMockTest extends BaseProfitBricksMockTest {
       try {
          DataCenter dataCenter = api.clearDataCenter(id);
 
-         assertRequestHasCommonProperties(server.takeRequest());
+         assertRequestHasCommonProperties(server.takeRequest(), "clearDataCenter");
          assertNotNull(dataCenter);
          assertEquals(dataCenter.id(), id);
          assertEquals(dataCenter.version(), 3);
@@ -227,7 +227,7 @@ public class DataCenterApiMockTest extends BaseProfitBricksMockTest {
 
       try {
          boolean result = api.deleteDataCenter("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee");
-         assertRequestHasCommonProperties(server.takeRequest());
+         assertRequestHasCommonProperties(server.takeRequest(), "deleteDataCenter");
          assertTrue(result);
       } finally {
          pbApi.close();
@@ -238,7 +238,7 @@ public class DataCenterApiMockTest extends BaseProfitBricksMockTest {
    @Test
    public void testDeleteNonExistingDataCenter() throws Exception {
       MockWebServer server = mockWebServer();
-      server.enqueue(new MockResponse().setResponseCode(500).setBody(payloadFromResource("/fault-404.xml")));
+      server.enqueue(new MockResponse().setResponseCode( 404 ));
 
       ProfitBricksApi pbApi = api(server.getUrl(rootUrl));
       DataCenterApi api = pbApi.dataCenterApi();

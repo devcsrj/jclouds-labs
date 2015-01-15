@@ -20,7 +20,7 @@ import org.jclouds.http.functions.ParseSax;
 import static org.testng.Assert.assertEquals;
 import org.testng.annotations.Test;
 
-@Test( groups = "unit", testName = "RequestIdOnlyResponseHandler" )
+@Test( groups = "unit", testName = "RequestIdOnlyResponseHandlerTest" )
 public class RequestIdOnlyResponseHandlerTest extends BaseResponseHandlerTest<String> {
 
    @Override

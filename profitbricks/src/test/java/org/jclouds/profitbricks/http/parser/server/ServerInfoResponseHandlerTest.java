@@ -61,7 +61,7 @@ public class ServerInfoResponseHandlerTest extends BaseResponseHandlerTest<Serve
               .creationTime( dateParser.toDate( "2014-12-04T07:09:23.138Z" ) )
               .lastModificationTime( dateParser.toDate( "2014-12-12T03:08:35.629Z" ) )
               .osType( OsType.LINUX )
-              .zone( AvailabilityZone.AUTO )
+              .availabilityZone( AvailabilityZone.AUTO )
               .isCpuHotPlug( true )
               .isRamHotPlug( true )
               .isNicHotPlug( true )

@@ -44,7 +44,7 @@ public class ServerApiMockTest extends BaseProfitBricksMockTest {
 
       try {
          List<Server> servers = api.getAllServers();
-         assertRequestHasCommonProperties( server.takeRequest() );
+         assertRequestHasCommonProperties( server.takeRequest(), "getAllServers");
          assertNotNull( servers );
          assertTrue( servers.size() == 2 );
       } finally {
@@ -82,7 +82,7 @@ public class ServerApiMockTest extends BaseProfitBricksMockTest {
       String id = "qwertyui-qwer-qwer-qwer-qwertyyuiiop";
       try {
          Server svr = api.getServer( id );
-         assertRequestHasCommonProperties( server.takeRequest() );
+         assertRequestHasCommonProperties( server.takeRequest(), "getServer" );
          assertNotNull( svr );
          assertEquals( svr.id(), id );
       } finally {
@@ -94,7 +94,7 @@ public class ServerApiMockTest extends BaseProfitBricksMockTest {
    @Test
    public void testGetNonExistingServer() throws Exception {
       MockWebServer server = mockWebServer();
-      server.enqueue( new MockResponse().setResponseCode( 500 ).setBody( payloadFromResource( "/fault-404.xml" ) ) );
+      server.enqueue( new MockResponse().setResponseCode( 404 ) );
 
       ProfitBricksApi pbApi = api( server.getUrl( rootUrl ) );
       ServerApi api = pbApi.serverApi();
@@ -122,7 +122,7 @@ public class ServerApiMockTest extends BaseProfitBricksMockTest {
       String id = "qwertyui-qwer-qwer-qwer-qwertyyuiiop";
       try {
          String requestId = api.startServer( id );
-         assertRequestHasCommonProperties( server.takeRequest() );
+         assertRequestHasCommonProperties( server.takeRequest(), "startServer" );
          assertEquals( requestId, "123456" );
       } finally {
          pbApi.close();
@@ -162,7 +162,7 @@ public class ServerApiMockTest extends BaseProfitBricksMockTest {
       String id = "qwertyui-qwer-qwer-qwer-qwertyyuiiop";
       try {
          String requestId = api.stopServer( id );
-         assertRequestHasCommonProperties( server.takeRequest() );
+         assertRequestHasCommonProperties( server.takeRequest(), "stopServer" );
          assertEquals( requestId, "123456" );
       } finally {
          pbApi.close();
@@ -181,7 +181,7 @@ public class ServerApiMockTest extends BaseProfitBricksMockTest {
       String id = "qwertyui-qwer-qwer-qwer-qwertyyuiiop";
       try {
          String requestId = api.resetServer( id );
-         assertRequestHasCommonProperties( server.takeRequest() );
+         assertRequestHasCommonProperties( server.takeRequest(), "resetServer" );
          assertEquals( requestId, "123456" );
       } finally {
          pbApi.close();
@@ -201,7 +201,7 @@ public class ServerApiMockTest extends BaseProfitBricksMockTest {
       String name = "jclouds-node";
       try {
          String serverId = api.createServer( Server.Request.CreatePayload.create( dataCenterId, name, 4, 4 * 1024 ) );
-         assertRequestHasCommonProperties( server.takeRequest() );
+         assertRequestHasCommonProperties( server.takeRequest(), "createServer" );
          assertNotNull( serverId );
          assertEquals( serverId, "qwertyui-qwer-qwer-qwer-qwertyyuiiop" );
       } finally {
@@ -225,7 +225,7 @@ public class ServerApiMockTest extends BaseProfitBricksMockTest {
                  .cores( 8 )
                  .ram( 8 * 1024 )
                  .build() );
-         assertRequestHasCommonProperties( server.takeRequest() );
+         assertRequestHasCommonProperties( server.takeRequest(), "updateServer" );
          assertNotNull( requestId );
          assertEquals( requestId, "102458" );
       } finally {
@@ -245,7 +245,7 @@ public class ServerApiMockTest extends BaseProfitBricksMockTest {
       String serverId = "qwertyui-qwer-qwer-qwer-qwertyyuiiop";
       try {
          boolean result = api.deleteServer( serverId );
-         assertRequestHasCommonProperties( server.takeRequest() );
+         assertRequestHasCommonProperties( server.takeRequest(), "deleteServer" );
          assertTrue( result );
       } finally {
          pbApi.close();

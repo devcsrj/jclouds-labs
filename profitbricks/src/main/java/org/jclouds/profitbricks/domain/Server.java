@@ -51,7 +51,7 @@ public abstract class Server implements ServerCommonProperties {
    public abstract String name();
 
    @Nullable
-   public abstract boolean hasInternetAccess();
+   public abstract Boolean hasInternetAccess();
 
    public abstract ProvisioningState state();
 
@@ -72,7 +72,7 @@ public abstract class Server implements ServerCommonProperties {
 
 //   public abstract List<Storage> storages();
 //   public abstract List<Nic> storages();
-   public static Server create( String id, String name, int cores, int ram, boolean hasInternetAccess, ProvisioningState state,
+   public static Server create( String id, String name, int cores, int ram, Boolean hasInternetAccess, ProvisioningState state,
            Status status, OsType osType, AvailabilityZone availabilityZone, Date creationTime, Date lastModificationTime, Boolean isCpuHotPlug,
            Boolean isRamHotPlug, Boolean isNicHotPlug, Boolean isNicHotUnPlug, Boolean isDiscVirtioHotPlug, Boolean isDiscVirtioHotUnPlug ) {
       return new AutoValue_Server( isCpuHotPlug, isRamHotPlug, isNicHotPlug, isNicHotUnPlug, isDiscVirtioHotPlug, isDiscVirtioHotUnPlug,
@@ -160,7 +160,7 @@ public abstract class Server implements ServerCommonProperties {
       private AvailabilityZone zone;
       private Date creationTime;
       private Date lastModificationTime;
-      private boolean hasInternetAccess;
+      private Boolean hasInternetAccess;
 
       public DescribingBuilder id( String id ) {
          this.id = id;
@@ -182,7 +182,7 @@ public abstract class Server implements ServerCommonProperties {
          return this;
       }
 
-      public DescribingBuilder zone( AvailabilityZone zone ) {
+      public DescribingBuilder availabilityZone( AvailabilityZone zone ) {
          this.zone = zone;
          return this;
       }
@@ -197,7 +197,7 @@ public abstract class Server implements ServerCommonProperties {
          return this;
       }
 
-      public DescribingBuilder hasInternetAccess( boolean hasInternetAccess ) {
+      public DescribingBuilder hasInternetAccess( Boolean hasInternetAccess ) {
          this.hasInternetAccess = hasInternetAccess;
          return this;
       }

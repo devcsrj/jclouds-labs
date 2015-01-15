@@ -49,7 +49,7 @@ public interface ServerApi {
     */
    @POST
    @Named( "server:getall" )
-   @Payload( "<ws:getAllDataCenters/>" )
+   @Payload( "<ws:getAllServers/>" )
    @XMLResponseParser( ServerListResponseHandler.class )
    @Fallback( Fallbacks.EmptyListOnNotFoundOr404.class )
    List<Server> getAllServers();
