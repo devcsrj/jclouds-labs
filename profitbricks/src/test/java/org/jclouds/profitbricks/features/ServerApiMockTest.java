@@ -20,6 +20,8 @@ import com.squareup.okhttp.mockwebserver.MockResponse;
 import com.squareup.okhttp.mockwebserver.MockWebServer;
 import java.util.List;
 import org.jclouds.profitbricks.ProfitBricksApi;
+import org.jclouds.profitbricks.domain.AvailabilityZone;
+import org.jclouds.profitbricks.domain.OsType;
 import org.jclouds.profitbricks.domain.Server;
 import org.jclouds.profitbricks.internal.BaseProfitBricksMockTest;
 import static org.jclouds.profitbricks.internal.BaseProfitBricksMockTest.mockWebServer;
@@ -44,7 +46,7 @@ public class ServerApiMockTest extends BaseProfitBricksMockTest {
 
       try {
          List<Server> servers = api.getAllServers();
-         assertRequestHasCommonProperties( server.takeRequest(), "getAllServers");
+         assertRequestHasCommonProperties( server.takeRequest(), "<ws:getAllServers/>" );
          assertNotNull( servers );
          assertTrue( servers.size() == 2 );
       } finally {
@@ -80,9 +82,11 @@ public class ServerApiMockTest extends BaseProfitBricksMockTest {
       ServerApi api = pbApi.serverApi();
 
       String id = "qwertyui-qwer-qwer-qwer-qwertyyuiiop";
+
+      String content = "<ws:getServer><serverId>" + id + "</serverId></ws:getServer>";
       try {
          Server svr = api.getServer( id );
-         assertRequestHasCommonProperties( server.takeRequest(), "getServer" );
+         assertRequestHasCommonProperties( server.takeRequest(), content );
          assertNotNull( svr );
          assertEquals( svr.id(), id );
       } finally {
@@ -120,9 +124,11 @@ public class ServerApiMockTest extends BaseProfitBricksMockTest {
       ServerApi api = pbApi.serverApi();
 
       String id = "qwertyui-qwer-qwer-qwer-qwertyyuiiop";
+
+      String content = "<ws:startServer><serverId>" + id + "</serverId></ws:startServer>";
       try {
          String requestId = api.startServer( id );
-         assertRequestHasCommonProperties( server.takeRequest(), "startServer" );
+         assertRequestHasCommonProperties( server.takeRequest(), content );
          assertEquals( requestId, "123456" );
       } finally {
          pbApi.close();
@@ -160,9 +166,11 @@ public class ServerApiMockTest extends BaseProfitBricksMockTest {
       ServerApi api = pbApi.serverApi();
 
       String id = "qwertyui-qwer-qwer-qwer-qwertyyuiiop";
+
+      String content = "<ws:stopServer><serverId>" + id + "</serverId></ws:stopServer>";
       try {
          String requestId = api.stopServer( id );
-         assertRequestHasCommonProperties( server.takeRequest(), "stopServer" );
+         assertRequestHasCommonProperties( server.takeRequest(), content );
          assertEquals( requestId, "123456" );
       } finally {
          pbApi.close();
@@ -179,9 +187,11 @@ public class ServerApiMockTest extends BaseProfitBricksMockTest {
       ServerApi api = pbApi.serverApi();
 
       String id = "qwertyui-qwer-qwer-qwer-qwertyyuiiop";
+
+      String content = "<ws:resetServer><serverId>" + id + "</serverId></ws:resetServer>";
       try {
          String requestId = api.resetServer( id );
-         assertRequestHasCommonProperties( server.takeRequest(), "resetServer" );
+         assertRequestHasCommonProperties( server.takeRequest(), content );
          assertEquals( requestId, "123456" );
       } finally {
          pbApi.close();
@@ -199,9 +209,48 @@ public class ServerApiMockTest extends BaseProfitBricksMockTest {
 
       String dataCenterId = "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee";
       String name = "jclouds-node";
+      String imageId = "some-random-image-id";
+
+      String content = "<ws:createServer>"
+              + "<request>"
+              + "<dataCenterId>" + dataCenterId + "</dataCenterId>"
+              + "<cores>4</cores>"
+              + "<ram>4096</ram>"
+              + "<serverName>" + name + "</serverName>"
+              //              + "<bootFromStorageId></bootFromStorageId>"
+              + "<bootFromImageId>" + imageId + "</bootFromImageId>"
+              + "<internetAccess>true</internetAccess>"
+              + "<lanId>2</lanId>"
+              + "<osType>LINUX</osType>"
+              + "<availabilityZone>ZONE_1</availabilityZone>"
+              + "<cpuHotPlug>true</cpuHotPlug>"
+              + "<ramHotPlug>false</ramHotPlug>"
+              + "<nicHotPlug>true</nicHotPlug>"
+              + "<nicHotUnPlug>false</nicHotUnPlug>"
+              + "<discVirtioHotPlug>true</discVirtioHotPlug>"
+              + "<discVirtioHotUnPlug>false</discVirtioHotUnPlug>"
+              + "</request>"
+              + "</ws:createServer>";
+
       try {
-         String serverId = api.createServer( Server.Request.CreatePayload.create( dataCenterId, name, 4, 4 * 1024 ) );
-         assertRequestHasCommonProperties( server.takeRequest(), "createServer" );
+         String serverId = api.createServer( Server.Request.creatingBuilder()
+                 .dataCenterId( dataCenterId )
+                 .name( name )
+                 .cores( 4 )
+                 .ram( 4 * 1024 )
+                 .bootFromImageId( imageId )
+                 .hasInternetAccess( Boolean.TRUE )
+                 .lanId( 2 )
+                 .osType( OsType.LINUX )
+                 .availabilityZone( AvailabilityZone.ZONE_1 )
+                 .isCpuHotPlug( Boolean.TRUE )
+                 .isRamHotPlug( Boolean.FALSE )
+                 .isNicHotPlug( Boolean.TRUE )
+                 .isNicHotUnPlug( Boolean.FALSE )
+                 .isDiscVirtioHotPlug( Boolean.TRUE )
+                 .isDiscVirtioHotUnPlug( Boolean.FALSE )
+                 .build() );
+         assertRequestHasCommonProperties( server.takeRequest(), content );
          assertNotNull( serverId );
          assertEquals( serverId, "qwertyui-qwer-qwer-qwer-qwertyyuiiop" );
       } finally {
@@ -219,13 +268,44 @@ public class ServerApiMockTest extends BaseProfitBricksMockTest {
       ServerApi api = pbApi.serverApi();
 
       String serverId = "qwertyui-qwer-qwer-qwer-qwertyyuiiop";
+      String newName = "apache-node";
+      String storageId = "some-random-storage-id";
+
+      String content = "<ws:updateServer>"
+              + "<request>"
+              + "<serverId>" + serverId + "</serverId>"
+              + "<cores>8</cores>"
+              + "<ram>8192</ram>"
+              + "<serverName>" + newName + "</serverName>"
+              + "<bootFromStorageId>" + storageId + "</bootFromStorageId>"
+//              + "<bootFromImageId>?</bootFromImageId>"
+              + "<osType>OTHER</osType>"
+              + "<availabilityZone>AUTO</availabilityZone>"
+              + "<cpuHotPlug>false</cpuHotPlug>"
+              + "<ramHotPlug>true</ramHotPlug>"
+              + "<nicHotPlug>false</nicHotPlug>"
+              + "<nicHotUnPlug>true</nicHotUnPlug>"
+              + "<discVirtioHotPlug>false</discVirtioHotPlug>"
+              + "<discVirtioHotUnPlug>true</discVirtioHotUnPlug>"
+              + "</request>"
+              + "</ws:updateServer>";
       try {
          String requestId = api.updateServer( Server.Request.updatingBuilder()
                  .id( serverId )
+                 .name( newName )
                  .cores( 8 )
                  .ram( 8 * 1024 )
+                 .bootFromStorageId( storageId )
+                 .osType( OsType.OTHER )
+                 .availabilityZone( AvailabilityZone.AUTO )
+                 .isCpuHotPlug( false )
+                 .isRamHotPlug( true )
+                 .isNicHotPlug( false )
+                 .isNicHotUnPlug( true )
+                 .isDiscVirtioHotPlug( false )
+                 .isDiscVirtioHotUnPlug( true )
                  .build() );
-         assertRequestHasCommonProperties( server.takeRequest(), "updateServer" );
+         assertRequestHasCommonProperties( server.takeRequest(), content );
          assertNotNull( requestId );
          assertEquals( requestId, "102458" );
       } finally {
@@ -243,9 +323,11 @@ public class ServerApiMockTest extends BaseProfitBricksMockTest {
       ServerApi api = pbApi.serverApi();
 
       String serverId = "qwertyui-qwer-qwer-qwer-qwertyyuiiop";
+      
+      String content = "<ws:deleteServer><serverId>" + serverId + "</serverId></ws:deleteServer>";
       try {
          boolean result = api.deleteServer( serverId );
-         assertRequestHasCommonProperties( server.takeRequest(), "deleteServer" );
+         assertRequestHasCommonProperties( server.takeRequest(), content );
          assertTrue( result );
       } finally {
          pbApi.close();

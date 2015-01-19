@@ -45,7 +45,7 @@ public class ImageApiMockTest extends BaseProfitBricksMockTest {
 
       try {
          List<Image> images = api.getAllImages();
-         assertRequestHasCommonProperties(server.takeRequest(), "getAllImages");
+         assertRequestHasCommonProperties(server.takeRequest(), "<ws:getAllImages/>");
          assertNotNull(images);
          assertTrue(images.size() == 7);
       } finally {
@@ -81,9 +81,11 @@ public class ImageApiMockTest extends BaseProfitBricksMockTest {
       ImageApi api = pbApi.imageApi();
 
       String id = "5ad99c9e-9166-11e4-9d74-52540066fee9";
+      
+      String content = "<ws:getImage><imageId>" + id + "</imageId></ws:getImage>";
       try {
          Image image = api.getImage(id);
-         assertRequestHasCommonProperties(server.takeRequest(), "getImage");
+         assertRequestHasCommonProperties(server.takeRequest(), content);
          assertNotNull(image);
          assertEquals(image.id(), id);
       } finally {
