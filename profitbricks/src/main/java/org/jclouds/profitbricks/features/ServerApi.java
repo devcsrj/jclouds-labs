@@ -140,7 +140,7 @@ public interface ServerApi {
    /**
     * Updates parameters of an existing virtual server device.
     *
-    * @param payload Paylaod
+    * @param payload Payload
     * @return Identifier of current request
     */
    @POST

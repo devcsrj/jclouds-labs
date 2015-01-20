@@ -16,33 +16,20 @@
  */
 package org.jclouds.profitbricks.http.parser;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
-import java.util.Date;
-
-import org.jclouds.date.DateCodec;
-import org.jclouds.date.DateCodecFactory;
 import org.jclouds.http.functions.ParseSax;
 import org.xml.sax.SAXException;
 
 public abstract class BaseProfitBricksResponseHandler<T> extends ParseSax.HandlerForGeneratedRequestWithResult<T> {
 
-   protected final DateCodec dateCodec;
-
    private final StringBuilder strBuilder;
 
-   public BaseProfitBricksResponseHandler(DateCodecFactory dateCodec) {
-      this.dateCodec = checkNotNull(checkNotNull(dateCodec, "dateCodecFactory null").iso8601(), "iso8601 date codec null");
+   public BaseProfitBricksResponseHandler() {
       this.strBuilder = new StringBuilder();
    }
 
    @Override
-   public void characters(char ch[], int start, int length) {
-      strBuilder.append(ch, start, length);
-   }
-
-   protected final Date textToIso8601Date() {
-      return dateCodec.toDate(textToStringValue());
+   public void characters( char ch[], int start, int length ) {
+      strBuilder.append( ch, start, length );
    }
 
    protected String textToStringValue() {
@@ -50,28 +37,28 @@ public abstract class BaseProfitBricksResponseHandler<T> extends ParseSax.Handle
    }
 
    protected Float textToFloatValue() {
-      return Float.valueOf(textToStringValue());
+      return Float.valueOf( textToStringValue() );
    }
-   
-   protected Double textToDoubleValue(){
-      return Double.valueOf( textToStringValue());
+
+   protected Double textToDoubleValue() {
+      return Double.valueOf( textToStringValue() );
    }
 
    protected int textToIntValue() {
-      return Integer.parseInt(textToStringValue());
+      return Integer.parseInt( textToStringValue() );
    }
 
    protected boolean textToBooleanValue() {
-      return Boolean.parseBoolean(textToStringValue());
+      return Boolean.parseBoolean( textToStringValue() );
    }
 
    protected void clearTextBuffer() {
-      strBuilder.setLength(0);
+      strBuilder.setLength( 0 );
    }
 
    @Override
-   public abstract void endElement(String uri, String localName, String qName) throws SAXException;
+   public abstract void endElement( String uri, String localName, String qName ) throws SAXException;
 
-   protected abstract void setPropertyOnEndTag(String qName);
+   protected abstract void setPropertyOnEndTag( String qName );
 
 }

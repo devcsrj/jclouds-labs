@@ -46,8 +46,6 @@ public class ServerBuilderTest {
    private final String _bootFromStorageId = "some-random-storage-id";
    private final String _bootFromImageId = "some-random-image-id";
 
-   private final String _serverId = "some-random-server-id";
-
    @Test
    public void testAutoValueServerPropertiesSettingCorrectly() {
       Server actual = Server.builder()

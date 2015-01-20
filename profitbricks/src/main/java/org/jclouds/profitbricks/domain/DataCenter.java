@@ -19,11 +19,13 @@ package org.jclouds.profitbricks.domain;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Strings.isNullOrEmpty;
 
+import java.util.List;
 import java.util.regex.Pattern;
 
 import org.jclouds.javax.annotation.Nullable;
 
 import com.google.auto.value.AutoValue;
+
 
 @AutoValue
 public abstract class DataCenter {
@@ -38,11 +40,13 @@ public abstract class DataCenter {
 
    @Nullable public abstract Location location();
 
-//   @Nullable public abstract List<Server> servers();
-//   @Nullable public abstract List<Storage> storages();
+   @Nullable public abstract List<Server> servers();
+   
+   @Nullable public abstract List<Storage> storages();
 //   @Nullable public abstract List<LoadBalancer> loadBalancers();
-   public static DataCenter create(String id, String name, int version, ProvisioningState state, Location location) {
-      return new AutoValue_DataCenter(id, name, version, state, location);
+   public static DataCenter create(String id, String name, int version, ProvisioningState state, Location location, List<Server> servers,
+           List<Storage> storages) {
+      return new AutoValue_DataCenter(id, name, version, state, location, servers, storages);
    }
 
    public static Builder builder() {
@@ -60,8 +64,8 @@ public abstract class DataCenter {
       private ProvisioningState state;
       private Location location;
       private int version;
-//      private List<Server> servers;
-//      private List<Storage> storage;
+      private List<Server> servers;
+      private List<Storage> storages;
 //      private List<LoadBalancer> loadBalancer;
 
       public Builder id(String id) {
@@ -88,13 +92,24 @@ public abstract class DataCenter {
 	 this.version = version;
 	 return this;
       }
+      
+      public Builder servers(List<Server> servers){
+         this.servers = servers;
+         return this;
+      }
+      
+      public Builder storages(List<Storage> storages){
+         this.storages = storages;
+         return this;
+      }
 
       public DataCenter build() {
-	 return DataCenter.create(id, name, version, state, location);
+	 return DataCenter.create(id, name, version, state, location, servers, storages);
       }
 
       public Builder fromDataCenter(DataCenter in) {
-	 return this.id(in.id()).name(in.name()).version(in.version()).state(in.state()).location(in.location());
+	 return this.id(in.id()).name(in.name()).version(in.version()).state(in.state()).location(in.location()).servers( in.servers())
+                 .storages(in.storages());
       }
    }
 

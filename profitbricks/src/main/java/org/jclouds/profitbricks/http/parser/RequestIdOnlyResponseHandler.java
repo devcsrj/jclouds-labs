@@ -16,17 +16,13 @@
  */
 package org.jclouds.profitbricks.http.parser;
 
-import com.google.inject.Inject;
-import org.jclouds.date.DateCodecFactory;
 import org.xml.sax.SAXException;
 
 public class RequestIdOnlyResponseHandler extends BaseProfitBricksResponseHandler<String> {
 
    private String requestId;
 
-   @Inject
-   RequestIdOnlyResponseHandler( DateCodecFactory dateCodec ) {
-      super( dateCodec );
+   RequestIdOnlyResponseHandler() {
    }
 
    @Override

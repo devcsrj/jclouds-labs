@@ -16,7 +16,12 @@
  */
 package org.jclouds.profitbricks.http.parser.server;
 
+import java.util.Date;
+
+import org.jclouds.date.DateCodec;
+
 import com.google.inject.Inject;
+
 import org.jclouds.date.DateCodecFactory;
 import org.jclouds.profitbricks.domain.AvailabilityZone;
 import org.jclouds.profitbricks.domain.OsType;
@@ -28,10 +33,16 @@ public abstract class BaseServerResponseHandler<T> extends BaseProfitBricksRespo
 
    protected Server.DescribingBuilder builder;
 
+   protected final DateCodec dateCodec;
+
    @Inject
    BaseServerResponseHandler( DateCodecFactory dateCodec ) {
-      super( dateCodec );
+      this.dateCodec = dateCodec.iso8601();
       this.builder = Server.builder();
+   }
+
+   protected final Date textToIso8601Date() {
+      return dateCodec.toDate( textToStringValue() );
    }
 
    @Override

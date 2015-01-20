@@ -16,32 +16,27 @@
  */
 package org.jclouds.profitbricks.http.parser.state;
 
-import org.jclouds.date.DateCodecFactory;
 import org.jclouds.profitbricks.domain.ProvisioningState;
 import org.jclouds.profitbricks.http.parser.BaseProfitBricksResponseHandler;
 import org.xml.sax.SAXException;
-
-import com.google.inject.Inject;
 
 public class GetProvisioningStateResponseHandler extends BaseProfitBricksResponseHandler<ProvisioningState> {
 
    private ProvisioningState state = ProvisioningState.UNRECOGNIZED;
 
-   @Inject
-   GetProvisioningStateResponseHandler(DateCodecFactory dateCodec) {
-      super(dateCodec);
+   GetProvisioningStateResponseHandler() {
    }
 
    @Override
-   public void endElement(String uri, String localName, String qName) throws SAXException {
-      setPropertyOnEndTag(qName);
+   public void endElement( String uri, String localName, String qName ) throws SAXException {
+      setPropertyOnEndTag( qName );
       clearTextBuffer();
    }
 
    @Override
-   protected void setPropertyOnEndTag(String qName) {
-      if ("return".equals(qName))
-	 state = ProvisioningState.fromValue(textToStringValue());
+   protected void setPropertyOnEndTag( String qName ) {
+      if ( "return".equals( qName ) )
+         state = ProvisioningState.fromValue( textToStringValue() );
    }
 
    @Override

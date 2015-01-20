@@ -14,36 +14,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.profitbricks.http.parser.image;
+package org.jclouds.profitbricks.http.parser.storage;
 
-import com.google.common.collect.Lists;
+import static org.testng.Assert.assertEquals;
 
-import java.util.List;
+import org.jclouds.http.functions.ParseSax;
+import org.jclouds.profitbricks.http.parser.BaseResponseHandlerTest;
+import org.testng.annotations.Test;
 
-import org.jclouds.profitbricks.domain.Image;
-import org.xml.sax.SAXException;
-
-public class ImageListResponseHandler extends BaseImageResponseHandler<List<Image>> {
-
-   private final List<Image> images;
-
-   ImageListResponseHandler() {
-      this.images = Lists.newArrayList();
-   }
+@Test( groups = "unit", testName = "StorageIdOnlyResponseHandlerTest" )
+public class StorageIdOnlyResponseHandlerTest extends BaseResponseHandlerTest<String> {
 
    @Override
-   public void endElement( String uri, String localName, String qName ) throws SAXException {
-      setPropertyOnEndTag( qName );
-      if ( "return".equals( qName ) ) {
-         images.add( builder.build() );
-         builder = Image.builder();
-      }
-      clearTextBuffer();
+   protected ParseSax<String> createParser() {
+      return factory.create( injector.getInstance( StorageIdOnlyResponseHandler.class ) );
    }
 
-   @Override
-   public List<Image> getResult() {
-      return images;
+   @Test
+   public void testParseResponseFromCreateStorage() {
+      ParseSax<String> parser = createParser();
+
+      String storageId = parser.parse( payloadFromResource( "/storage/storage-create.xml" ) );
+
+      assertEquals( "qswdefrg-qaws-qaws-defe-rgrgdsvcxbrh", storageId );
    }
 
 }

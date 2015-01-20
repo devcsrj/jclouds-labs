@@ -18,22 +18,18 @@ package org.jclouds.profitbricks.http.parser.datacenter;
 
 import java.util.List;
 
-import org.jclouds.date.DateCodecFactory;
 import org.jclouds.profitbricks.domain.DataCenter;
 import org.jclouds.profitbricks.domain.Location;
 import org.jclouds.profitbricks.domain.ProvisioningState;
 import org.xml.sax.SAXException;
 
 import com.google.common.collect.Lists;
-import com.google.inject.Inject;
 
 public class DataCenterListResponseHandler extends BaseDataCenterResponseHandler<List<DataCenter>> {
 
    private final List<DataCenter> dataCenters;
 
-   @Inject
-   DataCenterListResponseHandler(DateCodecFactory dateCodec) {
-      super(dateCodec);
+   DataCenterListResponseHandler() {
       this.dataCenters = Lists.newArrayList();
    }
 
@@ -43,22 +39,22 @@ public class DataCenterListResponseHandler extends BaseDataCenterResponseHandler
    }
 
    @Override
-   protected void setPropertyOnEndTag(String qName) {
-      super.setPropertyOnEndTag(qName);
-      if ("dataCenterName".equals(qName))
-	 builder.name(textToStringValue());
-      else if ("location".equals(qName))
-	 builder.location(Location.fromValue(textToStringValue()));
-      else if ("provisioningState".equals(qName))
-	 builder.state(ProvisioningState.fromValue(textToStringValue()));
+   protected void setPropertyOnEndTag( String qName ) {
+      super.setPropertyOnEndTag( qName );
+      if ( "dataCenterName".equals( qName ) )
+         builder.name( textToStringValue() );
+      else if ( "location".equals( qName ) )
+         builder.location( Location.fromValue( textToStringValue() ) );
+      else if ( "provisioningState".equals( qName ) )
+         builder.state( ProvisioningState.fromValue( textToStringValue() ) );
    }
 
    @Override
-   public void endElement(String uri, String localName, String qName) throws SAXException {
-      setPropertyOnEndTag(qName);
-      if ("return".equals(qName)) {
-	 dataCenters.add(builder.build());
-	 builder = DataCenter.builder();
+   public void endElement( String uri, String localName, String qName ) throws SAXException {
+      setPropertyOnEndTag( qName );
+      if ( "return".equals( qName ) ) {
+         dataCenters.add( builder.build() );
+         builder = DataCenter.builder();
       }
       clearTextBuffer();
    }

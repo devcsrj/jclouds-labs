@@ -14,45 +14,41 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.profitbricks.http.parser;
+package org.jclouds.profitbricks.http.parser.storage;
 
-import org.jclouds.profitbricks.domain.ServiceFault;
+import autovalue.shaded.com.google.common.common.collect.Lists;
+import com.google.inject.Inject;
+import java.util.List;
+import org.jclouds.date.DateCodecFactory;
+import org.jclouds.profitbricks.domain.Storage;
 import org.xml.sax.SAXException;
 
-public class ServiceFaultResponseHandler extends BaseProfitBricksResponseHandler<ServiceFault> {
+public class StorageListResponseHandler extends BaseStorageResponseHandler<List<Storage>> {
 
-   private final ServiceFault.Builder builder;
-   private boolean done = false;
+   private final List<Storage> storages;
 
-   ServiceFaultResponseHandler() {
-      this.builder = ServiceFault.builder();
-   }
-
-   @Override
-   protected void setPropertyOnEndTag( String qName ) {
-      if ( "faultCode".equals( qName ) )
-         builder.faultCode( ServiceFault.FaultCode.fromValue( textToStringValue() ) );
-      else if ( "httpCode".equals( qName ) )
-         builder.httpCode( textToIntValue() );
-      else if ( "message".equals( qName ) )
-         builder.message( textToStringValue() );
-      else if ( "requestId".equals( qName ) )
-         builder.requestId( textToIntValue() );
+   @Inject
+   StorageListResponseHandler( DateCodecFactory dateCodec ) {
+      super( dateCodec );
+      this.storages = Lists.newArrayList();
    }
 
    @Override
    public void endElement( String uri, String localName, String qName ) throws SAXException {
-      if ( done )
-         return;
       setPropertyOnEndTag( qName );
-      if ( "detail".equals( qName ) )
-         done = true;
+      if ( "return".equals( qName ) ) {
+         storages.add( builder
+                 .serverIds( serverIds )
+                 .build() );
+         builder = Storage.builder();
+         serverIds = Lists.newArrayList();
+      }
       clearTextBuffer();
    }
 
    @Override
-   public ServiceFault getResult() {
-      return builder.build();
+   public List<Storage> getResult() {
+      return storages;
    }
 
 }

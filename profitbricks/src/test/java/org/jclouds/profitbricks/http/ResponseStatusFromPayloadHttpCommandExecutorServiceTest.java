@@ -26,6 +26,7 @@ import org.jclouds.profitbricks.domain.Location;
 import org.jclouds.profitbricks.features.DataCenterApi;
 import org.jclouds.profitbricks.internal.BaseProfitBricksMockTest;
 import org.jclouds.rest.AuthorizationException;
+import org.jclouds.rest.InsufficientResourcesException;
 import org.jclouds.rest.ResourceNotFoundException;
 import org.testng.annotations.Test;
 
@@ -90,6 +91,27 @@ public class ResponseStatusFromPayloadHttpCommandExecutorServiceTest extends Bas
          fail("Request should have failed");
       } catch (Exception ex) {
          assertTrue(ex instanceof AuthorizationException, "Exception should be an AuthorizationException");
+      } finally {
+         pbApi.close();
+         server.shutdown();
+      }
+   }
+   
+   @Test
+   public void testServiceUnavailable() throws Exception {
+      MockWebServer server = mockWebServer();
+      for ( int i = 0; i <= 5; i++ ) { // jclouds retries 5 times
+         server.enqueue( new MockResponse().setResponseCode(503).setBody(payloadFromResource( "/fault-503.html" )));
+      }
+      
+      ProfitBricksApi pbApi = api(server.getUrl("/"));
+      DataCenterApi api = pbApi.dataCenterApi();
+      
+      try {
+         api.clearDataCenter("some-datacenter-id");
+         fail( "Request should have failed.");
+      } catch (Exception ex){
+         assertTrue(ex instanceof InsufficientResourcesException, "Exception should be InsufficientResourcesException");
       } finally {
          pbApi.close();
          server.shutdown();

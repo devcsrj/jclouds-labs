@@ -17,10 +17,15 @@
 package org.jclouds.profitbricks.domain;
 
 import org.jclouds.profitbricks.domain.internal.ServerCommonProperties;
+
 import com.google.auto.value.AutoValue;
+
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.util.Date;
+import java.util.List;
+
 import org.jclouds.javax.annotation.Nullable;
 
 @AutoValue
@@ -70,13 +75,16 @@ public abstract class Server implements ServerCommonProperties {
    @Nullable
    public abstract Date lastModificationTime();
 
-//   public abstract List<Storage> storages();
+   @Nullable
+   public abstract List<Storage> storages();
+
 //   public abstract List<Nic> storages();
    public static Server create( String id, String name, int cores, int ram, Boolean hasInternetAccess, ProvisioningState state,
-           Status status, OsType osType, AvailabilityZone availabilityZone, Date creationTime, Date lastModificationTime, Boolean isCpuHotPlug,
-           Boolean isRamHotPlug, Boolean isNicHotPlug, Boolean isNicHotUnPlug, Boolean isDiscVirtioHotPlug, Boolean isDiscVirtioHotUnPlug ) {
+           Status status, OsType osType, AvailabilityZone availabilityZone, Date creationTime, Date lastModificationTime,
+           List<Storage> storages, Boolean isCpuHotPlug, Boolean isRamHotPlug, Boolean isNicHotPlug, Boolean isNicHotUnPlug,
+           Boolean isDiscVirtioHotPlug, Boolean isDiscVirtioHotUnPlug ) {
       return new AutoValue_Server( isCpuHotPlug, isRamHotPlug, isNicHotPlug, isNicHotUnPlug, isDiscVirtioHotPlug, isDiscVirtioHotUnPlug,
-              cores, ram, id, name, hasInternetAccess, state, status, osType, availabilityZone, creationTime, lastModificationTime );
+              cores, ram, id, name, hasInternetAccess, state, status, osType, availabilityZone, creationTime, lastModificationTime, storages );
 
    }
 
@@ -161,6 +169,7 @@ public abstract class Server implements ServerCommonProperties {
       private Date creationTime;
       private Date lastModificationTime;
       private Boolean hasInternetAccess;
+      private List<Storage> storages;
 
       public DescribingBuilder id( String id ) {
          this.id = id;
@@ -202,10 +211,15 @@ public abstract class Server implements ServerCommonProperties {
          return this;
       }
 
+      public DescribingBuilder storages( List<Storage> storages ) {
+         this.storages = storages;
+         return this;
+      }
+
       @Override
       public Server build() {
          return Server.create( id, name, cores, ram, hasInternetAccess, state, status, osType, zone, creationTime,
-                 lastModificationTime, cpuHotPlug, ramHotPlug, nicHotPlug, nicHotUnPlug, discVirtioHotPlug, discVirtioHotUnPlug );
+                 lastModificationTime, storages, cpuHotPlug, ramHotPlug, nicHotPlug, nicHotUnPlug, discVirtioHotPlug, discVirtioHotUnPlug );
       }
 
       private DescribingBuilder fromServer( Server in ) {
@@ -213,7 +227,7 @@ public abstract class Server implements ServerCommonProperties {
                  .isCpuHotPlug( in.isCpuHotPlug() ).isDiscVirtioHotPlug( in.isDiscVirtioHotPlug() ).isDiscVirtioHotUnPlug( in.isDiscVirtioHotUnPlug() )
                  .isNicHotPlug( in.isNicHotPlug() ).isNicHotUnPlug( in.isNicHotUnPlug() ).isRamHotPlug( in.isRamHotPlug() )
                  .lastModificationTime( in.lastModificationTime() ).name( in.name() ).osType( in.osType() ).ram( in.ram() ).state( in.state() )
-                 .status( in.status() );
+                 .status( in.status() ).storages( in.storages() );
       }
 
       @Override

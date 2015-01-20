@@ -73,46 +73,53 @@ public class ResponseStatusFromPayloadHttpCommandExecutorService extends JavaUrl
    protected HttpResponse invoke(HttpURLConnection connection) throws IOException, InterruptedException {
       HttpResponse originalResponse = super.invoke(connection);
       HttpResponse.Builder<?> responseBuilder = originalResponse.toBuilder();
+      
+      switch ( originalResponse.getStatusCode() ) {
+         case 401: // HTML payload
+            responseBuilder.message( "This request requires authentication.");
+            break;
+         case 503: // HTML payload
+            responseBuilder.message( "The ProfitBricks team is currently carrying out maintenance work. For urgent matters, please contact: "
+                            + "support@profitbricks.com" );
+            break;
+         case 500: // SOAP-wrapped payload
+            if (hasPayload( originalResponse )){
+               // As we need to read the response body to determine if there are errors, but we may need to process the body
+               // again later in the response parsers if everything is OK, we buffer the body into an InputStream we can reset
+               InputStream in = null;
+               InputStream originalInputStream = originalResponse.getPayload().openStream();
+               if (originalInputStream instanceof ByteArrayInputStream)
+                  in = originalInputStream;
+               else
+                  try {
+                     in = new ByteArrayInputStream(ByteStreams.toByteArray(originalInputStream));
+                  } finally {
+                     closeQuietly(originalInputStream);
+                  }
 
-      if (hasPayload(originalResponse) && hasServerError(originalResponse)) {
-         // As we need to read the response body to determine if there are errors, but we may need to process the body
-         // again later in the response parsers if everything is OK, we buffer the body into an InputStream we can reset
-         InputStream in = null;
-         InputStream originalInputStream = originalResponse.getPayload().openStream();
-         if (originalInputStream instanceof ByteArrayInputStream)
-            in = originalInputStream;
-         else
-            try {
-               in = new ByteArrayInputStream(ByteStreams.toByteArray(originalInputStream));
-            } finally {
-               closeQuietly(originalInputStream);
+               try {
+                  ServiceFault fault = faultHandler.parse(in);
+                  if (fault != null)
+                     responseBuilder
+                           .statusCode(fault.httpCode())
+                           .message(fault.message());
+               } catch (Exception ex) {
+                  // ignore
+               } finally {
+                  // Reset the input stream and set the payload, so it can be read again
+                  // by the response and error parsers
+                  if (in != null) {
+                     in.reset();
+                     Payload payload = Payloads.newInputStreamPayload(in);
+                     contentMetadataCodec.fromHeaders(payload.getContentMetadata(), originalResponse.getHeaders());
+                     responseBuilder.payload(payload);
+                  }
+               }
             }
-
-         try {
-            ServiceFault fault = faultHandler.parse(in);
-            if (fault != null)
-               responseBuilder
-                       .statusCode(fault.httpCode())
-                       .message(fault.message());
-         } catch (Exception ex) {
-            // ignore
-         } finally {
-            // Reset the input stream and set the payload, so it can be read again
-            // by the response and error parsers
-            if (in != null) {
-               in.reset();
-               Payload payload = Payloads.newInputStreamPayload(in);
-               contentMetadataCodec.fromHeaders(payload.getContentMetadata(), originalResponse.getHeaders());
-               responseBuilder.payload(payload);
-            }
-         }
-      }
+            break;
+       }
 
       return responseBuilder.build();
-   }
-
-   private static boolean hasServerError(final HttpResponse response) {
-      return response.getStatusCode() >= 500;
    }
 
    private static boolean hasPayload(final HttpResponse response) {

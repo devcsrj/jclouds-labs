@@ -14,30 +14,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.profitbricks.http.parser;
+package org.jclouds.profitbricks.http.parser.storage;
 
-import org.jclouds.profitbricks.domain.ServiceFault;
+import com.google.inject.Inject;
+import org.jclouds.date.DateCodecFactory;
+import org.jclouds.profitbricks.domain.Storage;
 import org.xml.sax.SAXException;
 
-public class ServiceFaultResponseHandler extends BaseProfitBricksResponseHandler<ServiceFault> {
+public class StorageInfoResponseHandler extends BaseStorageResponseHandler<Storage> {
 
-   private final ServiceFault.Builder builder;
    private boolean done = false;
 
-   ServiceFaultResponseHandler() {
-      this.builder = ServiceFault.builder();
-   }
-
-   @Override
-   protected void setPropertyOnEndTag( String qName ) {
-      if ( "faultCode".equals( qName ) )
-         builder.faultCode( ServiceFault.FaultCode.fromValue( textToStringValue() ) );
-      else if ( "httpCode".equals( qName ) )
-         builder.httpCode( textToIntValue() );
-      else if ( "message".equals( qName ) )
-         builder.message( textToStringValue() );
-      else if ( "requestId".equals( qName ) )
-         builder.requestId( textToIntValue() );
+   @Inject
+   StorageInfoResponseHandler( DateCodecFactory dateCodec ) {
+      super( dateCodec );
    }
 
    @Override
@@ -45,13 +35,15 @@ public class ServiceFaultResponseHandler extends BaseProfitBricksResponseHandler
       if ( done )
          return;
       setPropertyOnEndTag( qName );
-      if ( "detail".equals( qName ) )
+      if ( "return".equals( qName ) ){
          done = true;
+         builder.serverIds( serverIds );
+      }
       clearTextBuffer();
    }
 
    @Override
-   public ServiceFault getResult() {
+   public Storage getResult() {
       return builder.build();
    }
 

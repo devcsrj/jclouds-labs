@@ -14,28 +14,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.profitbricks.http.parser.server;
+package org.jclouds.profitbricks.http.parser.storage;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
+import com.google.common.collect.ImmutableList;
+
+import java.util.List;
+
 import org.jclouds.date.DateCodec;
 import org.jclouds.date.DateCodecFactory;
 import org.jclouds.http.functions.ParseSax;
-import org.jclouds.profitbricks.domain.AvailabilityZone;
-import org.jclouds.profitbricks.domain.OsType;
 import org.jclouds.profitbricks.domain.ProvisioningState;
-import org.jclouds.profitbricks.domain.Server;
+import org.jclouds.profitbricks.domain.Storage;
 import org.jclouds.profitbricks.http.parser.BaseResponseHandlerTest;
 
 import org.testng.annotations.Test;
 
-@Test( groups = "unit", testName = "ServerInfoResponseHandlerTest" )
-public class ServerInfoResponseHandlerTest extends BaseResponseHandlerTest<Server> {
+@Test( groups = "unit", testName = "StorageListResponseHandlerTest" )
+public class StorageListResponseHandlerTest extends BaseResponseHandlerTest<List<Storage>> {
 
    @Override
-   protected ParseSax<Server> createParser() {
-      return factory.create( injector.getInstance( ServerInfoResponseHandler.class ) );
+   protected ParseSax<List<Storage>> createParser() {
+      return factory.create( injector.getInstance( StorageListResponseHandler.class ) );
    }
 
    protected DateCodecFactory createDateParser() {
@@ -43,33 +45,34 @@ public class ServerInfoResponseHandlerTest extends BaseResponseHandlerTest<Serve
    }
 
    @Test
-   public void testParseResponseFromGetServer() {
-      ParseSax<Server> parser = createParser();
+   public void testParseResponseFromGetAllStorages() {
+      ParseSax<List<Storage>> parser = createParser();
 
-      Server actual = parser.parse( payloadFromResource( "/server/server.xml" ) );
+      List<Storage> actual = parser.parse( payloadFromResource( "/storage/storages.xml" ) );
       assertNotNull( actual, "Parsed content returned null" );
 
       DateCodec dateParser = createDateParser().iso8601();
 
-      Server expected = Server.builder()
-              .id( "qwertyui-qwer-qwer-qwer-qwertyyuiiop" )
-              .name( "facebook-node" )
-              .cores( 4 )
-              .ram( 4096 )
-              .hasInternetAccess( true )
+      List<Storage> expected = ImmutableList.<Storage>of(
+              Storage.builder()
+              .id( "qswdefrg-qaws-qaws-defe-rgrgdsvcxbrh" )
+              .size( 40f )
+              .name( "hdd-1" )
               .state( ProvisioningState.AVAILABLE )
-              .status( Server.Status.RUNNING )
+              .serverIds( ImmutableList.<String>of( "qwertyui-qwer-qwer-qwer-qwertyyuiiop" ) )
               .creationTime( dateParser.toDate( "2014-12-04T07:09:23.138Z" ) )
-              .lastModificationTime( dateParser.toDate( "2014-12-12T03:08:35.629Z" ) )
-              .osType( OsType.LINUX )
-              .availabilityZone( AvailabilityZone.AUTO )
-              .isCpuHotPlug( true )
-              .isRamHotPlug( true )
-              .isNicHotPlug( true )
-              .isNicHotUnPlug( true )
-              .isDiscVirtioHotPlug( true )
-              .isDiscVirtioHotUnPlug( true )
-              .build();
+              .lastModificationTime( dateParser.toDate( "2014-12-12T03:14:48.316Z" ) )
+              .build(),
+              Storage.builder()
+              .id( "asfasfle-f23n-cu89-klfr-njkdsvwllkfa" )
+              .size( 100f )
+              .name( "hdd-2" )
+              .state( ProvisioningState.INPROCESS )
+              .serverIds( ImmutableList.<String>of( "asdfghjk-asdf-asdf-asdf-asdfghjklkjl" ) )
+              .creationTime( dateParser.toDate( "2014-11-04T07:09:23.138Z" ) )
+              .lastModificationTime( dateParser.toDate( "2014-11-12T03:14:48.316Z" ) )
+              .build()
+      );
 
       assertEquals( actual, expected );
    }

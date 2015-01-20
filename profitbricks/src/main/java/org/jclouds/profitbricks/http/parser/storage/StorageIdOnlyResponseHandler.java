@@ -14,45 +14,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.profitbricks.http.parser;
+package org.jclouds.profitbricks.http.parser.storage;
 
-import org.jclouds.profitbricks.domain.ServiceFault;
+import org.jclouds.profitbricks.http.parser.BaseProfitBricksResponseHandler;
 import org.xml.sax.SAXException;
 
-public class ServiceFaultResponseHandler extends BaseProfitBricksResponseHandler<ServiceFault> {
+public class StorageIdOnlyResponseHandler extends BaseProfitBricksResponseHandler<String> {
 
-   private final ServiceFault.Builder builder;
-   private boolean done = false;
+   private String storageId;
 
-   ServiceFaultResponseHandler() {
-      this.builder = ServiceFault.builder();
-   }
-
-   @Override
-   protected void setPropertyOnEndTag( String qName ) {
-      if ( "faultCode".equals( qName ) )
-         builder.faultCode( ServiceFault.FaultCode.fromValue( textToStringValue() ) );
-      else if ( "httpCode".equals( qName ) )
-         builder.httpCode( textToIntValue() );
-      else if ( "message".equals( qName ) )
-         builder.message( textToStringValue() );
-      else if ( "requestId".equals( qName ) )
-         builder.requestId( textToIntValue() );
+   StorageIdOnlyResponseHandler() {
    }
 
    @Override
    public void endElement( String uri, String localName, String qName ) throws SAXException {
-      if ( done )
-         return;
       setPropertyOnEndTag( qName );
-      if ( "detail".equals( qName ) )
-         done = true;
       clearTextBuffer();
    }
 
    @Override
-   public ServiceFault getResult() {
-      return builder.build();
+   protected void setPropertyOnEndTag( String qName ) {
+      if ( "storageId".equals( qName ) )
+         storageId = textToStringValue();
+   }
+
+   @Override
+   public String getResult() {
+      return storageId;
    }
 
 }
