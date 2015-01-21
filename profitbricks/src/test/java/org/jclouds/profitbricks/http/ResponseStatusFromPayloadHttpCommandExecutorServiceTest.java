@@ -23,7 +23,9 @@ import static org.testng.Assert.fail;
 import org.jclouds.profitbricks.ProfitBricksApi;
 import org.jclouds.profitbricks.domain.DataCenter;
 import org.jclouds.profitbricks.domain.Location;
+import org.jclouds.profitbricks.domain.Server;
 import org.jclouds.profitbricks.features.DataCenterApi;
+import org.jclouds.profitbricks.features.ServerApi;
 import org.jclouds.profitbricks.internal.BaseProfitBricksMockTest;
 import org.jclouds.rest.AuthorizationException;
 import org.jclouds.rest.InsufficientResourcesException;
@@ -39,6 +41,8 @@ import com.squareup.okhttp.mockwebserver.MockWebServer;
 @Test(groups = "unit", testName = "ResponseStatusFromPayloadHttpCommandExecutorServiceTest")
 public class ResponseStatusFromPayloadHttpCommandExecutorServiceTest extends BaseProfitBricksMockTest {
 
+   private final int MAX_RETRIES = 5; // FIXME use jclouds property
+   
    @Test
    public void testNotFound() throws Exception {
       MockWebServer server = mockWebServer();
@@ -98,11 +102,29 @@ public class ResponseStatusFromPayloadHttpCommandExecutorServiceTest extends Bas
    }
    
    @Test
-   public void testServiceUnavailable() throws Exception {
+   public void testOverLimitSettings() throws Exception {
       MockWebServer server = mockWebServer();
-      for ( int i = 0; i <= 5; i++ ) { // jclouds retries 5 times
-         server.enqueue( new MockResponse().setResponseCode(503).setBody(payloadFromResource( "/fault-503.html" )));
+      server.enqueue( new MockResponse().setResponseCode(503).setBody(payloadFromResource( "/fault-413.xml" )));
+      
+      ProfitBricksApi pbApi = api(server.getUrl("/"));
+      ServerApi api = pbApi.serverApi();
+      
+      try {
+         api.createServer( Server.Request.CreatePayload.create( "some-datacenter-id", "node1", 99, 12800) );
+         fail( "Request should have failed.");
+      } catch (Exception ex){
+         assertTrue(ex instanceof InsufficientResourcesException, "Exception should be InsufficientResourcesException");
+      } finally {
+         pbApi.close();
+         server.shutdown();
       }
+   }
+   
+   @Test
+   public void testServiceUnderMaintenance() throws Exception {
+      MockWebServer server = mockWebServer();
+      for ( int i = 0; i <= MAX_RETRIES; i++ )  // jclouds retries 5 times
+         server.enqueue( new MockResponse().setResponseCode(503).setBody(payloadFromResource( "/maintenance-503.html" )));
       
       ProfitBricksApi pbApi = api(server.getUrl("/"));
       DataCenterApi api = pbApi.dataCenterApi();
@@ -111,7 +133,7 @@ public class ResponseStatusFromPayloadHttpCommandExecutorServiceTest extends Bas
          api.clearDataCenter("some-datacenter-id");
          fail( "Request should have failed.");
       } catch (Exception ex){
-         assertTrue(ex instanceof InsufficientResourcesException, "Exception should be InsufficientResourcesException");
+         assertTrue(ex instanceof RuntimeException, "Exception should be RuntimeException");
       } finally {
          pbApi.close();
          server.shutdown();

@@ -46,7 +46,7 @@ public class ProfitBricksHttpErrorHandler implements HttpErrorHandler {
 	       exception = new IllegalArgumentException(response.getMessage(), exception);
 	       break;
 	    case 401:
-	       exception = new AuthorizationException(response.getMessage(), exception);
+	       exception = new AuthorizationException("This request requires authentication.", exception);
 	       break;
 	    case 402:
 	    case 409:
@@ -59,7 +59,11 @@ public class ProfitBricksHttpErrorHandler implements HttpErrorHandler {
 	       break;
 	    case 413:
 	    case 503:
-	       exception = new InsufficientResourcesException(response.getMessage(), exception);
+               // if nothing (default message was OK) was parsed from command executor, assume it was an 503 (Maintenance) html response.
+               if (response.getMessage().equals( "OK" )) 
+                  exception = new RuntimeException("The ProfitBricks team is currently carrying out maintenance." );
+               else
+                  exception = new InsufficientResourcesException(response.getMessage(), exception);
 	       break;
 	 }
       } finally {
