@@ -46,7 +46,7 @@ public class CreateStorageRequestBinderTest {
            + "         <request>\n"
            + "            <dataCenterId>aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee</dataCenterId>\n"
            + "            <storageName>hdd-1</storageName>\n"
-           + "            <size>60.0</size>\n"
+           + "            <size>60</size>\n"
            + "            <mountImageId>5ad99c9e-9166-11e4-9d74-52540066fee9</mountImageId>\n"
            + "            <profitBricksImagePassword>qqqqqqqqq</profitBricksImagePassword>\n"
            + "         </request>\n"

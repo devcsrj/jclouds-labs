@@ -185,7 +185,7 @@ public class StorageApiMockTest extends BaseProfitBricksMockTest {
 
       String content = "<ws:createStorage><request>"
               + "<dataCenterId>" + dataCenterId + "</dataCenterId>"
-              + "<storageName>hdd-1</storageName>" + "<size>80.0</size>"
+              + "<storageName>hdd-1</storageName>" + "<size>80</size>"
               + "<mountImageId>" + imageId + "</mountImageId>"
               + "<profitBricksImagePassword>qqqqqqqqq</profitBricksImagePassword>"
               + "</request></ws:createStorage>";
@@ -220,7 +220,7 @@ public class StorageApiMockTest extends BaseProfitBricksMockTest {
 
       String content = "<ws:updateStorage><request>"
               + "<storageId>" + storageId + "</storageId>"
-              + "<size>20.0</size><storageName>hdd-2</storageName>"
+              + "<size>20</size><storageName>hdd-2</storageName>"
               + "<mountImageId>" + imageId + "</mountImageId>"
               + "</request></ws:updateStorage>";
       try {

@@ -35,7 +35,7 @@ public class UpdateStorageRequestBinder extends BaseProfitBricksRequestBinder<St
               .append( "<ws:updateStorage>" )
               .append( "<request>" )
               .append( format( "<storageId>%s</storageId>", payload.id() ) )
-              .append( formatIfNotEmpty( "<size>%s</size>", payload.size() ) )
+              .append( formatIfNotEmpty( "<size>%.0f</size>", payload.size() ) )
               .append( formatIfNotEmpty( "<storageName>%s</storageName>", payload.name() ) )
               .append( formatIfNotEmpty( "<mountImageId>%s</mountImageId>", payload.mountImageId() ) )
               .append( "</request>" )

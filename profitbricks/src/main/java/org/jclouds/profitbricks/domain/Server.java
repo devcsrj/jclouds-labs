@@ -78,7 +78,7 @@ public abstract class Server implements ServerCommonProperties {
    @Nullable
    public abstract List<Storage> storages();
 
-//   public abstract List<Nic> storages();
+//   public abstract List<Nic> nics();
    public static Server create( String id, String name, int cores, int ram, Boolean hasInternetAccess, ProvisioningState state,
            Status status, OsType osType, AvailabilityZone availabilityZone, Date creationTime, Date lastModificationTime,
            List<Storage> storages, Boolean isCpuHotPlug, Boolean isRamHotPlug, Boolean isNicHotPlug, Boolean isNicHotUnPlug,

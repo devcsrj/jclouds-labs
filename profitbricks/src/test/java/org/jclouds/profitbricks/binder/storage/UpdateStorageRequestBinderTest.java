@@ -44,7 +44,7 @@ public class UpdateStorageRequestBinderTest {
            = ( "      <ws:updateStorage>\n"
            + "         <request>\n"
            + "            <storageId>pppppppp-llkl-kkjk-fhgh-vnmegrdgdsgr</storageId>\n"
-           + "            <size>100.0</size>\n"
+           + "            <size>100</size>\n"
            + "            <storageName>hdd-2</storageName>\n"
            + "            <mountImageId>5f3cac96-915f-11e4-9d74-52540066fee9</mountImageId>\n"
            + "         </request>\n"
