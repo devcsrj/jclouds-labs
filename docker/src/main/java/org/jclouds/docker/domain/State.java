@@ -32,11 +32,16 @@ public abstract class State {
 
    public abstract String finishedAt();
 
-   public abstract boolean ghost();
+   public abstract boolean paused();
 
-   @SerializedNames({ "Pid", "Running", "ExitCode", "StartedAt", "FinishedAt", "Ghost" })
+   public abstract boolean restarting();
+
+   State() {
+   }
+
+   @SerializedNames({ "Pid", "Running", "ExitCode", "StartedAt", "FinishedAt", "Paused", "Restarting" })
    public static State create(int pid, boolean running, int exitCode, String startedAt, String finishedAt,
-         boolean ghost) {
-      return new AutoValue_State(pid, running, exitCode, startedAt, finishedAt, ghost);
+         boolean paused, boolean restarting) {
+      return new AutoValue_State(pid, running, exitCode, startedAt, finishedAt, paused, restarting);
    }
 }

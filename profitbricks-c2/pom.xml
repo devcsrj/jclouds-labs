@@ -28,12 +28,12 @@
 
     <!-- TODO: when out of labs, switch to org.apache.jclouds.provider -->
     <groupId>org.apache.jclouds.labs</groupId>
-    <artifactId>profitbricks</artifactId>
+    <artifactId>profitbricks-c2</artifactId>
     <name>jclouds ProfitBricks Provider</name>
     <description>ComputeService binding to the ProfitBricks API</description>
     <packaging>bundle</packaging>
     <properties>
-        <test.profitbricks-c2.endpoint>https://api.profitbricks-c2.com/1.3</test.profitbricks-c2.endpoint>
+        <test.profitbricks-c2.endpoint>https://api.profitbricks.com/1.3</test.profitbricks-c2.endpoint>
         <test.profitbricks-c2.api-version>1.3</test.profitbricks-c2.api-version>
         <test.profitbricks-c2.identity>FIXME</test.profitbricks-c2.identity>
         <test.profitbricks-c2.credential>FIXME</test.profitbricks-c2.credential>
