@@ -32,13 +32,13 @@ public class CreateSnapshotRequestBinder extends BaseProfitBricksRequestBinder<S
 
     @Override
     protected String createPayload(Snapshot.Request.CreatePayload payload) {
-        requestBuilder.append( "<ws:createStorage>" )
+        requestBuilder.append( "<ws:createSnapshot>" )
                 .append("<request>")
                 .append(format("<storageId>%s</storageId>", payload.storageId()))
                 .append(format("<description>%s</description>", payload.description()))
                 .append(format("<snapshotName>%s</snapshotName>", payload.snapshotName()))
                 .append("</request>")
-                .append("</ws:createStorage>");
+                .append("</ws:createSnapshot>");
         return requestBuilder.toString();
     }
 }

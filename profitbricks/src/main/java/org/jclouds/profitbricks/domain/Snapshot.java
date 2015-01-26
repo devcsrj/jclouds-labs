@@ -43,9 +43,18 @@ public abstract class Snapshot {
     @Nullable
     public abstract Date lastModificationTime();
 
+    @Nullable
     public abstract ProvisioningState state();
 
     public abstract Location location();
+
+    public static Snapshot create(String id, String name, float size, boolean bootable, String description, OsType osType, boolean cpuHotPlug, boolean cpuHotUnPlug,
+                                  boolean discVirtioHotPlug, boolean discVirtioHotUnPlug, boolean ramHotPlug, boolean ramHotUnPlug,
+                                  boolean nicHotPlug, boolean nicHotUnPlug, Date creationTime, Date lastModificationTime, ProvisioningState state, Location location) {
+        return new AutoValue_Snapshot(id, name, size, bootable, description, osType, cpuHotPlug, cpuHotUnPlug,
+                discVirtioHotPlug, discVirtioHotUnPlug, ramHotPlug, ramHotUnPlug,
+                nicHotPlug, nicHotUnPlug, creationTime, lastModificationTime, state, location);
+    }
 
     public static Builder builder() {
         return new Builder();
@@ -161,13 +170,6 @@ public abstract class Snapshot {
             this.location = location;
             return this;
         }
-        public static Snapshot create(String id, String name, float size, boolean bootable, String description, OsType osType, boolean cpuHotPlug, boolean cpuHotUnPlug,
-                                      boolean discVirtioHotPlug, boolean discVirtioHotUnPlug, boolean ramHotPlug, boolean ramHotUnPlug,
-                                      boolean nicHotPlug, boolean nicHotUnPlug, Date creationTime, Date lastModificationTime, ProvisioningState state, Location location) {
-            return new AutoValue_Snapshot(id, name, size, bootable, description, osType, cpuHotPlug, cpuHotUnPlug,
-                    discVirtioHotPlug, discVirtioHotUnPlug, ramHotPlug, ramHotUnPlug,
-                    nicHotPlug, nicHotUnPlug, creationTime, lastModificationTime, state, location);
-        }
 
         private Builder fromSnapshot(Snapshot in) {
             return this.id(in.id()).name(in.name()).size(in.size()).creationTime(in.creationTime())
@@ -175,6 +177,10 @@ public abstract class Snapshot {
                     .cpuHotPlug(in.cpuHotPlug()).cpuHotUnPlug(in.cpuHotUnPlug()).discVirtioHotPlug(in.discVirtioHotPlug())
                     .discVirtioHotUnPlug(in.discVirtioHotUnPlug()).ramHotPlug(in.ramHotPlug()).ramHotUnPlug(in.ramHotUnPlug())
                     .nicHotPlug(in.nicHotPlug()).nicHotUnPlug(in.nicHotUnPlug());
+        }
+
+        public Snapshot build() {
+        return Snapshot.create(id,description,size,bootable,description,osType,cpuHotPlug,cpuHotUnPlug,discVirtioHotPlug,discVirtioHotUnPlug,ramHotPlug,ramHotUnPlug,nicHotPlug,nicHotUnPlug,creationTime,lastModificationTime,state,location);
         }
     }
 

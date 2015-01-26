@@ -34,6 +34,8 @@ import org.jclouds.profitbricks.domain.Snapshot;
 import org.jclouds.profitbricks.domain.Storage;
 import org.jclouds.profitbricks.http.filters.ProfitBricksSoapMessageEnvelope;
 import org.jclouds.profitbricks.http.parser.RequestIdOnlyResponseHandler;
+import org.jclouds.profitbricks.http.parser.snapshot.SnapshotIdOnlyResponseHandler;
+import org.jclouds.profitbricks.http.parser.snapshot.SnapshotListResponseHandler;
 import org.jclouds.profitbricks.http.parser.storage.StorageIdOnlyResponseHandler;
 import org.jclouds.profitbricks.http.parser.storage.StorageInfoResponseHandler;
 import org.jclouds.profitbricks.http.parser.storage.StorageListResponseHandler;
@@ -52,7 +54,15 @@ public interface SnapshotApi {
     @POST
     @Named( "snapshot:getall" )
     @Payload( "<ws:getAllSnapshots/>" )
-    @XMLResponseParser( StorageListResponseHandler.class )
+    @XMLResponseParser(SnapshotListResponseHandler.class )
     @Fallback( Fallbacks.EmptyListOnNotFoundOr404.class )
     List<Snapshot> getAllSnapshots();
+
+    @POST
+    @Named( "snapshot:get" )
+    @Payload( "<ws:getSnapshot><snapshotId>{snapshotId}</snapshotId></ws:getSnapshot>" )
+    @XMLResponseParser(SnapshotIdOnlyResponseHandler.class )
+    @Fallback( Fallbacks.NullOnNotFoundOr404.class )
+    Snapshot getSnapshot(@PayloadParam("snapshotId") String identifier);
 }
+
