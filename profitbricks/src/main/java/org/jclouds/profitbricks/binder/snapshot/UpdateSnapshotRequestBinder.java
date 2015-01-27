@@ -8,8 +8,7 @@ public class UpdateSnapshotRequestBinder extends BaseProfitBricksRequestBinder <
 
     protected final StringBuilder requestBuilder;
 
-    protected UpdateSnapshotRequestBinder()
-    {
+    protected UpdateSnapshotRequestBinder(){
         super("snapshot");
         this.requestBuilder = new StringBuilder(128);
     }

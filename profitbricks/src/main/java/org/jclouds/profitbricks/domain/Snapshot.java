@@ -198,6 +198,10 @@ public abstract class Snapshot {
             return new UpdatePayload.Builder();
         }
 
+        public static RollbackPayload.Builder rollbackBuilder() {
+            return new RollbackPayload.Builder();
+        }
+
         @AutoValue
         public abstract static class CreatePayload {
             public abstract String storageId();
@@ -288,9 +292,13 @@ public abstract class Snapshot {
                 private boolean ramHotplug;
 
                 private boolean ramHotunplug;
+
                 private boolean nicHotplug;
+
                 private boolean nicHotunplug;
+
                 private boolean discVirtioHotplug;
+
                 private boolean discVirtioHotunplug;
 
                 public Builder snapshotId(String snapshotId) {
@@ -363,6 +371,37 @@ public abstract class Snapshot {
                 }
             }
 
+        }
+
+        @AutoValue
+        public abstract static class RollbackPayload{
+
+            public abstract String snapshotId();
+            public abstract  String storageId();
+
+           public static RollbackPayload create(String snapshotId, String storageId){
+               return  new AutoValue_Snapshot_Request_RollbackPayload(snapshotId,storageId);
+           }
+
+            public static class Builder{
+                private String snapshotId;
+
+                private String storageId;
+
+                public Builder snapshotId(String snapshotId) {
+                    this.snapshotId = snapshotId;
+                    return this;
+                }
+
+                public Builder storageId(String storageId) {
+                    this.storageId = storageId;
+                    return this;
+                }
+
+                public RollbackPayload build() {
+                    return RollbackPayload.create(snapshotId, storageId);
+                }
+            }
         }
     }
 }

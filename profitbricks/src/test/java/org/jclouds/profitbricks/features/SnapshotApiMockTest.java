@@ -211,4 +211,30 @@ public class SnapshotApiMockTest extends BaseProfitBricksMockTest {
             server.shutdown();
         }
     }
+
+    @Test
+    public void testRollbackSnapshot() throws Exception{
+        MockWebServer server = mockWebServer();
+        server.enqueue(new MockResponse().setBody(payloadFromResource("/snapshot/snapshot-rollback.xml")));
+
+        ProfitBricksApi pbApi = api(server.getUrl(rootUrl));
+        SnapshotApi api = pbApi.snapshotApi();
+
+        String snapshotId ="qswdefrg-qaws-qaws-defe-rgrgdsvcxbrh";
+        String storageId = "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee";
+
+        String content =    "<ws:rollbackSnapshot><request><snapshotId>"+snapshotId+"</snapshotId><storageId>"+storageId+"</storageId></request></ws:rollbackSnapshot>";
+        try{
+           boolean result = api.rollbackSnapshot(Snapshot.Request.rollbackBuilder()
+                    .snapshotId(snapshotId)
+                    .storageId(storageId)
+                    .build());
+            assertRequestHasCommonProperties(server.takeRequest(), content);
+            assertTrue(result);
+        }
+        finally {
+            pbApi.close();
+            server.shutdown();
+        }
+    }
 }
