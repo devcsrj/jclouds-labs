@@ -27,18 +27,12 @@ import javax.ws.rs.core.MediaType;
 
 import org.jclouds.Fallbacks;
 import org.jclouds.http.filters.BasicAuthentication;
-import org.jclouds.profitbricks.binder.storage.ConnectStorageToServerRequestBinder;
-import org.jclouds.profitbricks.binder.storage.CreateStorageRequestBinder;
-import org.jclouds.profitbricks.binder.storage.UpdateStorageRequestBinder;
+import org.jclouds.profitbricks.binder.snapshot.CreateSnapshotRequestBinder;
+import org.jclouds.profitbricks.binder.snapshot.UpdateSnapshotRequestBinder;
 import org.jclouds.profitbricks.domain.Snapshot;
-import org.jclouds.profitbricks.domain.Storage;
 import org.jclouds.profitbricks.http.filters.ProfitBricksSoapMessageEnvelope;
-import org.jclouds.profitbricks.http.parser.RequestIdOnlyResponseHandler;
-import org.jclouds.profitbricks.http.parser.snapshot.SnapshotIdOnlyResponseHandler;
+import org.jclouds.profitbricks.http.parser.snapshot.SnapshotResponseHandler;
 import org.jclouds.profitbricks.http.parser.snapshot.SnapshotListResponseHandler;
-import org.jclouds.profitbricks.http.parser.storage.StorageIdOnlyResponseHandler;
-import org.jclouds.profitbricks.http.parser.storage.StorageInfoResponseHandler;
-import org.jclouds.profitbricks.http.parser.storage.StorageListResponseHandler;
 import org.jclouds.rest.annotations.Fallback;
 import org.jclouds.rest.annotations.MapBinder;
 import org.jclouds.rest.annotations.Payload;
@@ -46,23 +40,42 @@ import org.jclouds.rest.annotations.PayloadParam;
 import org.jclouds.rest.annotations.RequestFilters;
 import org.jclouds.rest.annotations.XMLResponseParser;
 
-@RequestFilters( { BasicAuthentication.class, ProfitBricksSoapMessageEnvelope.class } )
-@Consumes( MediaType.TEXT_XML )
-@Produces( MediaType.TEXT_XML )
+@RequestFilters({BasicAuthentication.class, ProfitBricksSoapMessageEnvelope.class})
+@Consumes(MediaType.TEXT_XML)
+@Produces(MediaType.TEXT_XML)
 public interface SnapshotApi {
 
     @POST
-    @Named( "snapshot:getall" )
-    @Payload( "<ws:getAllSnapshots/>" )
-    @XMLResponseParser(SnapshotListResponseHandler.class )
-    @Fallback( Fallbacks.EmptyListOnNotFoundOr404.class )
+    @Named("snapshot:getall")
+    @Payload("<ws:getAllSnapshots/>")
+    @XMLResponseParser(SnapshotListResponseHandler.class)
+    @Fallback(Fallbacks.EmptyListOnNotFoundOr404.class)
     List<Snapshot> getAllSnapshots();
 
     @POST
-    @Named( "snapshot:get" )
-    @Payload( "<ws:getSnapshot><snapshotId>{snapshotId}</snapshotId></ws:getSnapshot>" )
-    @XMLResponseParser(SnapshotIdOnlyResponseHandler.class )
-    @Fallback( Fallbacks.NullOnNotFoundOr404.class )
+    @Named("snapshot:get")
+    @Payload("<ws:getSnapshot><snapshotId>{snapshotId}</snapshotId></ws:getSnapshot>")
+    @XMLResponseParser(SnapshotResponseHandler.class)
+    @Fallback(Fallbacks.NullOnNotFoundOr404.class)
     Snapshot getSnapshot(@PayloadParam("snapshotId") String identifier);
+
+    @POST
+    @Named("snapshot:create")
+    @MapBinder(CreateSnapshotRequestBinder.class)
+    @XMLResponseParser(SnapshotResponseHandler.class)
+    Snapshot createSnapshot(@PayloadParam("snapshot") Snapshot.Request.CreatePayload payload);
+
+
+    @POST
+    @Named("snapshot:update")
+    @MapBinder(UpdateSnapshotRequestBinder.class)
+    @XMLResponseParser(SnapshotResponseHandler.class)
+    Snapshot updateSnapshot(@PayloadParam("snapshot") Snapshot.Request.UpdatePayload payload);
+
+    @POST
+    @Named( "snapshot:delete" )
+    @Payload( "<ws:deleteSnapshot><snapshotId>{id}</snapshotId></ws:deleteSnapshot>" )
+    @Fallback( Fallbacks.FalseOnNotFoundOr404.class )
+    boolean deleteSnapshot( @PayloadParam( "id" ) String id );
 }
 

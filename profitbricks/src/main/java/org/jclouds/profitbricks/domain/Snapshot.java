@@ -8,7 +8,8 @@ import java.util.List;
 
 @AutoValue
 public abstract class Snapshot {
-    public abstract String id();
+    @Nullable
+    public abstract String snapshotId();
 
     @Nullable
     public abstract String name();
@@ -17,8 +18,10 @@ public abstract class Snapshot {
 
     public abstract boolean bootable();
 
+    @Nullable
     public abstract String description();
 
+    @Nullable
     public abstract OsType osType();
 
     public abstract boolean cpuHotPlug();
@@ -46,6 +49,7 @@ public abstract class Snapshot {
     @Nullable
     public abstract ProvisioningState state();
 
+    @Nullable
     public abstract Location location();
 
     public static Snapshot create(String id, String name, float size, boolean bootable, String description, OsType osType, boolean cpuHotPlug, boolean cpuHotUnPlug,
@@ -172,7 +176,7 @@ public abstract class Snapshot {
         }
 
         private Builder fromSnapshot(Snapshot in) {
-            return this.id(in.id()).name(in.name()).size(in.size()).creationTime(in.creationTime())
+            return this.id(in.snapshotId()).name(in.name()).size(in.size()).creationTime(in.creationTime())
                     .lastModificationTime(in.lastModificationTime()).state(in.state()).bootable(in.bootable()).description(in.description())
                     .cpuHotPlug(in.cpuHotPlug()).cpuHotUnPlug(in.cpuHotUnPlug()).discVirtioHotPlug(in.discVirtioHotPlug())
                     .discVirtioHotUnPlug(in.discVirtioHotUnPlug()).ramHotPlug(in.ramHotPlug()).ramHotUnPlug(in.ramHotUnPlug())
@@ -180,7 +184,7 @@ public abstract class Snapshot {
         }
 
         public Snapshot build() {
-        return Snapshot.create(id,description,size,bootable,description,osType,cpuHotPlug,cpuHotUnPlug,discVirtioHotPlug,discVirtioHotUnPlug,ramHotPlug,ramHotUnPlug,nicHotPlug,nicHotUnPlug,creationTime,lastModificationTime,state,location);
+            return Snapshot.create(id, description, size, bootable, description, osType, cpuHotPlug, cpuHotUnPlug, discVirtioHotPlug, discVirtioHotUnPlug, ramHotPlug, ramHotUnPlug, nicHotPlug, nicHotUnPlug, creationTime, lastModificationTime, state, location);
         }
     }
 
@@ -197,23 +201,168 @@ public abstract class Snapshot {
         @AutoValue
         public abstract static class CreatePayload {
             public abstract String storageId();
+
             public abstract String description();
+
             public abstract String snapshotName();
 
-            public static CreatePayload create(String storageId, String description, String snapshotName)
-            {
-                return new AutoValue_Snapshot_Request_CreatePayload(storageId,description,snapshotName);
+            public static CreatePayload create(String storageId, String description, String snapshotName) {
+                return new AutoValue_Snapshot_Request_CreatePayload(storageId, description, snapshotName);
             }
 
             public static class Builder {
+                private String storageId;
+                private String description;
+                private String snapshotName;
 
+                public Builder storageId(String storageId) {
+                    this.storageId = storageId;
+                    return this;
+                }
+
+                public Builder description(String description) {
+                    this.description = description;
+                    return this;
+                }
+
+                public Builder snapshotName(String snapshotName) {
+                    this.snapshotName = snapshotName;
+                    return this;
+                }
+
+                public CreatePayload build() {
+                    return CreatePayload.create(storageId, description, snapshotName);
+                }
             }
         }
 
+        @AutoValue
         public abstract static class UpdatePayload {
-            public static class Builder {
 
+            public abstract String snapshotId();
+
+            public abstract String description();
+
+            public abstract String snapshotName();
+
+            public abstract boolean bootable();
+
+            @Nullable
+             public abstract OsType osType();
+
+            public abstract boolean cpuHotplug();
+
+            public abstract boolean cpuHotunplug();
+
+            public abstract boolean ramHotplug();
+
+            public abstract boolean ramHotunplug();
+
+            public abstract boolean nicHotplug();
+
+            public abstract boolean nicHotunplug();
+
+            public abstract boolean discVirtioHotplug();
+
+            public abstract boolean discVirtioHotunplug();
+
+            public static UpdatePayload create(String snapshotId, String description, String snapshotName, boolean bootable, OsType osType, boolean cpuHotplug, boolean cpuHotunplug, boolean ramHotplug, boolean ramHotunplug, boolean nicHotplug, boolean nicHotunplug, boolean discVirtioHotplug, boolean discVirtioHotunplug) {
+                return new AutoValue_Snapshot_Request_UpdatePayload(snapshotId, description, snapshotName, bootable, osType, cpuHotplug, cpuHotunplug, ramHotplug, ramHotunplug, nicHotplug, nicHotunplug, discVirtioHotplug, discVirtioHotunplug);
             }
+
+            public static class Builder {
+                private String snapshotId;
+
+                private String description;
+
+                private String snapshotName;
+
+                private boolean bootable;
+
+                private OsType osType;
+
+                private boolean cpuHotplug;
+
+                private boolean cpuHotunplug;
+
+                private boolean ramHotplug;
+
+                private boolean ramHotunplug;
+                private boolean nicHotplug;
+                private boolean nicHotunplug;
+                private boolean discVirtioHotplug;
+                private boolean discVirtioHotunplug;
+
+                public Builder snapshotId(String snapshotId) {
+                    this.snapshotId = snapshotId;
+                    return this;
+                }
+
+                public Builder description(String description) {
+                    this.description = description;
+                    return this;
+                }
+
+                public Builder snapshotName(String snapshotName) {
+                    this.snapshotName = snapshotName;
+                    return this;
+                }
+
+                public Builder bootable(boolean bootable) {
+                    this.bootable = bootable;
+                    return this;
+                }
+
+                public Builder osType(OsType osType) {
+                    this.osType = osType;
+                    return this;
+                }
+
+                public Builder cpuHotplug(boolean cpuHotplug) {
+                    this.cpuHotplug = cpuHotplug;
+                    return this;
+                }
+
+                public Builder cpuHotunplug(boolean cpuHotunplug) {
+                    this.cpuHotunplug = cpuHotunplug;
+                    return this;
+                }
+
+                public Builder ramHotplug(boolean ramHotplug) {
+                    this.ramHotplug = ramHotplug;
+                    return this;
+                }
+
+                public Builder ramHotunplug(boolean ramHotunplug) {
+                    this.ramHotunplug = ramHotunplug;
+                    return this;
+                }
+
+                public Builder nicHotplug(boolean nicHotplug) {
+                    this.nicHotplug = nicHotplug;
+                    return this;
+                }
+
+                public Builder nicHotunplug(boolean nicHotunplug) {
+                    this.nicHotunplug = nicHotunplug;
+                    return this;
+                }
+
+                public Builder discVirtioHotplug(boolean discVirtioHotplug) {
+                    this.discVirtioHotplug = discVirtioHotplug;
+                    return this;
+                }
+
+                public Builder discVirtioHotunplug(boolean discVirtioHotunplug) {
+                    this.discVirtioHotunplug = discVirtioHotunplug;
+                    return this;
+                }
+
+                public UpdatePayload build() {
+                    return UpdatePayload.create(snapshotId, description, snapshotName, bootable, osType, cpuHotplug, cpuHotunplug, ramHotplug, ramHotunplug, nicHotplug, nicHotunplug, discVirtioHotplug, discVirtioHotunplug);
+                }
+            }
+
         }
     }
 }

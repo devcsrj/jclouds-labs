@@ -16,22 +16,17 @@
  */
 package org.jclouds.profitbricks.features;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertNull;
-import static org.testng.Assert.assertTrue;
-import static org.testng.Assert.fail;
-
 import com.squareup.okhttp.mockwebserver.MockResponse;
 import com.squareup.okhttp.mockwebserver.MockWebServer;
 import org.jclouds.profitbricks.ProfitBricksApi;
-import org.jclouds.profitbricks.domain.DataCenter;
+import org.jclouds.profitbricks.domain.OsType;
 import org.jclouds.profitbricks.domain.Snapshot;
 import org.jclouds.profitbricks.internal.BaseProfitBricksMockTest;
 import org.testng.annotations.Test;
 
 import java.util.List;
+
+import static org.testng.Assert.*;
 
 /**
  * Mock tests for the {@link org.jclouds.profitbricks.features.DataCenterApi} class
@@ -40,7 +35,7 @@ import java.util.List;
 public class SnapshotApiMockTest extends BaseProfitBricksMockTest {
 
     @Test
-    public void testGetAllSnapshots() throws Exception{
+    public void testGetAllSnapshots() throws Exception {
         MockWebServer server = mockWebServer();
         server.enqueue(new MockResponse().setBody(payloadFromResource("/snapshot/snapshots.xml")));
 
@@ -67,7 +62,7 @@ public class SnapshotApiMockTest extends BaseProfitBricksMockTest {
         SnapshotApi api = pbApi.snapshotApi();
 
         try {
-            List<Snapshot> snapshots= api.getAllSnapshots();
+            List<Snapshot> snapshots = api.getAllSnapshots();
             assertRequestHasCommonProperties(server.takeRequest());
             assertTrue(snapshots.isEmpty());
         } finally {
@@ -77,7 +72,7 @@ public class SnapshotApiMockTest extends BaseProfitBricksMockTest {
     }
 
     @Test
-    public void testGetSnapshot() throws Exception{
+    public void testGetSnapshot() throws Exception {
         MockWebServer server = mockWebServer();
         server.enqueue(new MockResponse().setBody(payloadFromResource("/snapshot/snapshot.xml")));
 
@@ -86,14 +81,14 @@ public class SnapshotApiMockTest extends BaseProfitBricksMockTest {
 
         String id = "qswdefrg-qaws-qaws-defe-rgrgdsvcxbrh";
 
-        String content = "<ws:getSnapshot><snapshotId>"+id+"</snapshotId></ws:getSnapshot>";
+        String content = "<ws:getSnapshot><snapshotId>" + id + "</snapshotId></ws:getSnapshot>";
 
-        try{
+        try {
             Snapshot snapshot = api.getSnapshot(id);
-            assertRequestHasCommonProperties(server.takeRequest(),content);
+            assertRequestHasCommonProperties(server.takeRequest(), content);
             assertNotNull(snapshot);
-            assertEquals(snapshot.id(),id);
-        }finally {
+            assertEquals(snapshot.snapshotId(), id);
+        } finally {
             pbApi.close();
             server.shutdown();
         }
@@ -112,6 +107,105 @@ public class SnapshotApiMockTest extends BaseProfitBricksMockTest {
             Snapshot snapshot = api.getSnapshot(id);
             assertRequestHasCommonProperties(server.takeRequest());
             assertNull(snapshot);
+        } finally {
+            pbApi.close();
+            server.shutdown();
+        }
+    }
+
+    @Test
+    public void testCreateSnapshot() throws Exception {
+        MockWebServer server = mockWebServer();
+        server.enqueue(new MockResponse().setBody(payloadFromResource("/snapshot/snapshot-create.xml")));
+
+        ProfitBricksApi pbApi = api(server.getUrl(rootUrl));
+        SnapshotApi api = pbApi.snapshotApi();
+
+        String storageId = "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee";
+
+        String content = "<ws:createSnapshot>" +
+                "<request>" +
+                "<storageId>" + storageId + "</storageId>" +
+                "<description>description</description>" +
+                "<snapshotName>snapshot-name</snapshotName>" +
+                "</request>" +
+                "</ws:createSnapshot>";
+
+        try {
+            Snapshot snapshot = api.createSnapshot(
+                    Snapshot.Request.creatingBuilder()
+                            .storageId(storageId)
+                            .description("description")
+                            .snapshotName("snapshot-name")
+                            .build());
+            assertRequestHasCommonProperties(server.takeRequest(), content);
+            assertNotNull(snapshot.snapshotId());
+            assertEquals(snapshot.snapshotId(), "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee");
+
+        } finally {
+            pbApi.close();
+            server.shutdown();
+        }
+    }
+
+    @Test
+    public void testUpdateSnapshot() throws Exception {
+        MockWebServer server = mockWebServer();
+        server.enqueue(new MockResponse().setBody(payloadFromResource("/snapshot/snapshot-update.xml")));
+
+        ProfitBricksApi pbApi = api(server.getUrl(rootUrl));
+        SnapshotApi api = pbApi.snapshotApi();
+
+        String snapshotId = "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee";
+
+        String content = "<ws:updateSnapshot>" +
+                "<request>" +
+                "<snapshotId>" + snapshotId + "</snapshotId>" +
+                "<description>description</description>" +
+                "<snapshotName>snapshot-name</snapshotName>" +
+                "<bootable>false</bootable>" +
+                "<osType>LINUX</osType>" +
+                "<cpuHotPlug>false</cpuHotPlug>" +
+                "<cpuHotUnPlug>false</cpuHotUnPlug>" +
+                "<ramHotPlug>false</ramHotPlug>" +
+                "<ramHotUnPlug>false</ramHotUnPlug>" +
+                "<nicHotPlug>false</nicHotPlug>" +
+                "<nicHotUnPlug>false</nicHotUnPlug>" +
+                "<discVirtioHotPlug>false</discVirtioHotPlug>" +
+                "<discVirtioHotUnPlug>false</discVirtioHotUnPlug>" +
+                "</request>" +
+                "</ws:updateSnapshot>";
+
+        try {
+            Snapshot requestId = api.updateSnapshot(Snapshot.Request.updatingBuilder()
+                    .snapshotId(snapshotId)
+                    .snapshotName("snapshot-name")
+                    .description("description")
+                    .osType(OsType.LINUX)
+                    .build());
+            assertRequestHasCommonProperties(server.takeRequest(), content);
+            assertNotNull(requestId);
+        } finally {
+            pbApi.close();
+            server.shutdown();
+        }
+    }
+
+    @Test
+    public void testDeleteSnapshot() throws Exception {
+        MockWebServer server = mockWebServer();
+        server.enqueue(new MockResponse().setBody(payloadFromResource("/snapshot/snapshot-delete.xml")));
+
+        ProfitBricksApi pbApi = api(server.getUrl(rootUrl));
+        SnapshotApi api = pbApi.snapshotApi();
+
+        String snapshotId = "qswdefrg-qaws-qaws-defe-rgrgdsvcxbrh";
+        String content = "<ws:deleteSnapshot><snapshotId>" + snapshotId + "</snapshotId></ws:deleteSnapshot>";
+
+        try {
+            boolean result = api.deleteSnapshot(snapshotId);
+            assertRequestHasCommonProperties(server.takeRequest(), content);
+            assertTrue(result);
         } finally {
             pbApi.close();
             server.shutdown();

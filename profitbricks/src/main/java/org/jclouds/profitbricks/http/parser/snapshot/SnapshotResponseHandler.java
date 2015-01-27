@@ -1,17 +1,14 @@
 package org.jclouds.profitbricks.http.parser.snapshot;
 
-import org.jclouds.date.DateCodecFactory;
-import org.jclouds.profitbricks.domain.Server;
 import org.jclouds.profitbricks.domain.Snapshot;
-import org.jclouds.profitbricks.http.parser.BaseProfitBricksResponseHandler;
 import org.xml.sax.SAXException;
 
 
-public class SnapshotIdOnlyResponseHandler extends BaseSnapshotResponseHandler<Snapshot> {
+public class SnapshotResponseHandler extends BaseSnapshotResponseHandler<Snapshot> {
 
     private boolean done = false;
 
-    SnapshotIdOnlyResponseHandler( ) {
+    SnapshotResponseHandler() {
     }
 
     @Override
