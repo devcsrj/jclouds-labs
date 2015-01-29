@@ -26,10 +26,10 @@ import java.util.List;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
 
-@Test(groups = "live", testName = "DataCenterApiLiveTest", singleThreaded = true)
+@Test(groups = "live", testName = "SnapshotApiLiveTest", singleThreaded = true)
 public class SnapshotApiLiveTest extends BaseProfitBricksLiveTest {
     private String snapshotId;
-    private String storageId = "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee";
+    private String storageId = "3c655859-11d5-4472-bcc0-e93f6023bfda";
 
     @Test
     public void testCreateSnapshot() {
@@ -47,14 +47,20 @@ public class SnapshotApiLiveTest extends BaseProfitBricksLiveTest {
 
         assertNotNull(snapshots);
         assertTrue(snapshots.size() > 0);
+        snapshotId = snapshots.get(0).snapshotId();
+        System.out.println("********snapshotId*********");
+        System.out.println(snapshotId);
     }
 
     @Test
     public void testGetSnapshot() {
-        Snapshot snapshot = api.snapshotApi().getSnapshot(snapshotId);
+        Snapshot snapshot = api.snapshotApi().getSnapshot("79e17114-6441-4443-888c-2d11f07598bc");
 
         assertNotNull(snapshot);
-        assertTrue(snapshot.snapshotId() == snapshotId);
+        System.out.println("********snapshotId*********");
+        System.out.println(snapshot.snapshotId());
+
+        assertTrue(snapshot.snapshotId().compareTo("79e17114-6441-4443-888c-2d11f07598bc")==0);
     }
 
     @Test
