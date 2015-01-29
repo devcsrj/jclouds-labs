@@ -16,22 +16,20 @@
  */
 package org.jclouds.profitbricks.features;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertNull;
-
-import java.util.List;
-
 import org.jclouds.profitbricks.BaseProfitBricksLiveTest;
 import org.jclouds.profitbricks.domain.DataCenter;
 import org.jclouds.profitbricks.domain.Location;
 import org.jclouds.profitbricks.domain.ProvisioningState;
-
-import static org.testng.Assert.assertTrue;
-
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.Test;
+
+import java.util.List;
+
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.assertNull;
 
 @Test(groups = "live", testName = "DataCenterApiLiveTest", singleThreaded = true)
 public class DataCenterApiLiveTest extends BaseProfitBricksLiveTest {

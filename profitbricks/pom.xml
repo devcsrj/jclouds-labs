@@ -33,8 +33,8 @@
 
     <properties>
         <test.profitbricks.endpoint>https://api.profitbricks.com/1.3</test.profitbricks.endpoint>
-        <test.profitbricks.identity>FIXME</test.profitbricks.identity>
-        <test.profitbricks.credential>FIXME</test.profitbricks.credential>
+        <test.profitbricks.identity>vendors@stackpointcloud.com</test.profitbricks.identity>
+        <test.profitbricks.credential>Ljs#;K$g5}ehH)m</test.profitbricks.credential>
         <test.profitbricks.api-version>1.3</test.profitbricks.api-version>
         <test.profitbricks.template />
         <jclouds.osgi.export>org.jclouds.profitbricks*;version="${project.version}"</jclouds.osgi.export>

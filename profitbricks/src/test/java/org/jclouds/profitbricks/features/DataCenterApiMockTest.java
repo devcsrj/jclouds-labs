@@ -16,15 +16,8 @@
  */
 package org.jclouds.profitbricks.features;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertNull;
-import static org.testng.Assert.assertTrue;
-import static org.testng.Assert.fail;
-
-import java.util.List;
-
+import com.squareup.okhttp.mockwebserver.MockResponse;
+import com.squareup.okhttp.mockwebserver.MockWebServer;
 import org.jclouds.profitbricks.ProfitBricksApi;
 import org.jclouds.profitbricks.domain.DataCenter;
 import org.jclouds.profitbricks.domain.Location;
@@ -32,8 +25,15 @@ import org.jclouds.profitbricks.domain.ProvisioningState;
 import org.jclouds.profitbricks.internal.BaseProfitBricksMockTest;
 import org.testng.annotations.Test;
 
-import com.squareup.okhttp.mockwebserver.MockResponse;
-import com.squareup.okhttp.mockwebserver.MockWebServer;
+import java.util.List;
+
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.assertNull;
+import static org.testng.Assert.fail;
+
 
 /**
  * Mock tests for the {@link org.jclouds.profitbricks.features.DataCenterApi} class

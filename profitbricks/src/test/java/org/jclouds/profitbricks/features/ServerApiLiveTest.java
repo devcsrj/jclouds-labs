@@ -18,8 +18,6 @@ package org.jclouds.profitbricks.features;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
 import org.jclouds.profitbricks.BaseProfitBricksLiveTest;
 import org.jclouds.profitbricks.compute.internal.ProvisioningStatusAware;
 import org.jclouds.profitbricks.compute.internal.ProvisioningStatusPollingPredicate;
@@ -27,12 +25,16 @@ import org.jclouds.profitbricks.domain.DataCenter;
 import org.jclouds.profitbricks.domain.ProvisioningState;
 import org.jclouds.profitbricks.domain.Server;
 import org.jclouds.util.Predicates2;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertTrue;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.Test;
+
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertTrue;
 
 @Test( groups = "live", testName = "ServerApiLiveTest", singleThreaded = true )
 public class ServerApiLiveTest extends BaseProfitBricksLiveTest {

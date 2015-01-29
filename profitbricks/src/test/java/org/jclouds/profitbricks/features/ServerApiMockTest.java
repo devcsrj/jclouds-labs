@@ -18,20 +18,22 @@ package org.jclouds.profitbricks.features;
 
 import com.squareup.okhttp.mockwebserver.MockResponse;
 import com.squareup.okhttp.mockwebserver.MockWebServer;
-import java.util.List;
 import org.jclouds.profitbricks.ProfitBricksApi;
 import org.jclouds.profitbricks.domain.AvailabilityZone;
 import org.jclouds.profitbricks.domain.OsType;
 import org.jclouds.profitbricks.domain.Server;
 import org.jclouds.profitbricks.internal.BaseProfitBricksMockTest;
-import static org.jclouds.profitbricks.internal.BaseProfitBricksMockTest.mockWebServer;
 import org.jclouds.rest.ResourceNotFoundException;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertNull;
-import static org.testng.Assert.assertTrue;
-import static org.testng.Assert.fail;
 import org.testng.annotations.Test;
+
+import java.util.List;
+
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.assertNull;
+import static org.testng.Assert.fail;
+
 
 @Test( groups = "unit", testName = "ServerApiMockTest" )
 public class ServerApiMockTest extends BaseProfitBricksMockTest {

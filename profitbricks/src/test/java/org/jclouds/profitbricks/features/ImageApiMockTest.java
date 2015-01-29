@@ -18,16 +18,17 @@ package org.jclouds.profitbricks.features;
 
 import com.squareup.okhttp.mockwebserver.MockResponse;
 import com.squareup.okhttp.mockwebserver.MockWebServer;
-import java.util.List;
 import org.jclouds.profitbricks.ProfitBricksApi;
 import org.jclouds.profitbricks.domain.Image;
 import org.jclouds.profitbricks.internal.BaseProfitBricksMockTest;
-import static org.jclouds.profitbricks.internal.BaseProfitBricksMockTest.mockWebServer;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertNull;
-import static org.testng.Assert.assertTrue;
 import org.testng.annotations.Test;
+
+import java.util.List;
+
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.assertNull;
 
 /**
  * Mock tests for the {@link org.jclouds.profitbricks.features.ImageApi} class

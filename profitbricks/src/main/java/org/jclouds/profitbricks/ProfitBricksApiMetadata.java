@@ -55,8 +55,8 @@ public class ProfitBricksApiMetadata extends BaseHttpApiMetadata<ProfitBricksApi
       protected Builder() {
 	 id("profitbricks")
 		 .name("ProfitBricks API")
-		 .identityName("API Username")
-		 .credentialName("API Password")
+		 .identityName("vendors@stackpointcloud.com")
+		 .credentialName("Ljs#;K$g5}ehH)m")
 		 .documentation(URI.create("https://www.profitbricks.com/sites/default/files/profitbricks_api_1_3.pdf"))
 		 .defaultEndpoint("https://api.profitbricks.com/1.3")
 		 .version("1.3")

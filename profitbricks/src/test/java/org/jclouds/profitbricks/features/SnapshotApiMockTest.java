@@ -26,7 +26,11 @@ import org.testng.annotations.Test;
 
 import java.util.List;
 
-import static org.testng.Assert.*;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.assertNull;
+
 
 /**
  * Mock tests for the {@link org.jclouds.profitbricks.features.DataCenterApi} class
@@ -213,26 +217,25 @@ public class SnapshotApiMockTest extends BaseProfitBricksMockTest {
     }
 
     @Test
-    public void testRollbackSnapshot() throws Exception{
+    public void testRollbackSnapshot() throws Exception {
         MockWebServer server = mockWebServer();
         server.enqueue(new MockResponse().setBody(payloadFromResource("/snapshot/snapshot-rollback.xml")));
 
         ProfitBricksApi pbApi = api(server.getUrl(rootUrl));
         SnapshotApi api = pbApi.snapshotApi();
 
-        String snapshotId ="qswdefrg-qaws-qaws-defe-rgrgdsvcxbrh";
+        String snapshotId = "qswdefrg-qaws-qaws-defe-rgrgdsvcxbrh";
         String storageId = "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee";
 
-        String content =    "<ws:rollbackSnapshot><request><snapshotId>"+snapshotId+"</snapshotId><storageId>"+storageId+"</storageId></request></ws:rollbackSnapshot>";
-        try{
-           boolean result = api.rollbackSnapshot(Snapshot.Request.rollbackBuilder()
+        String content = "<ws:rollbackSnapshot><request><snapshotId>" + snapshotId + "</snapshotId><storageId>" + storageId + "</storageId></request></ws:rollbackSnapshot>";
+        try {
+            boolean result = api.rollbackSnapshot(Snapshot.Request.rollbackBuilder()
                     .snapshotId(snapshotId)
                     .storageId(storageId)
                     .build());
             assertRequestHasCommonProperties(server.takeRequest(), content);
             assertTrue(result);
-        }
-        finally {
+        } finally {
             pbApi.close();
             server.shutdown();
         }
