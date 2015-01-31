@@ -23,9 +23,6 @@ import org.testng.annotations.Test;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
-/**
- * Created by JASMIN on 01/27/15.
- */
 public class UpdateSnapshotRequestBinderTest {
 
     @Test
