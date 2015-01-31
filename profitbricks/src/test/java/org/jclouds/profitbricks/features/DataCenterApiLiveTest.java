@@ -34,92 +34,95 @@ import static org.testng.Assert.assertNull;
 @Test(groups = "live", testName = "DataCenterApiLiveTest", singleThreaded = true)
 public class DataCenterApiLiveTest extends BaseProfitBricksLiveTest {
 
-   private String dcId;
+    private String dcId;
 
-   @Test
-   public void testCreateDataCenter() {
-      DataCenter dc = api.dataCenterApi().createDataCenter(
-              DataCenter.Request.CreatePayload.create("JClouds", Location.DE_FKB)
-      );
+    @Test
+    public void testCreateDataCenter() {
+        DataCenter dc = api.dataCenterApi().createDataCenter(
+                DataCenter.Request.CreatePayload.create("JClouds", Location.DE_FKB)
+        );
 
-      assertNotNull(dc);
-      dcWaitingPredicate.apply(dc.id());
+        assertNotNull(dc);
+        dcWaitingPredicate.apply(dc.id());
 
-      dcId = dc.id();
-   }
+        dcId = dc.id();
+    }
 
-   @Test(dependsOnMethods = "testCreateDataCenter")
-   public void testGetDataCenter() {
-      assertNotNull(dcId, "No available datacenter found.");
+    @Test(dependsOnMethods = "testCreateDataCenter")
+    public void testGetDataCenter() {
+        assertNotNull(dcId, "No available datacenter found.");
 
-      DataCenter dataCenter = api.dataCenterApi().getDataCenter(dcId);
+        DataCenter dataCenter = api.dataCenterApi().getDataCenter(dcId);
 
-      assertNotNull(dataCenter);
-      assertEquals(dataCenter.id(), dcId);
-   }
+        assertNotNull(dataCenter);
+        assertEquals(dataCenter.id(), dcId);
+    }
 
-   @Test(dependsOnMethods = "testCreateDataCenter")
-   public void testGetAllDataCenters() {
-      List<DataCenter> dataCenters = api.dataCenterApi().getAllDataCenters();
+    @Test//(dependsOnMethods = "testCreateDataCenter")
+    public void testGetAllDataCenters() {
+        List<DataCenter> dataCenters = api.dataCenterApi().getAllDataCenters();
+        for (DataCenter dc : dataCenters) {
+            System.out.println(dc.id());
+            System.out.println(dc.name());
+        }
+        assertNotNull(dataCenters);
+        assertFalse(dataCenters.isEmpty(), "No datacenter found.");
+    }
 
-      assertNotNull(dataCenters);
-      assertFalse(dataCenters.isEmpty(), "No datacenter found.");
-   }
+    @Test(dependsOnMethods = "testCreateDataCenter")
+    public void testGetDataCenterState() {
+        assertNotNull(dcId, "No available datacenter found.");
 
-   @Test(dependsOnMethods = "testCreateDataCenter")
-   public void testGetDataCenterState() {
-      assertNotNull(dcId, "No available datacenter found.");
+        ProvisioningState state = api.dataCenterApi().getDataCenterState(dcId);
 
-      ProvisioningState state = api.dataCenterApi().getDataCenterState(dcId);
+        assertNotNull(state);
+    }
 
-      assertNotNull(state);
-   }
+    @Test(dependsOnMethods = "testGetDataCenter")
+    public void testUpdateDataCenter() {
+        assertNotNull(dcId, "No available datacenter found.");
 
-   @Test(dependsOnMethods = "testGetDataCenter")
-   public void testUpdateDataCenter() {
-      assertNotNull(dcId, "No available datacenter found.");
+        final String newName = "Apache";
+        DataCenter dataCenter = api.dataCenterApi().updateDataCenter(
+                DataCenter.Request.UpdatePayload.create(dcId, newName)
+        );
 
-      final String newName = "Apache";
-      DataCenter dataCenter = api.dataCenterApi().updateDataCenter(
-              DataCenter.Request.UpdatePayload.create(dcId, newName)
-      );
+        assertNotNull(dataCenter);
+        dcWaitingPredicate.apply(dcId);
 
-      assertNotNull(dataCenter);
-      dcWaitingPredicate.apply(dcId);
+        DataCenter fetchedDc = api.dataCenterApi().getDataCenter(dcId);
 
-      DataCenter fetchedDc = api.dataCenterApi().getDataCenter(dcId);
+        assertNotNull(fetchedDc);
+        assertEquals(newName, fetchedDc.name());
+    }
 
-      assertNotNull(fetchedDc);
-      assertEquals(newName, fetchedDc.name());
-   }
+    @Test(dependsOnMethods = "testUpdateDataCenter")
+    public void testClearDataCenter() {
+        DataCenter dataCenter = api.dataCenterApi().clearDataCenter(dcId);
 
-   @Test(dependsOnMethods = "testUpdateDataCenter")
-   public void testClearDataCenter() {
-      DataCenter dataCenter = api.dataCenterApi().clearDataCenter(dcId);
+        assertNotNull(dataCenter);
+    }
 
-      assertNotNull(dataCenter);
-   }
+    @Test
+    public void testGetNonExistingDataCenter() {
+        DataCenter dataCenter = api.dataCenterApi().getDataCenter("random-non-existing-id");
 
-   @Test
-   public void testGetNonExistingDataCenter() {
-      DataCenter dataCenter = api.dataCenterApi().getDataCenter("random-non-existing-id");
+        assertNull(dataCenter);
+    }
 
-      assertNull(dataCenter);
-   }
+    @Test
+    public void testDeleteNonExistingDataCenterMustReturnFalse() {
+        boolean result = api.dataCenterApi().deleteDataCenter("random-non-existing-id");
 
-   @Test
-   public void testDeleteNonExistingDataCenterMustReturnFalse() {
-      boolean result = api.dataCenterApi().deleteDataCenter("random-non-existing-id");
+        assertFalse(result);
+    }
 
-      assertFalse(result);
-   }
+    @AfterClass(alwaysRun = true)
+    public void testDeleteDataCenter() {
+        if (dcId != null) {
+            boolean result = api.dataCenterApi().deleteDataCenter(dcId);
 
-   @AfterClass(alwaysRun = true)
-   public void testDeleteDataCenter() {
-      if (dcId != null) {
-         boolean result = api.dataCenterApi().deleteDataCenter(dcId);
-
-         assertTrue(result, "Created test data center was not deleted.");
-      }
-   }
+            assertTrue(result, "Created test data center was not deleted.");
+        }
+    }
 }

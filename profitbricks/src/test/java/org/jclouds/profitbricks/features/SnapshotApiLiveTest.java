@@ -48,9 +48,10 @@ public class SnapshotApiLiveTest extends BaseProfitBricksLiveTest {
 
         assertNotNull(snapshots);
         assertTrue(snapshots.size() > 0);
-        snapshotId = snapshots.get(0).snapshotId();
-        System.out.println("********snapshotId*********");
-        System.out.println(snapshotId);
+        for (Snapshot snapshot : snapshots) {
+            System.out.println(snapshot.snapshotId());
+
+        }
     }
 
     @Test
@@ -60,8 +61,9 @@ public class SnapshotApiLiveTest extends BaseProfitBricksLiveTest {
         assertNotNull(snapshot);
         System.out.println("********snapshotId*********");
         System.out.println(snapshot.snapshotId());
+        System.out.println(snapshot.name());
 
-        assertTrue(snapshot.snapshotId().compareTo("79e17114-6441-4443-888c-2d11f07598bc")==0);
+        assertTrue(snapshot.snapshotId().compareTo("79e17114-6441-4443-888c-2d11f07598bc") == 0);
     }
 
     @Test

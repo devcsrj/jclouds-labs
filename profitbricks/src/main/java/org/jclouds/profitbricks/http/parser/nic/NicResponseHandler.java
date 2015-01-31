@@ -14,42 +14,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.jclouds.profitbricks.http.parser.nic;
 
-import autovalue.shaded.com.google.common.common.collect.Lists;
-import org.jclouds.profitbricks.domain.Firewall;
 import org.jclouds.profitbricks.domain.Nic;
-import org.jclouds.profitbricks.http.parser.firewall.FirewallListResponseHandler;
-import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
-import java.util.List;
-
-public abstract class NicResponseHandler extends BaseNicResponseHandler<Nic>{
-
-    FirewallListResponseHandler firewallResponseHandler;
-
-    List<Firewall> firewalls = Lists.newArrayList();
+public class NicResponseHandler extends BaseNicResponseHandler<Nic>{
 
     private boolean done = false;
-    private boolean userFireWallParser = false;
 
-    @Override
-    public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
-        if ("servers".equals(qName))
-            userFireWallParser = true;
+    NicResponseHandler(){
     }
 
     @Override
     public void endElement(String uri, String localName, String qName) throws SAXException {
-        if (done)
+       if (done)
             return;
+        setPropertyOnEndTag(qName);
 
-        if ("firewall".equals(qName)) {
-            userFireWallParser = false;
-            firewalls = firewallResponseHandler.getResult();
+        if ("return".equals(qName)) {
+            done = true;
         }
+        clearTextBuffer();
+
     }
 
     @Override

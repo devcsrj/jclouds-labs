@@ -17,32 +17,29 @@
 
 package org.jclouds.profitbricks.http.parser.firewall;
 
-import autovalue.shaded.com.google.common.common.collect.Lists;
 import org.jclouds.profitbricks.domain.Firewall;
 import org.xml.sax.SAXException;
 
-import java.util.List;
+public class FirewallListResponseHandler extends BaseFirewallResponseHandler<Firewall> {
 
-public class FirewallListResponseHandler extends BaseFirewallResponseHandler<List<Firewall>> {
-
-    private List<Firewall> firewalls;
+    private boolean done = false;
 
     FirewallListResponseHandler(){
-        firewalls = Lists.newArrayList();
+
     }
 
     @Override
     public void endElement(String uri, String localName, String qName) throws SAXException {
-        setPropertyOnEndTag(qName);
-        if ("return".equals(qName)) {
-            firewalls.add(builder.build());
-            builder = Firewall.builder();
-        }
+        if ( done )
+            return;
+        setPropertyOnEndTag( qName );
+        if ( "return".equals( qName ) )
+            done = true;
         clearTextBuffer();
     }
 
     @Override
-    public List<Firewall> getResult() {
-        return firewalls;
+    public Firewall getResult() {
+        return builder.build();
     }
 }

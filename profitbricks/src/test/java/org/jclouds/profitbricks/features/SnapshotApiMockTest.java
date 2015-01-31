@@ -35,7 +35,7 @@ import static org.testng.Assert.assertNull;
 /**
  * Mock tests for the {@link org.jclouds.profitbricks.features.DataCenterApi} class
  */
-@Test(groups = "unit", testName = "DataCenterApiMockTest")
+@Test(groups = "unit", testName = "SnapshotApiMockTest")
 public class SnapshotApiMockTest extends BaseProfitBricksMockTest {
 
     @Test
@@ -144,7 +144,7 @@ public class SnapshotApiMockTest extends BaseProfitBricksMockTest {
                             .build());
             assertRequestHasCommonProperties(server.takeRequest(), content);
             assertNotNull(snapshot.snapshotId());
-            assertEquals(snapshot.snapshotId(), "aca0380c-0298-4481-83ba-d8865033a6d5");
+            assertEquals(snapshot.snapshotId(), "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee");
 
         } finally {
             pbApi.close();

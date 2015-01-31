@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
+    <S:Body>
+        <ns2:getNicResponse xmlns:ns2="http://ws.api.profitbricks.com/">
+            <return>
+                <requestId>request-id</requestId>
+                <nicId>nic-id</nicId>
+                <dataCenterId>0</dataCenterId>
+                <dataCenterVersion>1</dataCenterVersion>
+                <lanId>lan-id</lanId>
+                <internetAccess>internet-access</internetAccess>
+                <serverId>server-id</serverId>
+                <ips>ips</ips>
+                <macAddress>mac-address</macAddress>
+                <firewall>
+                    <active>active</active>
+                    <firewallId>firewall-id</firewallId>
+                    <nicId>nic-id</nicId>
+                    <provisioningState>provisioning-state</provisioningState>
+                </firewall>
+                <dhcpActive>dhcp-active</dhcpActive>
+                <gatewayIp>gateway-ip</gatewayIp>
+                <provisioningState>provisioning-state</provisioningState>
+            </return>
+        </ns2:getNicResponse>
+    </S:Body>
+</S:Envelope>

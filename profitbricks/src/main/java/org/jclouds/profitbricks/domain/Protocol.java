@@ -18,7 +18,7 @@ package org.jclouds.profitbricks.domain;
 
 public enum Protocol {
 
-    TCP, UDP, ICMP, ANY,UNRECOGNIZED;
+    TCP, UDP, ICMP, ANY, UNRECOGNIZED;
 
     public static Protocol fromValue(String v) {
         try {

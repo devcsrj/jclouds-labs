@@ -19,11 +19,19 @@ package org.jclouds.profitbricks.features;
 
 import org.jclouds.Fallbacks;
 import org.jclouds.http.filters.BasicAuthentication;
+import org.jclouds.profitbricks.binder.nic.CreateNicRequestBinder;
 import org.jclouds.profitbricks.domain.Nic;
 import org.jclouds.profitbricks.http.filters.ProfitBricksSoapMessageEnvelope;
 import org.jclouds.profitbricks.http.parser.nic.NicListResponseHandler;
 import org.jclouds.profitbricks.http.parser.nic.NicResponseHandler;
-import org.jclouds.rest.annotations.*;
+import org.jclouds.profitbricks.http.parser.snapshot.SnapshotResponseHandler;
+import org.jclouds.rest.annotations.Fallback;
+import org.jclouds.rest.annotations.Payload;
+import org.jclouds.rest.annotations.RequestFilters;
+import org.jclouds.rest.annotations.XMLResponseParser;
+import org.jclouds.rest.annotations.MapBinder;
+import org.jclouds.rest.annotations.PayloadParam;
+
 
 import javax.inject.Named;
 import javax.ws.rs.Consumes;
@@ -45,10 +53,17 @@ public interface NicApi {
     List<Nic> getAllNics();
 
     @POST
-    @Named("nics:get")
-    @Payload("<nicId>nic-id</nicId>")
+    @Named("nic:create")
+    @MapBinder(CreateNicRequestBinder.class)
     @XMLResponseParser(NicResponseHandler.class)
+    Nic createNic(@PayloadParam("nic") Nic.Request.CreatePayload payload);
+
+    @POST
+    @Named("nics:get")
+    @Payload("<ws:getNic><nicId>{id}</nicId></ws:getNic>")
+    @XMLResponseParser(SnapshotResponseHandler.class)
     @Fallback(Fallbacks.EmptyListOnNotFoundOr404.class)
     Nic getNic(@PayloadParam("id") String identifier);
+
 
 }

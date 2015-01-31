@@ -18,37 +18,53 @@
 package org.jclouds.profitbricks.domain;
 
 import com.google.auto.value.AutoValue;
+import org.jclouds.javax.annotation.Nullable;
 
 import java.util.List;
 
 @AutoValue
 public abstract class Nic {
 
+    @Nullable
     public abstract String nicId();
 
+    @Nullable
     public abstract String dataCenterId();
 
+    @Nullable
     public abstract int dataCenterVersion();
 
+    @Nullable
     public abstract String lanId();
 
+    @Nullable
     public abstract boolean internetAccess();
 
+    @Nullable
     public abstract String serverId();
 
+    @Nullable
     public abstract String ips();
 
+    @Nullable
     public abstract String macAddress();
 
+    @Nullable
     public abstract List<Firewall> firewalls();
 
+    @Nullable
     public abstract boolean dhcpActive();
 
+    @Nullable
     public abstract String gatewayIp();
 
+    @Nullable
     public abstract ProvisioningState provisioningState();
 
-    public static Nic create(String nicId, String dataCenterId, int dataCenterVersion, String lanId, boolean internetAccess, String serverId, String ips, String macAddress, List<Firewall> firewalls, boolean dhcpActive, String gatewayIp, ProvisioningState provisioningState) {
+    public static Nic create(String nicId, String dataCenterId, int dataCenterVersion,
+                             String lanId, boolean internetAccess, String serverId,
+                             String ips, String macAddress, List<Firewall> firewalls,
+                             boolean dhcpActive, String gatewayIp, ProvisioningState provisioningState) {
         return new AutoValue_Nic(nicId, dataCenterId, dataCenterVersion, lanId, internetAccess, serverId, ips, macAddress, firewalls, dhcpActive, gatewayIp, provisioningState);
     }
 
@@ -56,7 +72,13 @@ public abstract class Nic {
         return new Builder();
     }
 
+    public Builder toBuilder() {
+        return builder().fromNic(this);
+    }
+
+
     public static class Builder {
+
         public String nicId;
 
         public String dataCenterId;
@@ -142,13 +164,91 @@ public abstract class Nic {
         }
 
         public Nic build() {
-            return Nic.create(serverId, dataCenterId, dataCenterVersion, lanId, internetAccess, serverId, ips, macAddress, firewalls, dhcpActive, gatewayIp, provisioningState);
+            System.out.println("builiding");
+
+            System.out.println(nicId);
+            System.out.println(dataCenterId);
+            System.out.println(dataCenterVersion);
+            System.out.println(lanId);
+            System.out.println(internetAccess);
+            System.out.println(serverId);
+            System.out.println(ips);
+            System.out.println(macAddress);
+            System.out.println(firewalls);
+            System.out.println(dhcpActive);
+            System.out.println(gatewayIp);
+            System.out.println(provisioningState);
+
+            return Nic.create(nicId, dataCenterId, dataCenterVersion, lanId, internetAccess, serverId, ips, macAddress, firewalls, dhcpActive, gatewayIp, provisioningState);
         }
 
-        private Nic.Builder fromNic(Nic in) {
+        private Builder fromNic(Nic in) {
             return this.nicId(in.nicId()).dataCenterId(in.dataCenterId()).dataCenterVersion(in.dataCenterVersion())
                     .lanId(in.lanId()).internetAccess(in.internetAccess()).serverId(in.serverId())
                     .ips(in.ips()).macAddress(in.macAddress()).dhcpActive(in.dhcpActive()).gatewayIp(in.gatewayIp()).firewalls(in.firewalls());
+        }
+    }
+
+    public static final class Request {
+
+        public static CreatePayload.Builder create() {
+            return new CreatePayload.Builder();
+        }
+
+        @AutoValue
+        public abstract static class CreatePayload {
+            public abstract String ip();
+
+            public abstract String nicName();
+
+            public abstract boolean dhcpActive();
+
+            public abstract String serverId();
+
+            public abstract String lanId();
+
+            public static CreatePayload create(String ip, String nicName, boolean dhcpActive, String serverId, String lanId) {
+                return new AutoValue_Nic_Request_CreatePayload(ip, nicName, dhcpActive, serverId, lanId);
+            }
+
+            public static class Builder {
+                private String ip;
+                private String nicName;
+                private boolean dhcpActive;
+                private String serverId;
+                private String lanId;
+
+                public Builder ip(String ip) {
+                    this.ip = ip;
+                    return this;
+                }
+
+                public Builder nicName(String nicName) {
+                    this.nicName = nicName;
+                    return this;
+                }
+
+                public Builder dhcpActive(boolean dhcpActive) {
+                    this.dhcpActive = dhcpActive;
+                    return this;
+                }
+
+                public Builder serverId(String serverId) {
+                    this.serverId = serverId;
+                    return this;
+                }
+
+                public Builder lanId(String lanId) {
+                    this.lanId = lanId;
+                    return this;
+                }
+
+                public CreatePayload build() {
+                    return CreatePayload.create(ip, nicName, dhcpActive, serverId, lanId);
+                }
+
+            }
+
         }
     }
 }

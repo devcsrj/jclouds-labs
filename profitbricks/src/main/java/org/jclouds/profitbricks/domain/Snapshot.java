@@ -195,6 +195,7 @@ public abstract class Snapshot {
         }
 
         private Builder fromSnapshot(Snapshot in) {
+
             return this.id(in.snapshotId()).name(in.name()).size(in.size()).creationTime(in.creationTime())
                     .lastModificationTime(in.lastModificationTime()).state(in.state()).bootable(in.bootable()).description(in.description())
                     .cpuHotPlug(in.cpuHotPlug()).cpuHotUnPlug(in.cpuHotUnPlug()).discVirtioHotPlug(in.discVirtioHotPlug())

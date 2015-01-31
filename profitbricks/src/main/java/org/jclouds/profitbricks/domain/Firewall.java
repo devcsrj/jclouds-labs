@@ -23,12 +23,16 @@ import org.jclouds.javax.annotation.Nullable;
 @AutoValue
 public abstract class Firewall {
 
+    @Nullable
     public abstract String fireWallId();
 
+    @Nullable
     public abstract boolean active();
 
+    @Nullable
     public abstract String nicId();
 
+    @Nullable
     public abstract ProvisioningState provisioningState();
 
     @Nullable
@@ -159,6 +163,8 @@ public abstract class Firewall {
         }
 
         public Firewall build() {
+            System.out.println("********inside the builder********");
+            System.out.println(fireWallId);
             return Firewall.create(fireWallId, active, nicId, provisioningState, icmpCode, icmpType, portRangeEnd, portRangeStart, protocol, sourceIp, sourceMac, targetIp);
         }
     }
