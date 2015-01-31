@@ -125,7 +125,7 @@ public class SnapshotApiMockTest extends BaseProfitBricksMockTest {
         ProfitBricksApi pbApi = api(server.getUrl(rootUrl));
         SnapshotApi api = pbApi.snapshotApi();
 
-        String storageId = "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee";
+            String storageId = "aca0380c-0298-4481-83ba-d8865033a6d5";
 
         String content = "<ws:createSnapshot>" +
                 "<request>" +
@@ -144,7 +144,7 @@ public class SnapshotApiMockTest extends BaseProfitBricksMockTest {
                             .build());
             assertRequestHasCommonProperties(server.takeRequest(), content);
             assertNotNull(snapshot.snapshotId());
-            assertEquals(snapshot.snapshotId(), "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee");
+            assertEquals(snapshot.snapshotId(), "aca0380c-0298-4481-83ba-d8865033a6d5");
 
         } finally {
             pbApi.close();

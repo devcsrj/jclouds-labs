@@ -14,10 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.profitbricks.domain.FireWal;
+package org.jclouds.profitbricks.domain;
 
 import com.google.auto.value.AutoValue;
-import org.jclouds.profitbricks.domain.Firewall;
 
 import java.util.List;
 
@@ -36,14 +35,24 @@ public abstract class Nic {
 
     public abstract String serverId();
 
-    public abstract List<String> ips();
+    public abstract String ips();
 
     public abstract String macAddress();
 
     public abstract List<Firewall> firewalls();
 
-    public static Nic create(String nicId, String dataCenterId, int dataCenterVersion, String lanId, boolean internetAccess, String serverId, List<String> ips, String macAddress, List<Firewall> firewalls) {
-        return new AutoValue_Nic(nicId, dataCenterId, dataCenterVersion, lanId, internetAccess, serverId, ips, macAddress, firewalls);
+    public abstract boolean dhcpActive();
+
+    public abstract String gatewayIp();
+
+    public abstract ProvisioningState provisioningState();
+
+    public static Nic create(String nicId, String dataCenterId, int dataCenterVersion, String lanId, boolean internetAccess, String serverId, String ips, String macAddress, List<Firewall> firewalls, boolean dhcpActive, String gatewayIp, ProvisioningState provisioningState) {
+        return new AutoValue_Nic(nicId, dataCenterId, dataCenterVersion, lanId, internetAccess, serverId, ips, macAddress, firewalls, dhcpActive, gatewayIp, provisioningState);
+    }
+
+    public static Builder builder() {
+        return new Builder();
     }
 
     public static class Builder {
@@ -59,9 +68,17 @@ public abstract class Nic {
 
         public String serverId;
 
-        public List<String> ips;
+        public String ips;
 
         public String macAddress;
+
+        public boolean dhcpActive;
+
+        public String gatewayIp;
+
+        public ProvisioningState provisioningState;
+
+        private List<Firewall> firewalls;
 
         public Builder nicId(String nicId) {
             this.nicId = nicId;
@@ -93,7 +110,7 @@ public abstract class Nic {
             return this;
         }
 
-        public Builder ips(List<String> ips) {
+        public Builder ips(String ips) {
             this.ips = ips;
             return this;
         }
@@ -103,10 +120,34 @@ public abstract class Nic {
             return this;
         }
 
+        public Builder dhcpActive(boolean dhcpActive) {
+            this.dhcpActive = dhcpActive;
+            return this;
+        }
+
+        public Builder gatewayIp(String gatewayIp) {
+            this.gatewayIp = gatewayIp;
+            return this;
+        }
+
+        public Builder firewalls(List<Firewall> firewalls) {
+            this.firewalls = firewalls;
+            return this;
+        }
+
+        public Builder provisioningState(ProvisioningState provisioningState) {
+            this.provisioningState = provisioningState;
+            return this;
+        }
+
+        public Nic build() {
+            return Nic.create(serverId, dataCenterId, dataCenterVersion, lanId, internetAccess, serverId, ips, macAddress, firewalls, dhcpActive, gatewayIp, provisioningState);
+        }
+
         private Nic.Builder fromNic(Nic in) {
             return this.nicId(in.nicId()).dataCenterId(in.dataCenterId()).dataCenterVersion(in.dataCenterVersion())
                     .lanId(in.lanId()).internetAccess(in.internetAccess()).serverId(in.serverId())
-                    .ips(in.ips()).macAddress(in.macAddress());
+                    .ips(in.ips()).macAddress(in.macAddress()).dhcpActive(in.dhcpActive()).gatewayIp(in.gatewayIp()).firewalls(in.firewalls());
         }
     }
 }

@@ -29,7 +29,7 @@ import static org.testng.Assert.assertTrue;
 @Test(groups = "live", testName = "SnapshotApiLiveTest", singleThreaded = true)
 public class SnapshotApiLiveTest extends BaseProfitBricksLiveTest {
     private String snapshotId;
-    private String storageId = "3c655859-11d5-4472-bcc0-e93f6023bfda";
+    private String storageId = "9fa38c91-b672-422e-8bb4-b4296e12504d";
 
     @Test
     public void testCreateSnapshot() {
@@ -69,7 +69,7 @@ public class SnapshotApiLiveTest extends BaseProfitBricksLiveTest {
 
         Snapshot snapshot = api.snapshotApi().getSnapshot(snapshotId);
 
-        assertTrue(snapshot.description() == "new description");
+        assertTrue(snapshot.description().equals("new description"));
     }
 
     @Test

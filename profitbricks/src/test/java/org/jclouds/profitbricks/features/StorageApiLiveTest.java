@@ -92,10 +92,16 @@ public class StorageApiLiveTest extends BaseProfitBricksLiveTest {
       assertEquals( storage.id(), createdStorageId );
    }
 
-   @Test( dependsOnMethods = "testCreateStorage" )
+   @Test/*( dependsOnMethods = "testCreateStorage" )*/
    public void testGetAllStorages() {
       List<Storage> storages = api.storageApi().getAllStorages();
 
+       for (Storage storage : storages) {
+           System.out.println(storage.id());
+           System.out.println(storage.state().toString());
+           System.out.println(storage.name());
+
+       }
       assertNotNull( storages );
       assertFalse( storages.isEmpty() );
    }

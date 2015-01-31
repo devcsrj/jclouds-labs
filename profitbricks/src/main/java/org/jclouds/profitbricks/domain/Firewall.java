@@ -18,28 +18,45 @@
 package org.jclouds.profitbricks.domain;
 
 import com.google.auto.value.AutoValue;
+import org.jclouds.javax.annotation.Nullable;
 
 @AutoValue
 public abstract class Firewall {
 
-    public abstract int icmpCode();
+    public abstract String fireWallId();
 
-    public abstract int icmpType();
+    public abstract boolean active();
 
+    public abstract String nicId();
+
+    public abstract ProvisioningState provisioningState();
+
+    @Nullable
+    public abstract String icmpCode();
+
+    @Nullable
+    public abstract String icmpType();
+
+    @Nullable
     public abstract int portRangeEnd();
 
+    @Nullable
     public abstract int portRangeStart();
 
+    @Nullable
     public abstract Protocol protocol();
 
+    @Nullable
     public abstract String sourceIp();
 
+    @Nullable
     public abstract String sourceMac();
 
+    @Nullable
     public abstract String targetIp();
 
-    public static Firewall create(int icmpCode, int icmpType, int portRangeEnd, int portRangeStart, Protocol protocol, String sourceIp, String sourceMac, String targetIp) {
-        return new AutoValue_Firewall(icmpCode, icmpType, portRangeEnd, portRangeStart, protocol, sourceIp, sourceMac, targetIp);
+    public static Firewall create(String fireWallId, boolean active, String nicId, ProvisioningState provisioningState, String icmpCode, String icmpType, int portRangeEnd, int portRangeStart, Protocol protocol, String sourceIp, String sourceMac, String targetIp) {
+        return new AutoValue_Firewall(fireWallId, active, nicId, provisioningState, icmpCode, icmpType, portRangeEnd, portRangeStart, protocol, sourceIp, sourceMac, targetIp);
     }
 
     public static Builder builder() {
@@ -51,9 +68,18 @@ public abstract class Firewall {
     }
 
     public static class Builder {
-        public int icmpCode;
 
-        public int icmpType;
+        public String fireWallId;
+
+        public boolean active;
+
+        public String nicId;
+
+        public ProvisioningState provisioningState;
+
+        public String icmpCode;
+
+        public String icmpType;
 
         public int portRangeEnd;
 
@@ -67,12 +93,32 @@ public abstract class Firewall {
 
         public String targetIp;
 
-        public Builder icmpCode(int icmpCode) {
+        public Builder fireWallId(String fireWallId) {
+            this.fireWallId = fireWallId;
+            return this;
+        }
+
+        public Builder active(boolean active) {
+            this.active = active;
+            return this;
+        }
+
+        public Builder nicId(String nicId) {
+            this.nicId = nicId;
+            return this;
+        }
+
+        public Builder provisioningState(ProvisioningState provisioningState) {
+            this.provisioningState = provisioningState;
+            return this;
+        }
+
+        public Builder icmpCode(String icmpCode) {
             this.icmpCode = icmpCode;
             return this;
         }
 
-        public Builder icmpType(int icmpType) {
+        public Builder icmpType(String icmpType) {
             this.icmpType = icmpType;
             return this;
         }
@@ -110,6 +156,10 @@ public abstract class Firewall {
         private Firewall.Builder fromFirewall(Firewall in) {
             return this.icmpCode(in.icmpType()).portRangeEnd(in.portRangeEnd())
                     .portRangeStart(in.portRangeStart()).protocol(in.protocol()).sourceIp(in.sourceIp()).sourceMac(in.sourceMac()).targetIp(in.targetIp());
+        }
+
+        public Firewall build() {
+            return Firewall.create(fireWallId, active, nicId, provisioningState, icmpCode, icmpType, portRangeEnd, portRangeStart, protocol, sourceIp, sourceMac, targetIp);
         }
     }
 }
