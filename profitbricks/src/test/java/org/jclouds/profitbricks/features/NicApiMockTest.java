@@ -23,6 +23,8 @@ import org.jclouds.profitbricks.domain.Nic;
 import org.jclouds.profitbricks.internal.BaseProfitBricksMockTest;
 import org.testng.annotations.Test;
 
+import java.util.List;
+
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
@@ -31,7 +33,7 @@ import static org.testng.Assert.assertNotNull;
 public class NicApiMockTest extends BaseProfitBricksMockTest {
 
     @Test
-    public void testGetNic() throws Exception{
+    public void testGetNic() throws Exception {
         MockWebServer server = mockWebServer();
         server.enqueue(new MockResponse().setBody(payloadFromResource("/nic/nic.xml")));
 
@@ -46,8 +48,23 @@ public class NicApiMockTest extends BaseProfitBricksMockTest {
             assertRequestHasCommonProperties(server.takeRequest(), content);
             assertNotNull(nic);
             assertEquals(nic.nicId(), id);
+        } finally {
+            pbApi.close();
+            server.shutdown();
+        }
+    }
 
+    @Test
+    public void testGetAllNic() throws Exception {
+        MockWebServer server = mockWebServer();
+        server.enqueue(new MockResponse().setBody(payloadFromResource("/nic/nic.xml")));
 
+        ProfitBricksApi pbApi = api(server.getUrl(rootUrl));
+        NicApi api = pbApi.nicApi();
+        try {
+            List<Nic> nics = api.getAllNics();
+            assertRequestHasCommonProperties(server.takeRequest(), "<ws:getAllNic/>");
+            assertNotNull(nics);
         } finally {
             pbApi.close();
             server.shutdown();

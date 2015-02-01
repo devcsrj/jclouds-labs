@@ -26,6 +26,8 @@ import java.util.List;
 public abstract class Nic {
 
     @Nullable
+    public abstract String requestId();
+    @Nullable
     public abstract String nicId();
 
     @Nullable
@@ -61,11 +63,11 @@ public abstract class Nic {
     @Nullable
     public abstract ProvisioningState provisioningState();
 
-    public static Nic create(String nicId, String dataCenterId, int dataCenterVersion,
+    public static Nic create(String requestId, String nicId, String dataCenterId, int dataCenterVersion,
                              String lanId, boolean internetAccess, String serverId,
                              String ips, String macAddress, List<Firewall> firewalls,
                              boolean dhcpActive, String gatewayIp, ProvisioningState provisioningState) {
-        return new AutoValue_Nic(nicId, dataCenterId, dataCenterVersion, lanId, internetAccess, serverId, ips, macAddress, firewalls, dhcpActive, gatewayIp, provisioningState);
+        return new AutoValue_Nic(requestId, nicId, dataCenterId, dataCenterVersion, lanId, internetAccess, serverId, ips, macAddress, firewalls, dhcpActive, gatewayIp, provisioningState);
     }
 
     public static Builder builder() {
@@ -78,6 +80,8 @@ public abstract class Nic {
 
 
     public static class Builder {
+
+        public String requestId;
 
         public String nicId;
 
@@ -102,6 +106,11 @@ public abstract class Nic {
         public ProvisioningState provisioningState;
 
         private List<Firewall> firewalls;
+
+        public Builder requestId(String requestId) {
+            this.requestId = requestId;
+            return this;
+        }
 
         public Builder nicId(String nicId) {
             this.nicId = nicId;
@@ -164,13 +173,13 @@ public abstract class Nic {
         }
 
         public Nic build() {
-            return Nic.create(nicId, dataCenterId, dataCenterVersion, lanId, internetAccess, serverId, ips, macAddress, firewalls, dhcpActive, gatewayIp, provisioningState);
+            return Nic.create(requestId, nicId, dataCenterId, dataCenterVersion, lanId, internetAccess, serverId, ips, macAddress, firewalls, dhcpActive, gatewayIp, provisioningState);
         }
 
         private Builder fromNic(Nic in) {
             return this.nicId(in.nicId()).dataCenterId(in.dataCenterId()).dataCenterVersion(in.dataCenterVersion())
                     .lanId(in.lanId()).internetAccess(in.internetAccess()).serverId(in.serverId())
-                    .ips(in.ips()).macAddress(in.macAddress()).dhcpActive(in.dhcpActive()).gatewayIp(in.gatewayIp()).firewalls(in.firewalls());
+                    .ips(in.ips()).macAddress(in.macAddress()).dhcpActive(in.dhcpActive()).gatewayIp(in.gatewayIp()).firewalls(in.firewalls()).requestId(in.requestId());
         }
     }
 
@@ -287,5 +296,43 @@ public abstract class Nic {
 
         }
 
+        @AutoValue
+        public abstract static class SetInternetAccessPayload {
+            public abstract String dataCenterId();
+
+            public abstract String lanId();
+
+            public abstract boolean internetAccess();
+
+            public static SetInternetAccessPayload create(String dataCenterId, String lanId, boolean internetAccess) {
+                return new AutoValue_Nic_Request_SetInternetAccessPayload(dataCenterId, lanId, internetAccess);
+            }
+
+            public static class Builder {
+                public String dataCenterId;
+                public String lanId;
+                public boolean internetAccess;
+
+                public Builder dataCenterId(String dataCenterId) {
+                    this.dataCenterId = dataCenterId;
+                    return this;
+                }
+
+                public Builder lanId(String lanId) {
+                    this.lanId = lanId;
+                    return this;
+                }
+
+                public Builder internetAccess(boolean internetAccess) {
+                    this.internetAccess = internetAccess;
+                    return this;
+                }
+
+                public SetInternetAccessPayload build() {
+                    return SetInternetAccessPayload.create(dataCenterId, lanId, internetAccess);
+                }
+            }
+        }
     }
 }
+

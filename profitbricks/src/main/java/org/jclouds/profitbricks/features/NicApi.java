@@ -20,6 +20,7 @@ package org.jclouds.profitbricks.features;
 import org.jclouds.Fallbacks;
 import org.jclouds.http.filters.BasicAuthentication;
 import org.jclouds.profitbricks.binder.nic.CreateNicRequestBinder;
+import org.jclouds.profitbricks.binder.nic.SetInternetAccessBinder;
 import org.jclouds.profitbricks.binder.nic.UpdateNicRequestBinder;
 import org.jclouds.profitbricks.domain.Nic;
 import org.jclouds.profitbricks.http.filters.ProfitBricksSoapMessageEnvelope;
@@ -70,4 +71,10 @@ public interface NicApi {
     @MapBinder(UpdateNicRequestBinder.class)
     @XMLResponseParser(NicResponseHandler.class)
     Nic updateNic(@PayloadParam("nic") Nic.Request.UpdatePayload payload);
+
+    @POST
+    @Named("nic:setInternetAccess")
+    @MapBinder(SetInternetAccessBinder.class)
+    @XMLResponseParser(NicResponseHandler.class)
+    Nic setInternetAccess(@PayloadParam("nic") Nic.Request.SetInternetAccessPayload payload);
 }

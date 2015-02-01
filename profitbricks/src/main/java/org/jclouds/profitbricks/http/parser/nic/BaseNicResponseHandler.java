@@ -52,6 +52,8 @@ public abstract class BaseNicResponseHandler<T> extends BaseProfitBricksResponse
             builder.gatewayIp(textToStringValue());
         else if ("provisioningState".equals(qName))
             builder.provisioningState(ProvisioningState.fromValue(textToStringValue()));
+        else if ("requestId".equals(qName))
+            builder.requestId(textToStringValue());
 
     }
 }

@@ -82,6 +82,7 @@ public class NicApiLiveTest extends BaseProfitBricksLiveTest {
         System.out.println("Updating one with id " + originalnic.nicId());
 
         Nic nic = api.nicApi().updateNic(toUpdate);
+
         System.out.println("Done updating");
 
         Nic newNic = api.nicApi().getNic(toUpdate.nicId());
@@ -93,5 +94,36 @@ public class NicApiLiveTest extends BaseProfitBricksLiveTest {
         System.out.println("lanId " + newNic.lanId());
         System.out.println("provisioningState " + newNic.provisioningState().toString());
         assertEquals(newNic.provisioningState(), ProvisioningState.INPROCESS);
+    }
+
+    @Test
+    void testSetInternetAccess() {
+        List<Nic> nics = api.nicApi().getAllNics();
+
+        System.out.println("Getting one specific to update, its id is " + nics.get(nics.size() - 2).nicId());
+        Nic originalnic = Nic.create("", "", "", 0, "", true, "", "", "", null, true, "", ProvisioningState.UNRECOGNIZED);
+
+        for (Nic n : nics) {
+            if (!n.lanId().equals("0")) {
+                originalnic = n;
+                break;
+            }
+        }
+        System.out.println("Original internet access " + originalnic.internetAccess());
+
+        System.out.println("Updating one with id " + originalnic.nicId());
+
+        Nic.Request.SetInternetAccessPayload toUpdate = Nic.Request.SetInternetAccessPayload.create(originalnic.dataCenterId(), "0", !originalnic.internetAccess());
+        System.out.println("LANID " + toUpdate.lanId());
+        System.out.println("origina LANID " + originalnic.lanId());
+
+        api.nicApi().setInternetAccess(toUpdate);
+
+        System.out.println("Done updating");
+
+        Nic newNic = api.nicApi().getNic(originalnic.nicId());
+
+        assertEquals(originalnic.internetAccess(), newNic.internetAccess());
+
     }
 }
