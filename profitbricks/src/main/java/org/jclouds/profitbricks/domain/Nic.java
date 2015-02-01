@@ -250,5 +250,57 @@ public abstract class Nic {
             }
 
         }
+
+        @AutoValue
+        public abstract static class UpdatePayload {
+            public abstract String nicId();
+
+            public abstract String ip();
+
+            public abstract String nicName();
+
+            public abstract boolean dhcpActive();
+
+            public abstract String lanId();
+
+            public static UpdatePayload create(String nicId, String ip, String nicName, boolean dhcpActive, String lanId) {
+                return new AutoValue_Nic_Request_UpdatePayload(nicId, ip, nicName, dhcpActive, lanId);
+            }
+
+            public static class Builder {
+                private String nicId;
+                private String ip;
+                private String nicName;
+                private boolean dhcpActive;
+                private String lanId;
+
+                public Builder ip(String nicId) {
+                    this.nicId = nicId;
+                    return this;
+                }
+
+                public Builder nicName(String nicName) {
+                    this.nicName = nicName;
+                    return this;
+                }
+
+                public Builder dhcpActive(boolean dhcpActive) {
+                    this.dhcpActive = dhcpActive;
+                    return this;
+                }
+
+                public Builder lanId(String lanId) {
+                    this.lanId = lanId;
+                    return this;
+                }
+
+                public UpdatePayload build() {
+                    return UpdatePayload.create(nicId, ip, nicName, dhcpActive, lanId);
+                }
+
+            }
+
+        }
+
     }
 }
