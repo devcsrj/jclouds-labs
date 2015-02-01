@@ -22,11 +22,9 @@ import org.jclouds.http.filters.BasicAuthentication;
 import org.jclouds.profitbricks.binder.nic.CreateNicRequestBinder;
 import org.jclouds.profitbricks.binder.nic.UpdateNicRequestBinder;
 import org.jclouds.profitbricks.domain.Nic;
-import org.jclouds.profitbricks.domain.Snapshot;
 import org.jclouds.profitbricks.http.filters.ProfitBricksSoapMessageEnvelope;
 import org.jclouds.profitbricks.http.parser.nic.NicListResponseHandler;
 import org.jclouds.profitbricks.http.parser.nic.NicResponseHandler;
-import org.jclouds.profitbricks.http.parser.snapshot.SnapshotResponseHandler;
 import org.jclouds.rest.annotations.Fallback;
 import org.jclouds.rest.annotations.Payload;
 import org.jclouds.rest.annotations.RequestFilters;
@@ -63,7 +61,7 @@ public interface NicApi {
     @POST
     @Named("nic:get")
     @Payload("<ws:getNic><nicId>{id}</nicId></ws:getNic>")
-    @XMLResponseParser(SnapshotResponseHandler.class)
+    @XMLResponseParser(NicResponseHandler.class)
     @Fallback(Fallbacks.EmptyListOnNotFoundOr404.class)
     Nic getNic(@PayloadParam("id") String identifier);
 

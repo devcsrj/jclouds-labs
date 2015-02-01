@@ -28,9 +28,7 @@ public class NicListResponseHandler extends BaseNicResponseHandler<List<Nic>> {
 
     @Override
     public void endElement(String uri, String localName, String qName) throws SAXException {
-        setPropertyOnEndTag("qname");
         setPropertyOnEndTag(qName);
-        System.out.println(qName);
         if ("return".equals(qName)) {
             nics.add(builder.build());
             builder = Nic.builder();

@@ -19,16 +19,13 @@ package org.jclouds.profitbricks.http.parser.nic;
 import org.jclouds.profitbricks.domain.Nic;
 import org.xml.sax.SAXException;
 
-public class NicResponseHandler extends BaseNicResponseHandler<Nic>{
+public class NicResponseHandler extends BaseNicResponseHandler<Nic> {
 
     private boolean done = false;
 
-    NicResponseHandler(){
-    }
-
     @Override
     public void endElement(String uri, String localName, String qName) throws SAXException {
-       if (done)
+        if (done)
             return;
         setPropertyOnEndTag(qName);
 
@@ -36,12 +33,10 @@ public class NicResponseHandler extends BaseNicResponseHandler<Nic>{
             done = true;
         }
         clearTextBuffer();
-
     }
 
     @Override
     public Nic getResult() {
         return builder.build();
     }
-
 }

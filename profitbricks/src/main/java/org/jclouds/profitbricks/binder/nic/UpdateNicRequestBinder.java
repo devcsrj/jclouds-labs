@@ -30,7 +30,7 @@ public class UpdateNicRequestBinder extends BaseProfitBricksRequestBinder<Nic.Re
     }
 
     protected String createPayload(Nic.Request.UpdatePayload payload) {
-        requestBuilder.append("<ws:updateNic>")
+       requestBuilder.append("<ws:updateNic>")
                 .append("<request>")
                 .append(format("<nicId>%s</nicId>", payload.nicId()))
                 .append(format("<ip>%s</ip>", payload.ip()))
@@ -41,5 +41,4 @@ public class UpdateNicRequestBinder extends BaseProfitBricksRequestBinder<Nic.Re
                 .append("</ws:updateNic>");
         return requestBuilder.toString();
     }
-
 }

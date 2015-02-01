@@ -18,8 +18,10 @@ package org.jclouds.profitbricks.features;
 
 import org.jclouds.profitbricks.BaseProfitBricksLiveTest;
 import org.jclouds.profitbricks.domain.Nic;
+import org.jclouds.profitbricks.domain.ProvisioningState;
 import org.testng.annotations.Test;
 
+import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
 import java.util.List;
@@ -46,7 +48,6 @@ public class NicApiLiveTest extends BaseProfitBricksLiveTest {
 
     @Test
     public void testGetNic() {
-        System.out.println("starting");
         List<Nic> nics = api.nicApi().getAllNics();
 
         Nic nic = api.nicApi().getNic(nics.get(0).nicId());
@@ -63,5 +64,34 @@ public class NicApiLiveTest extends BaseProfitBricksLiveTest {
         Nic nic = api.nicApi().createNic(toCreate);
 
         assertNotNull(nic);
+    }
+
+    @Test
+    public void testUpdateNic() {
+        System.out.println("Getting all nics");
+        List<Nic> nics = api.nicApi().getAllNics();
+
+        System.out.println("Getting one specific to update, its id is " + (nics.size() - 2));
+        Nic originalnic = nics.get(nics.size() - 2);
+        String gatewayip = originalnic.gatewayIp();
+
+        System.out.println("provisioningState " + originalnic.provisioningState().toString());
+
+        Nic.Request.UpdatePayload toUpdate = Nic.Request.UpdatePayload.create(originalnic.nicId(), "192.168.1.138", "new name", originalnic.dhcpActive(), "0");
+
+        System.out.println("Updating one with id " + originalnic.nicId());
+
+        Nic nic = api.nicApi().updateNic(toUpdate);
+        System.out.println("Done updating");
+
+        Nic newNic = api.nicApi().getNic(toUpdate.nicId());
+
+        System.out.println("nicId " + newNic.nicId());
+        System.out.println("dataCenterId " + newNic.dataCenterId());
+        System.out.println("dataCenterVersion " + newNic.dataCenterVersion());
+        System.out.println("ips " + newNic.ips());
+        System.out.println("lanId " + newNic.lanId());
+        System.out.println("provisioningState " + newNic.provisioningState().toString());
+        assertEquals(newNic.provisioningState(), ProvisioningState.INPROCESS);
     }
 }

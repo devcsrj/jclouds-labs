@@ -164,21 +164,6 @@ public abstract class Nic {
         }
 
         public Nic build() {
-            System.out.println("builiding");
-
-            System.out.println(nicId);
-            System.out.println(dataCenterId);
-            System.out.println(dataCenterVersion);
-            System.out.println(lanId);
-            System.out.println(internetAccess);
-            System.out.println(serverId);
-            System.out.println(ips);
-            System.out.println(macAddress);
-            System.out.println(firewalls);
-            System.out.println(dhcpActive);
-            System.out.println(gatewayIp);
-            System.out.println(provisioningState);
-
             return Nic.create(nicId, dataCenterId, dataCenterVersion, lanId, internetAccess, serverId, ips, macAddress, firewalls, dhcpActive, gatewayIp, provisioningState);
         }
 
