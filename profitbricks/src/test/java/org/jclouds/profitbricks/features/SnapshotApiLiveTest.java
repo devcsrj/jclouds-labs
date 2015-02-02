@@ -34,12 +34,8 @@ public class SnapshotApiLiveTest extends BaseProfitBricksLiveTest {
 
     @Test
     public void testCreateSnapshot() {
-        Snapshot snapshot = api.snapshotApi().createSnapshot(Snapshot.Request.CreatePayload.create(storageId, "my description", "test snapshot"));
-
+        Snapshot snapshot = api.snapshotApi().createSnapshot(Snapshot.Request.CreatePayload.create("edd9c7e8-56bc-408d-838d-2a99cb9cec59", "my description", "test snapshot"));
         assertNotNull(snapshot);
-
-        dcWaitingPredicate.apply(snapshot.snapshotId());
-        snapshotId = snapshot.snapshotId();
     }
 
     @Test
