@@ -33,7 +33,7 @@ public class SetInternetAccessBinder extends BaseProfitBricksRequestBinder<Nic.R
     protected String createPayload(Nic.Request.SetInternetAccessPayload payload) {
         requestBuilder.append("<ws:setInternetAccess>")
                 .append(format("<dataCenterId>%s</dataCenterId>", payload.dataCenterId()))
-                .append(format("<dataCenterId>%s</dataCenterId>", payload.lanId()))
+                .append(format("<lanId>%s</lanId>", payload.lanId()))
                 .append(format("<internetAccess>%s</internetAccess>", payload.internetAccess()))
                 .append("</ws:setInternetAccess>");
         return requestBuilder.toString();

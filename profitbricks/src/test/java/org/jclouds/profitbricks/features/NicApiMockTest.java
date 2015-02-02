@@ -148,8 +148,8 @@ public class NicApiMockTest extends BaseProfitBricksMockTest {
                 "<internetAccess>true</internetAccess>" +
                 "</ws:setInternetAccess>";
         try {
-            Nic nic = api.setInternetAccess(Nic.Request.SetInternetAccessPayload.create("lan-id", "lan-id", true));
-            //  assertRequestHasCommonProperties(server.takeRequest(),content);
+            Nic nic = api.setInternetAccess(Nic.Request.SetInternetAccessPayload.create("datacenter-id", "lan-id", true));
+            assertRequestHasCommonProperties(server.takeRequest(),content);
         } finally {
             pbApi.close();
             server.shutdown();

@@ -3,7 +3,9 @@
     <soapenv:Header/>
     <soapenv:Body>
         <ws:setInternetAccess>
-
+            <dataCenterId>datacenter-id</dataCenterId>
+            <lanId>lan-id</lanId>
+            <internetAccess>internet-access</internetAccess>
         </ws:setInternetAccess>
     </soapenv:Body>
 </soapenv:Envelope>
