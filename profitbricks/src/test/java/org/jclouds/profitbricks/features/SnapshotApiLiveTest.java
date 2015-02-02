@@ -13,7 +13,7 @@ import static org.testng.Assert.assertTrue;
 @Test(groups = "live", testName = "DataCenterApiLiveTest", singleThreaded = true)
 public class SnapshotApiLiveTest extends BaseProfitBricksLiveTest {
     private String snapshotId;
-    private String storageId = "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee";
+    private String storageId = "7e84c2ef-968e-42f8-87d2-15aeb1a70539";
 
     @Test
     public void testCreateSnapshot() {
@@ -21,7 +21,6 @@ public class SnapshotApiLiveTest extends BaseProfitBricksLiveTest {
 
         assertNotNull(snapshot);
 
-        dcWaitingPredicate.apply(snapshot.snapshotId());
         snapshotId = snapshot.snapshotId();
     }
 
