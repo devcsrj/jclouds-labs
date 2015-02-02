@@ -70,4 +70,89 @@ public class NicApiMockTest extends BaseProfitBricksMockTest {
             server.shutdown();
         }
     }
+
+    @Test
+    public void testCreateSnapshot() throws Exception {
+        MockWebServer server = mockWebServer();
+        server.enqueue(new MockResponse().setBody(payloadFromResource("/nic/nic-create.xml")));
+
+        ProfitBricksApi pbApi = api(server.getUrl(rootUrl));
+        NicApi api = pbApi.nicApi();
+
+        String content = "<ws:createNic>" +
+                "<request>" +
+                "<ip>ip</ip>" +
+                "<nicName>nic-name</nicName>" +
+                "<dhcpActive>true</dhcpActive>" +
+                "<serverId>server-id</serverId>" +
+                "<lanId>lan-id</lanId>" +
+                "</request>" +
+                "</ws:createNic>";
+
+        try {
+            Nic nic = api.createNic(
+                    Nic.Request.create()
+                            .ip("ip")
+                            .nicName("nic-name")
+                            .dhcpActive(true)
+                            .lanId("lan-id")
+                            .serverId("server-id")
+                            .build());
+
+            assertRequestHasCommonProperties(server.takeRequest(), content);
+            assertNotNull(nic.nicId());
+
+        } finally {
+            pbApi.close();
+            server.shutdown();
+        }
+    }
+
+    @Test
+    public void testUpdateNic() throws Exception {
+        MockWebServer server = mockWebServer();
+        server.enqueue(new MockResponse().setBody(payloadFromResource("/nic/nic-update.xml")));
+
+        ProfitBricksApi pbApi = api(server.getUrl(rootUrl));
+        NicApi api = pbApi.nicApi();
+
+        String content = "<ws:updateNic>" +
+                "<request>" +
+                "<nicId>nic-id</nicId>" +
+                "<ip>ip</ip>" +
+                "<nicName>nic-name</nicName>" +
+                "<dhcpActive>true</dhcpActive>" +
+                "<lanId>lan-id</lanId>" +
+                "</request>" +
+                "</ws:updateNic>";
+        try {
+            Nic nic = api.updateNic(Nic.Request.UpdatePayload.create("nic-id", "ip", "nic-name", true, "lan-id"));
+            assertRequestHasCommonProperties(server.takeRequest(), content);
+        } finally {
+            pbApi.close();
+            server.shutdown();
+        }
+    }
+
+    @Test
+    public void testSetInternetAccess() throws Exception {
+        MockWebServer server = mockWebServer();
+        server.enqueue(new MockResponse().setBody(payloadFromResource("/nic/nic-internetaccess.xml")));
+
+        ProfitBricksApi pbApi = api(server.getUrl(rootUrl));
+        NicApi api = pbApi.nicApi();
+
+        String content = "<ws:setInternetAccess>" +
+                "<dataCenterId>datacenter-id</dataCenterId>" +
+                "<lanId>lan-id</lanId>" +
+                "<internetAccess>true</internetAccess>" +
+                "</ws:setInternetAccess>";
+        try {
+            Nic nic = api.setInternetAccess(Nic.Request.SetInternetAccessPayload.create("lan-id", "lan-id", true));
+            //  assertRequestHasCommonProperties(server.takeRequest(),content);
+        } finally {
+            pbApi.close();
+            server.shutdown();
+        }
+    }
 }

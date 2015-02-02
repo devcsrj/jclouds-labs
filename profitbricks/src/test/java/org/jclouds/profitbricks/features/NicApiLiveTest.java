@@ -73,15 +73,12 @@ public class NicApiLiveTest extends BaseProfitBricksLiveTest {
 
         System.out.println("Getting one specific to update, its id is " + (nics.size() - 2));
         Nic originalnic = nics.get(nics.size() - 2);
-        String gatewayip = originalnic.gatewayIp();
 
         System.out.println("provisioningState " + originalnic.provisioningState().toString());
 
         Nic.Request.UpdatePayload toUpdate = Nic.Request.UpdatePayload.create(originalnic.nicId(), "192.168.1.138", "new name", originalnic.dhcpActive(), "0");
 
         System.out.println("Updating one with id " + originalnic.nicId());
-
-        Nic nic = api.nicApi().updateNic(toUpdate);
 
         System.out.println("Done updating");
 
@@ -101,7 +98,7 @@ public class NicApiLiveTest extends BaseProfitBricksLiveTest {
         List<Nic> nics = api.nicApi().getAllNics();
 
         System.out.println("Getting one specific to update, its id is " + nics.get(nics.size() - 2).nicId());
-        Nic originalnic = Nic.create("", "", "", 0, "", true, "", "", "", null, true, "", ProvisioningState.UNRECOGNIZED);
+        Nic originalnic = Nic.create("", "", "", 0, "", true, "", "", "", true, "", ProvisioningState.UNRECOGNIZED);
 
         for (Nic n : nics) {
             if (!n.lanId().equals("0")) {

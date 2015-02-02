@@ -20,13 +20,12 @@ package org.jclouds.profitbricks.domain;
 import com.google.auto.value.AutoValue;
 import org.jclouds.javax.annotation.Nullable;
 
-import java.util.List;
-
 @AutoValue
 public abstract class Nic {
 
     @Nullable
     public abstract String requestId();
+
     @Nullable
     public abstract String nicId();
 
@@ -51,8 +50,8 @@ public abstract class Nic {
     @Nullable
     public abstract String macAddress();
 
-    @Nullable
-    public abstract List<Firewall> firewalls();
+    // @Nullable
+    // public abstract List<Firewall> firewalls();
 
     @Nullable
     public abstract boolean dhcpActive();
@@ -65,9 +64,9 @@ public abstract class Nic {
 
     public static Nic create(String requestId, String nicId, String dataCenterId, int dataCenterVersion,
                              String lanId, boolean internetAccess, String serverId,
-                             String ips, String macAddress, List<Firewall> firewalls,
+                             String ips, String macAddress,
                              boolean dhcpActive, String gatewayIp, ProvisioningState provisioningState) {
-        return new AutoValue_Nic(requestId, nicId, dataCenterId, dataCenterVersion, lanId, internetAccess, serverId, ips, macAddress, firewalls, dhcpActive, gatewayIp, provisioningState);
+        return new AutoValue_Nic(requestId, nicId, dataCenterId, dataCenterVersion, lanId, internetAccess, serverId, ips, macAddress, dhcpActive, gatewayIp, provisioningState);
     }
 
     public static Builder builder() {
@@ -105,7 +104,7 @@ public abstract class Nic {
 
         public ProvisioningState provisioningState;
 
-        private List<Firewall> firewalls;
+        // private List<Firewall> firewalls;
 
         public Builder requestId(String requestId) {
             this.requestId = requestId;
@@ -162,24 +161,19 @@ public abstract class Nic {
             return this;
         }
 
-        public Builder firewalls(List<Firewall> firewalls) {
-            this.firewalls = firewalls;
-            return this;
-        }
-
         public Builder provisioningState(ProvisioningState provisioningState) {
             this.provisioningState = provisioningState;
             return this;
         }
 
         public Nic build() {
-            return Nic.create(requestId, nicId, dataCenterId, dataCenterVersion, lanId, internetAccess, serverId, ips, macAddress, firewalls, dhcpActive, gatewayIp, provisioningState);
+            return Nic.create(requestId, nicId, dataCenterId, dataCenterVersion, lanId, internetAccess, serverId, ips, macAddress, dhcpActive, gatewayIp, provisioningState);
         }
 
         private Builder fromNic(Nic in) {
             return this.nicId(in.nicId()).dataCenterId(in.dataCenterId()).dataCenterVersion(in.dataCenterVersion())
                     .lanId(in.lanId()).internetAccess(in.internetAccess()).serverId(in.serverId())
-                    .ips(in.ips()).macAddress(in.macAddress()).dhcpActive(in.dhcpActive()).gatewayIp(in.gatewayIp()).firewalls(in.firewalls()).requestId(in.requestId());
+                    .ips(in.ips()).macAddress(in.macAddress()).dhcpActive(in.dhcpActive()).gatewayIp(in.gatewayIp()).requestId(in.requestId());
         }
     }
 
