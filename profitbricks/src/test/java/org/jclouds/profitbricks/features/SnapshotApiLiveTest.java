@@ -23,16 +23,18 @@ import org.jclouds.profitbricks.domain.Snapshot;
 import org.testng.annotations.Test;
 
 import java.util.List;
+import org.jclouds.profitbricks.domain.ProvisioningState;
 import org.jclouds.profitbricks.domain.Storage;
+import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
 
-@Test(groups = "live", testName = "DataCenterApiLiveTest", singleThreaded = true)
+@Test(groups = "live", testName = "SnapshotApiLiveTest", singleThreaded = true)
 public class SnapshotApiLiveTest extends BaseProfitBricksLiveTest {
 
-    private String snapshotId;
+    private String snapshotId = "3d5caf11-9c1b-42f6-9327-852e6230a53c";
     private String storageId;
 
     @Override
@@ -42,15 +44,19 @@ public class SnapshotApiLiveTest extends BaseProfitBricksLiveTest {
         assertFalse(storages.isEmpty(), "Must atleast have 1 datacenter available for server testing.");
 
         storageId = Iterables.getFirst(storages, null).id();
+
+        System.out.println("Storages count " + storages.size());
+
     }
 
     @Test
     public void testCreateSnapshot() {
+        getStorage();
         Snapshot snapshot = api.snapshotApi().createSnapshot(Snapshot.Request.CreatePayload.create(storageId, "my description", "test snapshot"));
 
         assertNotNull(snapshot);
-
-        snapshotId = snapshot.snapshotId();
+        System.out.print(snapshot);
+        snapshotId = snapshot.id();
     }
 
     @Test
@@ -58,30 +64,47 @@ public class SnapshotApiLiveTest extends BaseProfitBricksLiveTest {
         List<Snapshot> snapshots = api.snapshotApi().getAllSnapshots();
 
         System.out.println("Snapshots count " + snapshots.size());
+        snapshotId = snapshots.get(0).id();
+        System.out.println("Taking one snapshot ID " + snapshotId);
+
         assertNotNull(snapshots);
-        assertTrue(snapshots.size() > 0);
+        assertEquals(snapshots.size() > 0, true);
     }
 
     @Test
     public void testGetSnapshot() {
+        getSnapshotId();
+
         Snapshot snapshot = api.snapshotApi().getSnapshot(snapshotId);
 
+        System.out.print(snapshot);
+
         assertNotNull(snapshot);
-        assertTrue(snapshot.snapshotId().equals(snapshotId));
+        assertTrue(snapshot.id().equals(snapshotId));
     }
 
     @Test
     public void testUpdateSnapshot() {
-        api.snapshotApi().updateSnapshot(Snapshot.Request.UpdatePayload.create(snapshotId, "new description", "new name", true, OsType.LINUX, true, true, true, true, true, true, true, true));
+        getSnapshotId();
+
+        System.out.println("Updating snapshot " + snapshotId);
+
+        api.snapshotApi().updateSnapshot(Snapshot.Request.UpdatePayload.create(snapshotId, "new description", "new name123", true, OsType.LINUX, true, true, true, true, true, true, true, true));
 
         Snapshot snapshot = api.snapshotApi().getSnapshot(snapshotId);
 
+        System.out.print(snapshot);
+
         assertNotNull(snapshot);
-        assertTrue(snapshot.description().equals("new description"));
+        assertEquals(snapshot.name(), "new name123");
     }
 
     @Test
     public void testRollbackSnapshot() {
+        getSnapshotId();
+
+        System.out.println("Rolling back snapshot " + snapshotId);
+
         boolean result = api.snapshotApi().rollbackSnapshot(Snapshot.Request.RollbackPayload.create(snapshotId, storageId));
 
         assertTrue(result);
@@ -89,9 +112,35 @@ public class SnapshotApiLiveTest extends BaseProfitBricksLiveTest {
 
     @Test
     public void testDeleteSnapshot() {
+        getSnapshotId();
+
+        System.out.println("Deleting snapshot " + snapshotId);
         boolean result = api.snapshotApi().deleteSnapshot(snapshotId);
 
         assertTrue(result);
     }
 
+    private void getSnapshotId() {
+        if (snapshotId == null) {
+            System.out.println("SnapshotId is null.");
+            System.out.println("Fetching a new one.");
+            List<Snapshot> snapshots = api.snapshotApi().getAllSnapshots();
+
+            for (Snapshot s : snapshots) {
+                if (s.state().equals(ProvisioningState.AVAILABLE)) {
+                    snapshotId = s.id();
+                }
+            }
+        }
+    }
+
+    private void getStorage() {
+        if (storageId == null) {
+            System.out.println("Storage ID is null.");
+            System.out.println("Fetching a new one.");
+            List<Storage> storages = api.storageApi().getAllStorages();
+
+            storageId = Iterables.getFirst(storages, null).id();
+        }
+    }
 }

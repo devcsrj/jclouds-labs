@@ -25,7 +25,7 @@ import java.util.Date;
 public abstract class Snapshot {
 
     @Nullable
-    public abstract String snapshotId();
+    public abstract String id();
 
     @Nullable
     public abstract String name();
@@ -192,7 +192,7 @@ public abstract class Snapshot {
         }
 
         private Builder fromSnapshot(Snapshot in) {
-            return this.id(in.snapshotId()).name(in.name()).size(in.size()).creationTime(in.creationTime())
+            return this.id(in.id()).name(in.name()).size(in.size()).creationTime(in.creationTime())
                     .lastModificationTime(in.lastModificationTime()).state(in.state()).bootable(in.bootable()).description(in.description())
                     .cpuHotPlug(in.cpuHotPlug()).cpuHotUnPlug(in.cpuHotUnPlug()).discVirtioHotPlug(in.discVirtioHotPlug())
                     .discVirtioHotUnPlug(in.discVirtioHotUnPlug()).ramHotPlug(in.ramHotPlug()).ramHotUnPlug(in.ramHotUnPlug())
@@ -200,7 +200,7 @@ public abstract class Snapshot {
         }
 
         public Snapshot build() {
-            return Snapshot.create(id, description, size, bootable, description, osType, cpuHotPlug, cpuHotUnPlug, discVirtioHotPlug, discVirtioHotUnPlug, ramHotPlug, ramHotUnPlug, nicHotPlug, nicHotUnPlug, creationTime, lastModificationTime, state, location);
+            return Snapshot.create(id, name, size, bootable, description, osType, cpuHotPlug, cpuHotUnPlug, discVirtioHotPlug, discVirtioHotUnPlug, ramHotPlug, ramHotUnPlug, nicHotPlug, nicHotUnPlug, creationTime, lastModificationTime, state, location);
         }
     }
 

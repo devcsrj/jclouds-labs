@@ -90,7 +90,7 @@ public class SnapshotApiMockTest extends BaseProfitBricksMockTest {
             Snapshot snapshot = api.getSnapshot(id);
             assertRequestHasCommonProperties(server.takeRequest(), content);
             assertNotNull(snapshot);
-            assertEquals(snapshot.snapshotId(), id);
+            assertEquals(snapshot.id(), id);
         } finally {
             pbApi.close();
             server.shutdown();
@@ -142,8 +142,8 @@ public class SnapshotApiMockTest extends BaseProfitBricksMockTest {
                     .snapshotName("snapshot-name")
                     .build());
             assertRequestHasCommonProperties(server.takeRequest(), content);
-            assertNotNull(snapshot.snapshotId());
-            assertEquals(snapshot.snapshotId(), "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee");
+            assertNotNull(snapshot.id());
+            assertEquals(snapshot.id(), "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee");
 
         } finally {
             pbApi.close();

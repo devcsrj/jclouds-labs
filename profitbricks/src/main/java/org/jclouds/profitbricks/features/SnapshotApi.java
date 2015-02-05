@@ -16,7 +16,6 @@
  */
 package org.jclouds.profitbricks.features;
 
-
 import java.util.List;
 
 import javax.inject.Named;
@@ -32,6 +31,7 @@ import org.jclouds.profitbricks.binder.snapshot.RollbackSnapshotRequestHandler;
 import org.jclouds.profitbricks.binder.snapshot.UpdateSnapshotRequestBinder;
 import org.jclouds.profitbricks.domain.Snapshot;
 import org.jclouds.profitbricks.http.filters.ProfitBricksSoapMessageEnvelope;
+import org.jclouds.profitbricks.http.parser.RequestIdOnlyResponseHandler;
 import org.jclouds.profitbricks.http.parser.snapshot.SnapshotResponseHandler;
 import org.jclouds.profitbricks.http.parser.snapshot.SnapshotListResponseHandler;
 import org.jclouds.rest.annotations.Fallback;
@@ -66,24 +66,22 @@ public interface SnapshotApi {
     @XMLResponseParser(SnapshotResponseHandler.class)
     Snapshot createSnapshot(@PayloadParam("snapshot") Snapshot.Request.CreatePayload payload);
 
-
     @POST
     @Named("snapshot:update")
     @MapBinder(UpdateSnapshotRequestBinder.class)
-    @XMLResponseParser(SnapshotResponseHandler.class)
-    Snapshot updateSnapshot(@PayloadParam("snapshot") Snapshot.Request.UpdatePayload payload);
+    @XMLResponseParser(RequestIdOnlyResponseHandler.class)
+    String updateSnapshot(@PayloadParam("snapshot") Snapshot.Request.UpdatePayload payload);
 
     @POST
-    @Named( "snapshot:delete" )
-    @Payload( "<ws:deleteSnapshot><snapshotId>{id}</snapshotId></ws:deleteSnapshot>" )
-    @Fallback( Fallbacks.FalseOnNotFoundOr404.class )
-    boolean deleteSnapshot( @PayloadParam( "id" ) String id );
+    @Named("snapshot:delete")
+    @Payload("<ws:deleteSnapshot><snapshotId>{id}</snapshotId></ws:deleteSnapshot>")
+    @Fallback(Fallbacks.FalseOnNotFoundOr404.class)
+    boolean deleteSnapshot(@PayloadParam("id") String id);
 
     @POST
-    @Named( "snapshot:rollback" )
-    @MapBinder( RollbackSnapshotRequestHandler.class )
-    @Fallback( Fallbacks.FalseOnNotFoundOr404.class )
+    @Named("snapshot:rollback")
+    @MapBinder(RollbackSnapshotRequestHandler.class)
+    @Fallback(Fallbacks.FalseOnNotFoundOr404.class)
     boolean rollbackSnapshot(@PayloadParam("snapshot") Snapshot.Request.RollbackPayload payload);
 
 }
-
