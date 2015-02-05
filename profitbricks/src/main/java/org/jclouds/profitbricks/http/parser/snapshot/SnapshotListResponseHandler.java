@@ -22,9 +22,6 @@ import org.xml.sax.SAXException;
 
 import java.util.List;
 
-/**
- * Created by JASMIN on 01/26/15.
- */
 public class SnapshotListResponseHandler extends BaseSnapshotResponseHandler<List<Snapshot>> {
 
     private final List<Snapshot> snapshots;
