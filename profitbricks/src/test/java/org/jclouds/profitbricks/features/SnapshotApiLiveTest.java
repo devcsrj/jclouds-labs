@@ -1,19 +1,48 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.jclouds.profitbricks.features;
 
+import com.google.common.collect.Iterables;
 import org.jclouds.profitbricks.BaseProfitBricksLiveTest;
 import org.jclouds.profitbricks.domain.OsType;
 import org.jclouds.profitbricks.domain.Snapshot;
 import org.testng.annotations.Test;
 
 import java.util.List;
+import org.jclouds.profitbricks.domain.Storage;
+import static org.testng.Assert.assertFalse;
 
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
 
 @Test(groups = "live", testName = "DataCenterApiLiveTest", singleThreaded = true)
 public class SnapshotApiLiveTest extends BaseProfitBricksLiveTest {
+
     private String snapshotId;
-    private String storageId = "7e84c2ef-968e-42f8-87d2-15aeb1a70539";
+    private String storageId;
+
+    @Override
+    protected void initialize() {
+        super.initialize();
+        List<Storage> storages = api.storageApi().getAllStorages();
+        assertFalse(storages.isEmpty(), "Must atleast have 1 datacenter available for server testing.");
+
+        storageId = Iterables.getFirst(storages, null).id();
+    }
 
     @Test
     public void testCreateSnapshot() {
@@ -28,6 +57,7 @@ public class SnapshotApiLiveTest extends BaseProfitBricksLiveTest {
     public void testGetAllSnapshots() {
         List<Snapshot> snapshots = api.snapshotApi().getAllSnapshots();
 
+        System.out.println("Snapshots count " + snapshots.size());
         assertNotNull(snapshots);
         assertTrue(snapshots.size() > 0);
     }
@@ -37,7 +67,7 @@ public class SnapshotApiLiveTest extends BaseProfitBricksLiveTest {
         Snapshot snapshot = api.snapshotApi().getSnapshot(snapshotId);
 
         assertNotNull(snapshot);
-        assertTrue(snapshot.snapshotId() == snapshotId);
+        assertTrue(snapshot.snapshotId().equals(snapshotId));
     }
 
     @Test
@@ -46,7 +76,8 @@ public class SnapshotApiLiveTest extends BaseProfitBricksLiveTest {
 
         Snapshot snapshot = api.snapshotApi().getSnapshot(snapshotId);
 
-        assertTrue(snapshot.description() == "new description");
+        assertNotNull(snapshot);
+        assertTrue(snapshot.description().equals("new description"));
     }
 
     @Test

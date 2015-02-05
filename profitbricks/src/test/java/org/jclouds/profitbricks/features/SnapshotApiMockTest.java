@@ -25,11 +25,14 @@ import org.jclouds.profitbricks.internal.BaseProfitBricksMockTest;
 import org.testng.annotations.Test;
 
 import java.util.List;
-
-import static org.testng.Assert.*;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertNull;
+import static org.testng.Assert.assertTrue;
 
 /**
- * Mock tests for the {@link org.jclouds.profitbricks.features.DataCenterApi} class
+ * Mock tests for the {@link org.jclouds.profitbricks.features.DataCenterApi}
+ * class
  */
 @Test(groups = "unit", testName = "DataCenterApiMockTest")
 public class SnapshotApiMockTest extends BaseProfitBricksMockTest {
@@ -123,21 +126,21 @@ public class SnapshotApiMockTest extends BaseProfitBricksMockTest {
 
         String storageId = "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee";
 
-        String content = "<ws:createSnapshot>" +
-                "<request>" +
-                "<storageId>" + storageId + "</storageId>" +
-                "<description>description</description>" +
-                "<snapshotName>snapshot-name</snapshotName>" +
-                "</request>" +
-                "</ws:createSnapshot>";
+        String content = "<ws:createSnapshot>"
+                + "<request>"
+                + "<storageId>" + storageId + "</storageId>"
+                + "<description>description</description>"
+                + "<snapshotName>snapshot-name</snapshotName>"
+                + "</request>"
+                + "</ws:createSnapshot>";
 
         try {
             Snapshot snapshot = api.createSnapshot(
                     Snapshot.Request.creatingBuilder()
-                            .storageId(storageId)
-                            .description("description")
-                            .snapshotName("snapshot-name")
-                            .build());
+                    .storageId(storageId)
+                    .description("description")
+                    .snapshotName("snapshot-name")
+                    .build());
             assertRequestHasCommonProperties(server.takeRequest(), content);
             assertNotNull(snapshot.snapshotId());
             assertEquals(snapshot.snapshotId(), "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee");
@@ -158,23 +161,23 @@ public class SnapshotApiMockTest extends BaseProfitBricksMockTest {
 
         String snapshotId = "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee";
 
-        String content = "<ws:updateSnapshot>" +
-                "<request>" +
-                "<snapshotId>" + snapshotId + "</snapshotId>" +
-                "<description>description</description>" +
-                "<snapshotName>snapshot-name</snapshotName>" +
-                "<bootable>false</bootable>" +
-                "<osType>LINUX</osType>" +
-                "<cpuHotPlug>false</cpuHotPlug>" +
-                "<cpuHotUnPlug>false</cpuHotUnPlug>" +
-                "<ramHotPlug>false</ramHotPlug>" +
-                "<ramHotUnPlug>false</ramHotUnPlug>" +
-                "<nicHotPlug>false</nicHotPlug>" +
-                "<nicHotUnPlug>false</nicHotUnPlug>" +
-                "<discVirtioHotPlug>false</discVirtioHotPlug>" +
-                "<discVirtioHotUnPlug>false</discVirtioHotUnPlug>" +
-                "</request>" +
-                "</ws:updateSnapshot>";
+        String content = "<ws:updateSnapshot>"
+                + "<request>"
+                + "<snapshotId>" + snapshotId + "</snapshotId>"
+                + "<description>description</description>"
+                + "<snapshotName>snapshot-name</snapshotName>"
+                + "<bootable>false</bootable>"
+                + "<osType>LINUX</osType>"
+                + "<cpuHotPlug>false</cpuHotPlug>"
+                + "<cpuHotUnPlug>false</cpuHotUnPlug>"
+                + "<ramHotPlug>false</ramHotPlug>"
+                + "<ramHotUnPlug>false</ramHotUnPlug>"
+                + "<nicHotPlug>false</nicHotPlug>"
+                + "<nicHotUnPlug>false</nicHotUnPlug>"
+                + "<discVirtioHotPlug>false</discVirtioHotPlug>"
+                + "<discVirtioHotUnPlug>false</discVirtioHotUnPlug>"
+                + "</request>"
+                + "</ws:updateSnapshot>";
 
         try {
             Snapshot requestId = api.updateSnapshot(Snapshot.Request.updatingBuilder()
@@ -213,26 +216,25 @@ public class SnapshotApiMockTest extends BaseProfitBricksMockTest {
     }
 
     @Test
-    public void testRollbackSnapshot() throws Exception{
+    public void testRollbackSnapshot() throws Exception {
         MockWebServer server = mockWebServer();
         server.enqueue(new MockResponse().setBody(payloadFromResource("/snapshot/snapshot-rollback.xml")));
 
         ProfitBricksApi pbApi = api(server.getUrl(rootUrl));
         SnapshotApi api = pbApi.snapshotApi();
 
-        String snapshotId ="qswdefrg-qaws-qaws-defe-rgrgdsvcxbrh";
+        String snapshotId = "qswdefrg-qaws-qaws-defe-rgrgdsvcxbrh";
         String storageId = "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee";
 
-        String content =    "<ws:rollbackSnapshot><request><snapshotId>"+snapshotId+"</snapshotId><storageId>"+storageId+"</storageId></request></ws:rollbackSnapshot>";
-        try{
-           boolean result = api.rollbackSnapshot(Snapshot.Request.rollbackBuilder()
+        String content = "<ws:rollbackSnapshot><request><snapshotId>" + snapshotId + "</snapshotId><storageId>" + storageId + "</storageId></request></ws:rollbackSnapshot>";
+        try {
+            boolean result = api.rollbackSnapshot(Snapshot.Request.rollbackBuilder()
                     .snapshotId(snapshotId)
                     .storageId(storageId)
                     .build());
             assertRequestHasCommonProperties(server.takeRequest(), content);
             assertTrue(result);
-        }
-        finally {
+        } finally {
             pbApi.close();
             server.shutdown();
         }
