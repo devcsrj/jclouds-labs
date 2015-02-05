@@ -4,7 +4,7 @@
         <ns2:getSnapshotResponse xmlns:ns2="http://ws.api.profitbricks.com/">
             <return>
                 <snapshotId>qswdefrg-qaws-qaws-defe-rgrgdsvcxbrh</snapshotId>
-                <description>descr42q3ersiption</description>
+                <description>description</description>
                 <snapshotSize>1024</snapshotSize>
                 <snapshotName>snapshot01</snapshotName>
                 <provisioningState>AVAILABLE</provisioningState>

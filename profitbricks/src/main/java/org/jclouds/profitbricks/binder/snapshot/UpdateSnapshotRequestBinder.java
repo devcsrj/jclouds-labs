@@ -20,11 +20,11 @@ import static java.lang.String.format;
 import org.jclouds.profitbricks.binder.BaseProfitBricksRequestBinder;
 import org.jclouds.profitbricks.domain.Snapshot;
 
-public class UpdateSnapshotRequestBinder extends BaseProfitBricksRequestBinder<Snapshot.Request.UpdatePayload> {
+public class UpdateSnapshotRequestBinder extends BaseProfitBricksRequestBinder <Snapshot.Request.UpdatePayload>{
 
     protected final StringBuilder requestBuilder;
 
-    protected UpdateSnapshotRequestBinder() {
+    protected UpdateSnapshotRequestBinder(){
         super("snapshot");
         this.requestBuilder = new StringBuilder(128);
     }
@@ -48,9 +48,6 @@ public class UpdateSnapshotRequestBinder extends BaseProfitBricksRequestBinder<S
                 .append(formatIfNotEmpty("<discVirtioHotUnPlug>%s</discVirtioHotUnPlug>", payload.discVirtioHotunplug()))
                 .append("</request>")
                 .append("</ws:updateSnapshot>");
-
-        System.out.println(requestBuilder.toString());
-
         return requestBuilder.toString();
     }
 }

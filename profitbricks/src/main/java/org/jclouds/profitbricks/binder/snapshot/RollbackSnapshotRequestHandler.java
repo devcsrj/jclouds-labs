@@ -22,7 +22,6 @@ import org.jclouds.profitbricks.domain.Snapshot;
 import static java.lang.String.format;
 
 public class RollbackSnapshotRequestHandler extends BaseProfitBricksRequestBinder<Snapshot.Request.RollbackPayload> {
-
     protected final StringBuilder requestBuilder;
 
     protected RollbackSnapshotRequestHandler() {
@@ -31,7 +30,7 @@ public class RollbackSnapshotRequestHandler extends BaseProfitBricksRequestBinde
     }
 
     @Override
-    protected String createPayload(Snapshot.Request.RollbackPayload payload) {
+    protected String createPayload(Snapshot.Request.RollbackPayload payload){
         requestBuilder.append("<ws:rollbackSnapshot>")
                 .append("<request>")
                 .append(format("<snapshotId>%s</snapshotId>", payload.snapshotId()))

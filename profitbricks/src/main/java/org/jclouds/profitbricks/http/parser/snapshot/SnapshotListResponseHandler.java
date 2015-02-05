@@ -22,6 +22,9 @@ import org.xml.sax.SAXException;
 
 import java.util.List;
 
+/**
+ * Created by JASMIN on 01/26/15.
+ */
 public class SnapshotListResponseHandler extends BaseSnapshotResponseHandler<List<Snapshot>> {
 
     private final List<Snapshot> snapshots;
@@ -31,10 +34,10 @@ public class SnapshotListResponseHandler extends BaseSnapshotResponseHandler<Lis
     }
 
     @Override
-    public void endElement(String uri, String localName, String qName) throws SAXException {
-        setPropertyOnEndTag(qName);
-        if ("return".equals(qName)) {
-            snapshots.add(builder.build());
+    public void endElement( String uri, String localName, String qName ) throws SAXException {
+        setPropertyOnEndTag( qName );
+        if ( "return".equals( qName ) ) {
+            snapshots.add( builder.build() );
             builder = Snapshot.builder();
         }
         clearTextBuffer();
