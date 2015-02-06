@@ -34,7 +34,7 @@ import static org.testng.Assert.assertTrue;
  * Mock tests for the {@link org.jclouds.profitbricks.features.DataCenterApi}
  * class
  */
-@Test(groups = "unit", testName = "DataCenterApiMockTest")
+@Test(groups = "unit", testName = "SnapshotApiMockTest")
 public class SnapshotApiMockTest extends BaseProfitBricksMockTest {
 
     @Test
@@ -90,7 +90,7 @@ public class SnapshotApiMockTest extends BaseProfitBricksMockTest {
             Snapshot snapshot = api.getSnapshot(id);
             assertRequestHasCommonProperties(server.takeRequest(), content);
             assertNotNull(snapshot);
-            assertEquals(snapshot.snapshotId(), id);
+            assertEquals(snapshot.id(), id);
         } finally {
             pbApi.close();
             server.shutdown();
@@ -139,11 +139,11 @@ public class SnapshotApiMockTest extends BaseProfitBricksMockTest {
                     Snapshot.Request.creatingBuilder()
                     .storageId(storageId)
                     .description("description")
-                    .snapshotName("snapshot-name")
+                    .name("snapshot-name")
                     .build());
             assertRequestHasCommonProperties(server.takeRequest(), content);
-            assertNotNull(snapshot.snapshotId());
-            assertEquals(snapshot.snapshotId(), "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee");
+            assertNotNull(snapshot.id());
+            assertEquals(snapshot.id(), "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee");
 
         } finally {
             pbApi.close();
@@ -180,9 +180,9 @@ public class SnapshotApiMockTest extends BaseProfitBricksMockTest {
                 + "</ws:updateSnapshot>";
 
         try {
-            Snapshot requestId = api.updateSnapshot(Snapshot.Request.updatingBuilder()
+            String requestId = api.updateSnapshot(Snapshot.Request.updatingBuilder()
                     .snapshotId(snapshotId)
-                    .snapshotName("snapshot-name")
+                    .name("snapshot-name")
                     .description("description")
                     .osType(OsType.LINUX)
                     .build());

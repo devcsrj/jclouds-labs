@@ -33,7 +33,7 @@ public class CreateSnapshotRequestBinderTest {
         Snapshot.Request.CreatePayload payload = Snapshot.Request.CreatePayload.create("123-1233-1324", "describingthesnapshot", "snapshotname");
 
         String actual = binder.createPayload(payload);
-        assertNotNull(actual, "Binder returned null payload");
+        assertNotNull(actual, "Binder returned null payload");  
         assertEquals(expectedPayload, actual);
     }
 
