@@ -28,8 +28,8 @@ public abstract class BaseProfitBricksResponseHandler<T> extends ParseSax.Handle
    }
 
    @Override
-   public void characters( char ch[], int start, int length ) {
-      strBuilder.append( ch, start, length );
+   public void characters(char ch[], int start, int length) {
+      strBuilder.append(ch, start, length);
    }
 
    protected String textToStringValue() {
@@ -37,11 +37,11 @@ public abstract class BaseProfitBricksResponseHandler<T> extends ParseSax.Handle
    }
 
    protected Float textToFloatValue() {
-      return Float.valueOf( textToStringValue() );
+      return Float.valueOf(textToStringValue());
    }
 
    protected Double textToDoubleValue() {
-      return Double.valueOf( textToStringValue() );
+      return Double.valueOf(textToStringValue());
    }
 
    protected int textToIntValue() {

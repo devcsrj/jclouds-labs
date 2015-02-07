@@ -26,20 +26,20 @@ public class ConnectStorageToServerRequestBinder extends BaseProfitBricksRequest
    protected final StringBuilder requestBuilder;
 
    ConnectStorageToServerRequestBinder() {
-      super( "storage" );
-      this.requestBuilder = new StringBuilder( 128 * 2 );
+      super("storage");
+      this.requestBuilder = new StringBuilder(128 * 2);
    }
 
    @Override
-   protected String createPayload( Storage.Request.ConnectPayload payload ) {
-      requestBuilder.append( "<ws:connectStorageToServer>" )
-              .append( "<request>" )
-              .append( format( "<storageId>%s</storageId>", payload.storageId() ) )
-              .append( format( "<serverId>%s</serverId>", payload.serverId() ) )
-              .append( formatIfNotEmpty( "<busType>%s</busType>", payload.busType() ) )
-              .append( formatIfNotEmpty( "<deviceNumber>%s</deviceNumber>", payload.deviceNumber() ) )
-              .append( "</request>" )
-              .append( "</ws:connectStorageToServer>" );
+   protected String createPayload(Storage.Request.ConnectPayload payload) {
+      requestBuilder.append("<ws:connectStorageToServer>")
+              .append("<request>")
+              .append(format("<storageId>%s</storageId>", payload.storageId()))
+              .append(format("<serverId>%s</serverId>", payload.serverId()))
+              .append(formatIfNotEmpty("<busType>%s</busType>", payload.busType()))
+              .append(formatIfNotEmpty("<deviceNumber>%s</deviceNumber>", payload.deviceNumber()))
+              .append("</request>")
+              .append("</ws:connectStorageToServer>");
       return requestBuilder.toString();
    }
 }

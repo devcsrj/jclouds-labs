@@ -25,21 +25,21 @@ public class CreateStorageRequestBinder extends BaseProfitBricksRequestBinder<St
    protected final StringBuilder requestBuilder;
 
    CreateStorageRequestBinder() {
-      super( "storage" );
-      this.requestBuilder = new StringBuilder( 128 * 2 );
+      super("storage");
+      this.requestBuilder = new StringBuilder(128 * 2);
    }
 
    @Override
-   protected String createPayload( Storage.Request.CreatePayload payload ) {
-      requestBuilder.append( "<ws:createStorage>" )
-              .append( "<request>" )
-              .append( format( "<dataCenterId>%s</dataCenterId>", payload.dataCenterId() ) )
-              .append( formatIfNotEmpty( "<storageName>%s</storageName>", payload.name() ) )
-              .append( format( "<size>%.0f</size>", payload.size() ) )
-              .append( formatIfNotEmpty( "<mountImageId>%s</mountImageId>", payload.mountImageId() ) )
-              .append( formatIfNotEmpty( "<profitBricksImagePassword>%s</profitBricksImagePassword>", payload.profitBricksImagePassword() ) )
-              .append( "</request>" )
-              .append( "</ws:createStorage>" );
+   protected String createPayload(Storage.Request.CreatePayload payload) {
+      requestBuilder.append("<ws:createStorage>")
+              .append("<request>")
+              .append(format("<dataCenterId>%s</dataCenterId>", payload.dataCenterId()))
+              .append(formatIfNotEmpty("<storageName>%s</storageName>", payload.name()))
+              .append(format("<size>%.0f</size>", payload.size()))
+              .append(formatIfNotEmpty("<mountImageId>%s</mountImageId>", payload.mountImageId()))
+              .append(formatIfNotEmpty("<profitBricksImagePassword>%s</profitBricksImagePassword>", payload.profitBricksImagePassword()))
+              .append("</request>")
+              .append("</ws:createStorage>");
       return requestBuilder.toString();
    }
 

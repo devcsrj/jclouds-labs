@@ -28,18 +28,18 @@ public class StorageListResponseHandler extends BaseStorageResponseHandler<List<
    private final List<Storage> storages;
 
    @Inject
-   StorageListResponseHandler( DateCodecFactory dateCodec ) {
-      super( dateCodec );
+   StorageListResponseHandler(DateCodecFactory dateCodec) {
+      super(dateCodec);
       this.storages = Lists.newArrayList();
    }
 
    @Override
-   public void endElement( String uri, String localName, String qName ) throws SAXException {
-      setPropertyOnEndTag( qName );
-      if ( "return".equals( qName ) ) {
-         storages.add( builder
-                 .serverIds( serverIds )
-                 .build() );
+   public void endElement(String uri, String localName, String qName) throws SAXException {
+      setPropertyOnEndTag(qName);
+      if ("return".equals(qName)) {
+         storages.add(builder
+                 .serverIds(serverIds)
+                 .build());
          builder = Storage.builder();
          serverIds = Lists.newArrayList();
       }

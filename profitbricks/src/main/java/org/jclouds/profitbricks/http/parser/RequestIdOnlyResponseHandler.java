@@ -26,14 +26,14 @@ public class RequestIdOnlyResponseHandler extends BaseProfitBricksResponseHandle
    }
 
    @Override
-   public void endElement( String uri, String localName, String qName ) throws SAXException {
-      setPropertyOnEndTag( qName );
+   public void endElement(String uri, String localName, String qName) throws SAXException {
+      setPropertyOnEndTag(qName);
       clearTextBuffer();
    }
 
    @Override
-   protected void setPropertyOnEndTag( String qName ) {
-      if ( "requestId".equals( qName ) )
+   protected void setPropertyOnEndTag(String qName) {
+      if ("requestId".equals(qName))
          requestId = textToStringValue();
    }
 

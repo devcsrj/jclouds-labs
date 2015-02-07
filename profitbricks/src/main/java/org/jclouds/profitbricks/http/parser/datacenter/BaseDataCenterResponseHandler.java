@@ -28,11 +28,11 @@ public abstract class BaseDataCenterResponseHandler<T> extends BaseProfitBricksR
    }
 
    @Override
-   protected void setPropertyOnEndTag( String qName ) {
-      if ( "dataCenterId".equals( qName ) )
-         builder.id( textToStringValue() );
-      else if ( "dataCenterVersion".equals( qName ) )
-         builder.version( textToIntValue() );
+   protected void setPropertyOnEndTag(String qName) {
+      if ("dataCenterId".equals(qName))
+         builder.id(textToStringValue());
+      else if ("dataCenterVersion".equals(qName))
+         builder.version(textToIntValue());
    }
 
 }

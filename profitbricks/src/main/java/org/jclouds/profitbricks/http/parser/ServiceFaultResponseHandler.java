@@ -29,23 +29,23 @@ public class ServiceFaultResponseHandler extends BaseProfitBricksResponseHandler
    }
 
    @Override
-   protected void setPropertyOnEndTag( String qName ) {
-      if ( "faultCode".equals( qName ) )
-         builder.faultCode( ServiceFault.FaultCode.fromValue( textToStringValue() ) );
-      else if ( "httpCode".equals( qName ) )
-         builder.httpCode( textToIntValue() );
-      else if ( "message".equals( qName ) )
-         builder.message( textToStringValue() );
-      else if ( "requestId".equals( qName ) )
-         builder.requestId( textToIntValue() );
+   protected void setPropertyOnEndTag(String qName) {
+      if ("faultCode".equals(qName))
+         builder.faultCode(ServiceFault.FaultCode.fromValue(textToStringValue()));
+      else if ("httpCode".equals(qName))
+         builder.httpCode(textToIntValue());
+      else if ("message".equals(qName))
+         builder.message(textToStringValue());
+      else if ("requestId".equals(qName))
+         builder.requestId(textToIntValue());
    }
 
    @Override
-   public void endElement( String uri, String localName, String qName ) throws SAXException {
-      if ( done )
+   public void endElement(String uri, String localName, String qName) throws SAXException {
+      if (done)
          return;
-      setPropertyOnEndTag( qName );
-      if ( "detail".equals( qName ) )
+      setPropertyOnEndTag(qName);
+      if ("detail".equals(qName))
          done = true;
       clearTextBuffer();
    }

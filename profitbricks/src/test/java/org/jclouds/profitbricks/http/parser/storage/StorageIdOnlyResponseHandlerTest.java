@@ -22,21 +22,21 @@ import org.jclouds.http.functions.ParseSax;
 import org.jclouds.profitbricks.http.parser.BaseResponseHandlerTest;
 import org.testng.annotations.Test;
 
-@Test( groups = "unit", testName = "StorageIdOnlyResponseHandlerTest" )
+@Test(groups = "unit", testName = "StorageIdOnlyResponseHandlerTest")
 public class StorageIdOnlyResponseHandlerTest extends BaseResponseHandlerTest<String> {
 
    @Override
    protected ParseSax<String> createParser() {
-      return factory.create( injector.getInstance( StorageIdOnlyResponseHandler.class ) );
+      return factory.create(injector.getInstance(StorageIdOnlyResponseHandler.class));
    }
 
    @Test
    public void testParseResponseFromCreateStorage() {
       ParseSax<String> parser = createParser();
 
-      String storageId = parser.parse( payloadFromResource( "/storage/storage-create.xml" ) );
+      String storageId = parser.parse(payloadFromResource("/storage/storage-create.xml"));
 
-      assertEquals( "qswdefrg-qaws-qaws-defe-rgrgdsvcxbrh", storageId );
+      assertEquals("qswdefrg-qaws-qaws-defe-rgrgdsvcxbrh", storageId);
    }
 
 }

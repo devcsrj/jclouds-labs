@@ -44,63 +44,63 @@ public class DataCenterInfoResponseHandler extends BaseDataCenterResponseHandler
    private boolean useStorageParser = false;
 
    @Inject
-   DataCenterInfoResponseHandler( ServerInfoResponseHandler serverInfoResponseHandler, StorageInfoResponseHandler storageInforResponseHandler ) {
+   DataCenterInfoResponseHandler(ServerInfoResponseHandler serverInfoResponseHandler, StorageInfoResponseHandler storageInforResponseHandler) {
       this.serverInfoResponseHandler = serverInfoResponseHandler;
       this.storageInfoResponseHandler = storageInforResponseHandler;
    }
 
    @Override
-   public void startElement( String uri, String localName, String qName, Attributes attributes ) throws SAXException {
-      if ( "servers".equals( qName ) )
+   public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
+      if ("servers".equals(qName))
          useServerParser = true;
-      else if ( "storages".equals( qName ) )
+      else if ("storages".equals(qName))
          useStorageParser = true;
    }
 
    @Override
-   protected void setPropertyOnEndTag( String qName ) {
-      super.setPropertyOnEndTag( qName );
-      if ( "dataCenterName".equals( qName ) )
-         builder.name( textToStringValue() );
-      else if ( "location".equals( qName ) )
-         builder.location( Location.fromId( textToStringValue() ) );
-      else if ( "provisioningState".equals( qName ) )
-         builder.state( ProvisioningState.fromValue( textToStringValue() ) );
+   protected void setPropertyOnEndTag(String qName) {
+      super.setPropertyOnEndTag(qName);
+      if ("dataCenterName".equals(qName))
+         builder.name(textToStringValue());
+      else if ("location".equals(qName))
+         builder.location(Location.fromId(textToStringValue()));
+      else if ("provisioningState".equals(qName))
+         builder.state(ProvisioningState.fromValue(textToStringValue()));
    }
 
    @Override
-   public void characters( char[] ch, int start, int length ) {
-      if ( useServerParser )
-         serverInfoResponseHandler.characters( ch, start, length );
-      else if ( useStorageParser )
-         storageInfoResponseHandler.characters( ch, start, length );
+   public void characters(char[] ch, int start, int length) {
+      if (useServerParser)
+         serverInfoResponseHandler.characters(ch, start, length);
+      else if (useStorageParser)
+         storageInfoResponseHandler.characters(ch, start, length);
       else
-         super.characters( ch, start, length );
+         super.characters(ch, start, length);
    }
 
    @Override
-   public void endElement( String uri, String localName, String qName ) throws SAXException {
-      if ( done )
+   public void endElement(String uri, String localName, String qName) throws SAXException {
+      if (done)
          return;
 
-      if ( "servers".equals( qName ) ) {
+      if ("servers".equals(qName)) {
          useServerParser = false;
-         servers.add( serverInfoResponseHandler.getResult() );
-      } else if ( "storages".equals( qName ) ) {
+         servers.add(serverInfoResponseHandler.getResult());
+      } else if ("storages".equals(qName)) {
          useStorageParser = false;
-         storages.add( storageInfoResponseHandler.getResult() );
+         storages.add(storageInfoResponseHandler.getResult());
       }
 
-      if ( useServerParser )
-         serverInfoResponseHandler.endElement( uri, localName, qName );
-      else if ( useStorageParser )
-         storageInfoResponseHandler.endElement( uri, localName, qName );
+      if (useServerParser)
+         serverInfoResponseHandler.endElement(uri, localName, qName);
+      else if (useStorageParser)
+         storageInfoResponseHandler.endElement(uri, localName, qName);
       else {
-         setPropertyOnEndTag( qName );
-         if ( "return".equals( qName ) ) {
+         setPropertyOnEndTag(qName);
+         if ("return".equals(qName)) {
             done = true;
-            builder.servers( servers );
-            builder.storages( storages );
+            builder.servers(servers);
+            builder.storages(storages);
          }
          clearTextBuffer();
       }
