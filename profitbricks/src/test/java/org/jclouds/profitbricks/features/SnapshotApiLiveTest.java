@@ -30,6 +30,7 @@ import static org.testng.Assert.assertFalse;
 
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
+import org.testng.annotations.AfterClass;
 
 @Test(groups = "live", testName = "SnapshotApiLiveTest", singleThreaded = true)
 public class SnapshotApiLiveTest extends BaseProfitBricksLiveTest {
@@ -50,13 +51,18 @@ public class SnapshotApiLiveTest extends BaseProfitBricksLiveTest {
     @Test
     public void testCreateSnapshot() {
         getStorage();
-                
+
         Snapshot snapshot = api.snapshotApi().createSnapshot(Snapshot.Request.CreatePayload.create(storageId, "my description", "test snapshot"));
 
         assertNotNull(snapshot);
 
         System.out.print(snapshot);
+
+        snapshotWaitingPredicate.apply(snapshot.id());
+
         snapshotId = snapshot.id();
+
+        System.out.println("Newly created snapshot with ID " + snapshotId);
     }
 
     @Test
@@ -77,12 +83,26 @@ public class SnapshotApiLiveTest extends BaseProfitBricksLiveTest {
         System.out.print(snapshot);
 
         assertNotNull(snapshot);
-        assertTrue(snapshot.id().equals(snapshotId));
+        assertEquals(snapshot.id(), snapshotId);
     }
 
     @Test
     public void testUpdateSnapshot() {
-        api.snapshotApi().updateSnapshot(Snapshot.Request.UpdatePayload.create(snapshotId, "new description", "new name", true, OsType.LINUX, true, true, true, true, true, true, true, true));
+        api.snapshotApi().updateSnapshot(Snapshot.Request.updatingBuilder()
+                .snapshotId(snapshotId)
+                .description("new description")
+                .name("new name")
+                .bootable(true)
+                .osType(OsType.LINUX)
+                .cpuHotplug(true)
+                .cpuHotunplug(true)
+                .discVirtioHotplug(true)
+                .discVirtioHotunplug(true)
+                .nicHotplug(true)
+                .nicHotunplug(true)
+                .ramHotplug(true)
+                .ramHotunplug(true)
+                .build());
 
         Snapshot snapshot = api.snapshotApi().getSnapshot(snapshotId);
 
@@ -101,10 +121,9 @@ public class SnapshotApiLiveTest extends BaseProfitBricksLiveTest {
     }
 
     @Test
+    @AfterClass(alwaysRun = true)
     public void testDeleteSnapshot() {
         getSnapshotId();
-
-        System.out.println("Deleting snapshot " + snapshotId);
 
         boolean result = api.snapshotApi().deleteSnapshot(snapshotId);
 

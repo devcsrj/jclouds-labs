@@ -83,12 +83,14 @@ public abstract class Snapshot {
     public static class Builder {
 
         private String id;
+        @Nullable
         private String name;
         private float size;
         private Date creationTime;
         private Date lastModificationTime;
         private ProvisioningState state;
         private boolean bootable;
+        @Nullable
         private String description;
         private OsType osType;
         private boolean cpuHotPlug;
@@ -296,8 +298,10 @@ public abstract class Snapshot {
 
                 private String snapshotId;
 
+                @Nullable
                 private String description;
 
+                @Nullable
                 private String name;
 
                 private boolean bootable;

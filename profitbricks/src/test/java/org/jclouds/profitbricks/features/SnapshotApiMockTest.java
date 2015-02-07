@@ -25,6 +25,8 @@ import org.jclouds.profitbricks.internal.BaseProfitBricksMockTest;
 import org.testng.annotations.Test;
 
 import java.util.List;
+import static org.jclouds.profitbricks.internal.BaseProfitBricksMockTest.mockWebServer;
+import org.testng.Assert;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
@@ -209,6 +211,25 @@ public class SnapshotApiMockTest extends BaseProfitBricksMockTest {
             boolean result = api.deleteSnapshot(snapshotId);
             assertRequestHasCommonProperties(server.takeRequest(), content);
             assertTrue(result);
+        } finally {
+            pbApi.close();
+            server.shutdown();
+        }
+    }
+
+    @Test
+    public void testDeleteNonExistingSnapshot() throws Exception {
+        MockWebServer server = mockWebServer();
+        server.enqueue(new MockResponse().setResponseCode(404));
+
+        ProfitBricksApi pbApi = api(server.getUrl(rootUrl));
+        SnapshotApi api = pbApi.snapshotApi();
+
+        String id = "random-non-existing-id";
+        try {
+            boolean result = api.deleteSnapshot(id);
+            assertRequestHasCommonProperties(server.takeRequest());
+            Assert.assertFalse(result);
         } finally {
             pbApi.close();
             server.shutdown();

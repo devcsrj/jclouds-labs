@@ -21,7 +21,6 @@ import static org.jclouds.util.Closeables2.closeQuietly;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.Proxy;
 import java.net.URI;
@@ -45,11 +44,9 @@ import org.jclouds.io.Payload;
 import org.jclouds.io.Payloads;
 import org.jclouds.profitbricks.domain.ServiceFault;
 
-import com.google.common.base.Charsets;
 import com.google.common.base.Function;
 import com.google.common.base.Supplier;
 import com.google.common.io.ByteStreams;
-import com.google.common.io.CharStreams;
 import com.google.inject.Inject;
 
 /**
