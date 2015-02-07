@@ -113,16 +113,6 @@ public abstract class DataCenter {
          return this;
       }
       
-      public Builder servers(List<Server> servers){
-         this.servers = servers;
-         return this;
-      }
-      
-      public Builder storages(List<Storage> storages){
-         this.storages = storages;
-         return this;
-      }
-
       public DataCenter build() {
          return DataCenter.create(id, name, version, state, location, servers, storages);
       }
