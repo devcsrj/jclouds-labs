@@ -184,7 +184,7 @@ public class DataCenterApiMockTest extends BaseProfitBricksMockTest {
 
       ProfitBricksApi pbApi = api(server.getUrl(rootUrl));
       DataCenterApi api = pbApi.dataCenterApi();
-
+      
       String id = "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee";
       String newName = "Apache";
 

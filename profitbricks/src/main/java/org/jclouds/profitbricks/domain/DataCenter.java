@@ -28,6 +28,7 @@ import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 
+
 @AutoValue
 public abstract class DataCenter {
 
@@ -111,7 +112,7 @@ public abstract class DataCenter {
          this.storages = storages;
          return this;
       }
-
+      
       public DataCenter build() {
          return DataCenter.create(id, name, version, state, location, servers, storages);
       }

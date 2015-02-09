@@ -17,11 +17,12 @@
 package org.jclouds.profitbricks.compute.internal;
 
 /**
- * An enumeration of ProfitBricks domain classes containing a property 'ProvisioningState'.
+ * An enumeration of ProfitBricks domain classes containing a property
+ * 'ProvisioningState'.
  *
  * @see ProvisioningStatusPollingPredicate
  */
 public enum ProvisioningStatusAware {
 
-   DATACENTER, SERVER, STORAGE;
+    DATACENTER, SERVER, STORAGE, SNAPSHOT;
 }
