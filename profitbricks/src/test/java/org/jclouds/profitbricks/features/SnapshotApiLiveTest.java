@@ -16,6 +16,7 @@
  */
 package org.jclouds.profitbricks.features;
 
+import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import org.jclouds.profitbricks.BaseProfitBricksLiveTest;
 import org.jclouds.profitbricks.domain.OsType;
@@ -23,8 +24,12 @@ import org.jclouds.profitbricks.domain.Snapshot;
 import org.testng.annotations.Test;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+import org.jclouds.profitbricks.compute.internal.ProvisioningStatusAware;
+import org.jclouds.profitbricks.compute.internal.ProvisioningStatusPollingPredicate;
 import org.jclouds.profitbricks.domain.ProvisioningState;
 import org.jclouds.profitbricks.domain.Storage;
+import org.jclouds.util.Predicates2;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 
@@ -35,12 +40,16 @@ import org.testng.annotations.AfterClass;
 @Test(groups = "live", testName = "SnapshotApiLiveTest", singleThreaded = true)
 public class SnapshotApiLiveTest extends BaseProfitBricksLiveTest {
 
+    protected Predicate<String> snapshotWaitingPredicate;
     private String snapshotId;
     private String storageId;
 
     @Override
     protected void initialize() {
         super.initialize();
+
+        initializeWaitPredicate();
+
         List<Storage> storages = api.storageApi().getAllStorages();
         assertFalse(storages.isEmpty(), "Must atleast have 1 storage available for snapshot testing.");
 
@@ -55,8 +64,6 @@ public class SnapshotApiLiveTest extends BaseProfitBricksLiveTest {
         Snapshot snapshot = api.snapshotApi().createSnapshot(Snapshot.Request.CreatePayload.create(storageId, "my description", "test snapshot"));
 
         assertNotNull(snapshot);
-
-        System.out.print(snapshot);
 
         snapshotWaitingPredicate.apply(snapshot.id());
 
@@ -153,5 +160,11 @@ public class SnapshotApiLiveTest extends BaseProfitBricksLiveTest {
 
             storageId = Iterables.getFirst(storages, null).id();
         }
+    }
+
+    private void initializeWaitPredicate() {
+        this.snapshotWaitingPredicate = Predicates2.retry(
+                new ProvisioningStatusPollingPredicate(api, ProvisioningStatusAware.SNAPSHOT, ProvisioningState.AVAILABLE),
+                2l * 60l, 2l, TimeUnit.SECONDS);
     }
 }

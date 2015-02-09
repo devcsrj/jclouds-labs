@@ -29,7 +29,6 @@ import com.google.common.base.Predicate;
 public abstract class BaseProfitBricksLiveTest extends BaseApiLiveTest<ProfitBricksApi> {
 
     protected Predicate<String> dcWaitingPredicate;
-    protected Predicate<String> snapshotWaitingPredicate;
 
     public BaseProfitBricksLiveTest() {
         provider = "profitbricks";
@@ -41,9 +40,7 @@ public abstract class BaseProfitBricksLiveTest extends BaseApiLiveTest<ProfitBri
         this.dcWaitingPredicate = Predicates2.retry(
                 new ProvisioningStatusPollingPredicate(api, ProvisioningStatusAware.DATACENTER, ProvisioningState.AVAILABLE),
                 2l * 60l, 2l, TimeUnit.SECONDS);
-        this.snapshotWaitingPredicate = Predicates2.retry(
-                new ProvisioningStatusPollingPredicate(api, ProvisioningStatusAware.SNAPSHOT, ProvisioningState.AVAILABLE),
-                2l * 60l, 2l, TimeUnit.SECONDS);
+     
     }
 
 }
