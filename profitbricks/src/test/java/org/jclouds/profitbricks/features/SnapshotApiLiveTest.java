@@ -53,7 +53,6 @@ public class SnapshotApiLiveTest extends BaseProfitBricksLiveTest {
         List<Storage> storages = api.storageApi().getAllStorages();
         assertFalse(storages.isEmpty(), "Must atleast have 1 storage available for snapshot testing.");
 
-        System.out.println("Storages count " + storages.size());
         storageId = Iterables.getFirst(storages, null).id();
     }
 
@@ -68,15 +67,12 @@ public class SnapshotApiLiveTest extends BaseProfitBricksLiveTest {
         snapshotWaitingPredicate.apply(snapshot.id());
 
         snapshotId = snapshot.id();
-
-        System.out.println("Newly created snapshot with ID " + snapshotId);
     }
 
     @Test
     public void testGetAllSnapshots() {
         List<Snapshot> snapshots = api.snapshotApi().getAllSnapshots();
 
-        System.out.println("Snapshots count " + snapshots.size());
         assertNotNull(snapshots);
         assertTrue(snapshots.size() > 0);
     }
@@ -86,8 +82,6 @@ public class SnapshotApiLiveTest extends BaseProfitBricksLiveTest {
         getSnapshotId();
 
         Snapshot snapshot = api.snapshotApi().getSnapshot(snapshotId);
-
-        System.out.print(snapshot);
 
         assertNotNull(snapshot);
         assertEquals(snapshot.id(), snapshotId);
@@ -120,8 +114,7 @@ public class SnapshotApiLiveTest extends BaseProfitBricksLiveTest {
     @Test
     public void testRollbackSnapshot() {
         getSnapshotId();
-        System.out.println("Rolling back snapshot " + snapshotId);
-
+        
         boolean result = api.snapshotApi().rollbackSnapshot(Snapshot.Request.RollbackPayload.create(snapshotId, storageId));
 
         assertTrue(result);
@@ -138,8 +131,6 @@ public class SnapshotApiLiveTest extends BaseProfitBricksLiveTest {
 
     private void getSnapshotId() {
         if (snapshotId == null) {
-            System.out.println("SnapshotId is null.");
-            System.out.println("Fetching a new one.");
             List<Snapshot> snapshots = api.snapshotApi().getAllSnapshots();
 
             for (Snapshot s : snapshots) {
@@ -152,9 +143,7 @@ public class SnapshotApiLiveTest extends BaseProfitBricksLiveTest {
     }
 
     private void getStorage() {
-        if (storageId == null) {
-            System.out.println("Storage ID is null.");
-            System.out.println("Fetching a new one.");
+        if (storageId == null) {            
             List<Storage> storages = api.storageApi().getAllStorages();
 
             storageId = Iterables.getFirst(storages, null).id();
