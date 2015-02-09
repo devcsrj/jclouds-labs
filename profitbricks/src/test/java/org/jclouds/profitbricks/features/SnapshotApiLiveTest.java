@@ -42,7 +42,7 @@ public class SnapshotApiLiveTest extends BaseProfitBricksLiveTest {
     protected void initialize() {
         super.initialize();
         List<Storage> storages = api.storageApi().getAllStorages();
-        assertFalse(storages.isEmpty(), "Must atleast have 1 datacenter available for server testing.");
+        assertFalse(storages.isEmpty(), "Must atleast have 1 storage available for snapshot testing.");
 
         System.out.println("Storages count " + storages.size());
         storageId = Iterables.getFirst(storages, null).id();
