@@ -127,7 +127,6 @@ public class SnapshotApiLiveTest extends BaseProfitBricksLiveTest {
         assertTrue(result);
     }
 
-    @Test
     @AfterClass(alwaysRun = true)
     public void testDeleteSnapshot() {
         getSnapshotId();
