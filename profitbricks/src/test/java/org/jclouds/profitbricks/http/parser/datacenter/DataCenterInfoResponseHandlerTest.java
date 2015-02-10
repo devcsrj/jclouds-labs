@@ -46,10 +46,6 @@ public class DataCenterInfoResponseHandlerTest extends BaseResponseHandlerTest<D
       return injector.getInstance( DateCodecFactory.class );
    }
 
-   protected DateCodecFactory createDateParser() {
-      return injector.getInstance(DateCodecFactory.class);
-   }
-
    @Test
    public void testParseResponseFromGetDataCenter() {
       ParseSax<DataCenter> parser = createParser();
@@ -57,8 +53,6 @@ public class DataCenterInfoResponseHandlerTest extends BaseResponseHandlerTest<D
       DataCenter actual = parser.parse(payloadFromResource("/datacenter/datacenter.xml"));
       assertNotNull(actual, "Parsed content returned null");
       
-      DateCodec dateParser = createDateParser().iso8601();
-
       DateCodec dateParser = createDateParser().iso8601();
 
       DataCenter expected = DataCenter.builder()
