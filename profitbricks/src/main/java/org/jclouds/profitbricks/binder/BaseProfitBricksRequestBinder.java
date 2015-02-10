@@ -56,7 +56,7 @@ public abstract class BaseProfitBricksRequestBinder<T> implements MapBinder {
    protected abstract String createPayload(T payload);
 
    protected static String formatIfNotEmpty(String pattern, Object param) {
-      return Strings.isNullOrEmpty(nullableToString( param )) ? "" : String.format(pattern, param);
+      return Strings.isNullOrEmpty(nullableToString(param)) ? "" : String.format(pattern, param);
    }
 
    protected static String nullableToString(Object object) {

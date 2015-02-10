@@ -27,14 +27,14 @@ public class StorageIdOnlyResponseHandler extends BaseProfitBricksResponseHandle
    }
 
    @Override
-   public void endElement( String uri, String localName, String qName ) throws SAXException {
-      setPropertyOnEndTag( qName );
+   public void endElement(String uri, String localName, String qName) throws SAXException {
+      setPropertyOnEndTag(qName);
       clearTextBuffer();
    }
 
    @Override
-   protected void setPropertyOnEndTag( String qName ) {
-      if ( "storageId".equals( qName ) )
+   protected void setPropertyOnEndTag(String qName) {
+      if ("storageId".equals(qName))
          storageId = textToStringValue();
    }
 

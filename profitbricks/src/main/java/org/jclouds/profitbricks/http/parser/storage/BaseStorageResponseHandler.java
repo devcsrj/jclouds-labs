@@ -39,45 +39,45 @@ public abstract class BaseStorageResponseHandler<T> extends BaseProfitBricksResp
    protected List<String> serverIds;
 
    @Inject
-   BaseStorageResponseHandler( DateCodecFactory dateCodec ) {
+   BaseStorageResponseHandler(DateCodecFactory dateCodec) {
       this.dateCodec = dateCodec.iso8601();
       this.builder = Storage.builder();
       this.serverIds = Lists.newArrayList();
    }
 
    protected final Date textToIso8601Date() {
-      return dateCodec.toDate( textToStringValue() );
+      return dateCodec.toDate(textToStringValue());
    }
 
    @Override
-   protected void setPropertyOnEndTag( String qName ) {
+   protected void setPropertyOnEndTag(String qName) {
 //            <requestId>?</requestId>
 //            <dataCenterId>?</dataCenterId>
 //            <dataCenterVersion>?</dataCenterVersion>
-      if ( "storageId".equals( qName ) )
-         builder.id( textToStringValue() );
-      else if ( "size".equals( qName ) )
-         builder.size( textToFloatValue() );
-      else if ( "storageName".equals( qName ) )
-         builder.name( textToStringValue() );
-      else if ( "provisioningState".equals( qName ) )
-         builder.state( ProvisioningState.fromValue( textToStringValue() ) );
-      else if ( "creationTime".equals( qName ) )
-         builder.creationTime( textToIso8601Date() );
-      else if ( "lastModificationTime".equals( qName ) )
-         builder.lastModificationTime( textToIso8601Date() );
+      if ("storageId".equals(qName))
+         builder.id(textToStringValue());
+      else if ("size".equals(qName))
+         builder.size(textToFloatValue());
+      else if ("storageName".equals(qName))
+         builder.name(textToStringValue());
+      else if ("provisioningState".equals(qName))
+         builder.state(ProvisioningState.fromValue(textToStringValue()));
+      else if ("creationTime".equals(qName))
+         builder.creationTime(textToIso8601Date());
+      else if ("lastModificationTime".equals(qName))
+         builder.lastModificationTime(textToIso8601Date());
 //            <mountImage>
 //               <imageId>?</imageId>
 //               <imageName>?</imageName>
 //            </mountImage>
-      else if ( "serverIds".equals( qName ) )
-         serverIds.add( textToStringValue() );
-      else if ( "bootDevice".equals( qName ) )
-         builder.bootDevice( textToBooleanValue() );
-      else if ( "busType".equals( qName ) )
-         builder.busType( BusType.fromValue( textToStringValue() ) );
-      else if ( "deviceNumber".equals( qName ) )
-         builder.deviceNumber( textToIntValue() );
+      else if ("serverIds".equals(qName))
+         serverIds.add(textToStringValue());
+      else if ("bootDevice".equals(qName))
+         builder.bootDevice(textToBooleanValue());
+      else if ("busType".equals(qName))
+         builder.busType(BusType.fromValue(textToStringValue()));
+      else if ("deviceNumber".equals(qName))
+         builder.deviceNumber(textToIntValue());
    }
 
 }

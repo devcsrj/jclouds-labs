@@ -21,7 +21,7 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import org.testng.annotations.Test;
 
-@Test( groups = "unit", testName = "CreateStorageRequestBinderTest" )
+@Test(groups = "unit", testName = "CreateStorageRequestBinderTest")
 public class CreateStorageRequestBinderTest {
 
    @Test
@@ -29,20 +29,20 @@ public class CreateStorageRequestBinderTest {
       CreateStorageRequestBinder binder = new CreateStorageRequestBinder();
 
       Storage.Request.CreatePayload payload = Storage.Request.creatingBuilder()
-              .name( "hdd-1" )
-              .size( 60f )
-              .dataCenterId( "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee" )
-              .mountImageId( "5ad99c9e-9166-11e4-9d74-52540066fee9" )
-              .imagePassword( "qqqqqqqqq" )
+              .name("hdd-1")
+              .size(60f)
+              .dataCenterId("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee")
+              .mountImageId("5ad99c9e-9166-11e4-9d74-52540066fee9")
+              .imagePassword("qqqqqqqqq")
               .build();
 
-      String actual = binder.createPayload( payload );
-      assertNotNull( actual, "Binder returned null payload" );
-      assertEquals( actual, expectedPayload );
+      String actual = binder.createPayload(payload);
+      assertNotNull(actual, "Binder returned null payload");
+      assertEquals(actual, expectedPayload);
    }
 
    private final String expectedPayload
-           = ( "      <ws:createStorage>\n"
+           = ("      <ws:createStorage>\n"
            + "         <request>\n"
            + "            <dataCenterId>aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee</dataCenterId>\n"
            + "            <storageName>hdd-1</storageName>\n"
@@ -50,7 +50,7 @@ public class CreateStorageRequestBinderTest {
            + "            <mountImageId>5ad99c9e-9166-11e4-9d74-52540066fee9</mountImageId>\n"
            + "            <profitBricksImagePassword>qqqqqqqqq</profitBricksImagePassword>\n"
            + "         </request>\n"
-           + "      </ws:createStorage>" )
-           .replaceAll( "\\s+", "" );
+           + "      </ws:createStorage>")
+           .replaceAll("\\s+", "");
 
 }

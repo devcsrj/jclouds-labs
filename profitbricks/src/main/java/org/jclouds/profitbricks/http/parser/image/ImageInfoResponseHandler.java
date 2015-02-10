@@ -27,11 +27,11 @@ public class ImageInfoResponseHandler extends BaseImageResponseHandler<Image> {
    }
 
    @Override
-   public void endElement( String uri, String localName, String qName ) throws SAXException {
-      if ( done )
+   public void endElement(String uri, String localName, String qName) throws SAXException {
+      if (done)
          return;
-      setPropertyOnEndTag( qName );
-      if ( "return".equals( qName ) )
+      setPropertyOnEndTag(qName);
+      if ("return".equals(qName))
          done = true;
       clearTextBuffer();
    }

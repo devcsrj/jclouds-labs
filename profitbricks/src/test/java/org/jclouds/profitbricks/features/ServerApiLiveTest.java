@@ -18,6 +18,8 @@ package org.jclouds.profitbricks.features;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 import org.jclouds.profitbricks.BaseProfitBricksLiveTest;
 import org.jclouds.profitbricks.compute.internal.ProvisioningStatusAware;
 import org.jclouds.profitbricks.compute.internal.ProvisioningStatusPollingPredicate;
@@ -25,119 +27,113 @@ import org.jclouds.profitbricks.domain.DataCenter;
 import org.jclouds.profitbricks.domain.ProvisioningState;
 import org.jclouds.profitbricks.domain.Server;
 import org.jclouds.util.Predicates2;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.Test;
-
-import java.util.List;
-import java.util.concurrent.TimeUnit;
-
-import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.Test;
 
 @Test(groups = "live", testName = "ServerApiLiveTest", singleThreaded = true)
 public class ServerApiLiveTest extends BaseProfitBricksLiveTest {
 
-    private Predicate<String> waitUntilAvailable;
-    private DataCenter dataCenter;
-    private String createdServerId;
+   private Predicate<String> waitUntilAvailable;
+   private DataCenter dataCenter;
+   private String createdServerId;
 
-    @Override
-    protected void initialize() {
-        super.initialize();
-        List<DataCenter> dataCenters = api.dataCenterApi().getAllDataCenters();
-        assertFalse(dataCenters.isEmpty(), "Must atleast have 1 datacenter available for server testing.");
+   @Override
+   protected void initialize() {
+      super.initialize();
+      List<DataCenter> dataCenters = api.dataCenterApi().getAllDataCenters();
+      assertFalse(dataCenters.isEmpty(), "Must atleast have 1 datacenter available for server testing.");
 
-        this.dataCenter = Iterables.getFirst(dataCenters, null);
+      this.dataCenter = Iterables.getFirst(dataCenters, null);
 
-        this.waitUntilAvailable = Predicates2.retry(
-                new ProvisioningStatusPollingPredicate(api, ProvisioningStatusAware.SERVER, ProvisioningState.AVAILABLE),
-                2l * 60l, 2l, TimeUnit.SECONDS);
-    }
+      this.waitUntilAvailable = Predicates2.retry(
+              new ProvisioningStatusPollingPredicate(api, ProvisioningStatusAware.SERVER, ProvisioningState.AVAILABLE),
+              2l * 60l, 2l, TimeUnit.SECONDS);
+   }
 
-    @Test
-    public void testCreateServer() {
-        String serverId = api.serverApi().createServer(
-                Server.Request.CreatePayload.create(dataCenter.id(), "jclouds-node", 1, 1024));
+   @Test
+   public void testCreateServer() {
+      String serverId = api.serverApi().createServer(
+              Server.Request.CreatePayload.create(dataCenter.id(), "jclouds-node", 1, 1024));
 
-        assertNotNull(serverId);
-        this.createdServerId = serverId;
-    }
+      assertNotNull(serverId);
+      this.createdServerId = serverId;
+   }
 
-    @Test(dependsOnMethods = "testCreateServer")
-    public void testGetServer() {
-        Server server = api.serverApi().getServer(createdServerId);
+   @Test(dependsOnMethods = "testCreateServer")
+   public void testGetServer() {
+      Server server = api.serverApi().getServer(createdServerId);
 
-        assertNotNull(server);
-        assertEquals(server.id(), createdServerId);
-    }
+      assertNotNull(server);
+      assertEquals(server.id(), createdServerId);
+   }
 
-    @Test //( dependsOnMethods = "testCreateServer" )
-    public void testGetAllServers() {
-        List<Server> servers = api.serverApi().getAllServers();
-        for (Server server : servers) {
-            System.out.println(server.id());
-        }
-        assertNotNull(servers);
-        assertFalse(servers.isEmpty());
-    }
+   @Test(dependsOnMethods = "testCreateServer")
+   public void testGetAllServers() {
+      List<Server> servers = api.serverApi().getAllServers();
 
-    @Test(dependsOnMethods = "testCreateServer")
-    public void testWaitUntilAvailable() {
-        boolean available = waitUntilAvailable.apply(createdServerId);
+      assertNotNull(servers);
+      assertFalse(servers.isEmpty());
+   }
 
-        assertTrue(available);
-    }
+   @Test(dependsOnMethods = "testCreateServer")
+   public void testWaitUntilAvailable() {
+      boolean available = waitUntilAvailable.apply(createdServerId);
 
-    @Test(dependsOnMethods = "testWaitUntilAvailable")
-    public void testUpdateServer() {
-        String requestId = api.serverApi().updateServer(
-                Server.Request.updatingBuilder()
-                        .id(createdServerId)
-                        .name("apache-node")
-                        .cores(2)
-                        .ram(2 * 1024)
-                        .build());
+      assertTrue(available);
+   }
 
-        assertNotNull(requestId);
-        waitUntilAvailable.apply(createdServerId);
+   @Test(dependsOnMethods = "testWaitUntilAvailable")
+   public void testUpdateServer() {
+      String requestId = api.serverApi().updateServer(
+              Server.Request.updatingBuilder()
+              .id(createdServerId)
+              .name("apache-node")
+              .cores(2)
+              .ram(2 * 1024)
+              .build());
 
-        Server server = api.serverApi().getServer(createdServerId);
-        assertEquals(server.state(), ProvisioningState.AVAILABLE);
-    }
+      assertNotNull(requestId);
+      waitUntilAvailable.apply(createdServerId);
 
-    @Test(dependsOnMethods = "testUpdateServer")
-    public void testStopServer() {
-        String requestId = api.serverApi().stopServer(createdServerId);
-        assertNotNull(requestId);
+      Server server = api.serverApi().getServer(createdServerId);
+      assertEquals(server.state(), ProvisioningState.AVAILABLE);
+   }
 
-        Predicate<String> waitUntilInactive = Predicates2.retry(new ProvisioningStatusPollingPredicate(
-                api, ProvisioningStatusAware.SERVER, ProvisioningState.INACTIVE), 2l * 60l, 2l, TimeUnit.SECONDS);
+   @Test(dependsOnMethods = "testUpdateServer")
+   public void testStopServer() {
+      String requestId = api.serverApi().stopServer(createdServerId);
+      assertNotNull(requestId);
 
-        waitUntilInactive.apply(createdServerId);
-        Server server = api.serverApi().getServer(createdServerId);
-        assertEquals(server.status(), Server.Status.SHUTOFF);
-    }
+      Predicate<String> waitUntilInactive = Predicates2.retry(new ProvisioningStatusPollingPredicate(
+              api, ProvisioningStatusAware.SERVER, ProvisioningState.INACTIVE), 2l * 60l, 2l, TimeUnit.SECONDS);
 
-    @Test(dependsOnMethods = "testStopServer")
-    public void testStartServer() {
-        String requestId = api.serverApi().startServer(createdServerId);
-        assertNotNull(requestId);
+      waitUntilInactive.apply(createdServerId);
+      Server server = api.serverApi().getServer(createdServerId);
+      assertEquals(server.status(), Server.Status.SHUTOFF);
+   }
 
-        waitUntilAvailable.apply(createdServerId);
+   @Test(dependsOnMethods = "testStopServer")
+   public void testStartServer() {
+      String requestId = api.serverApi().startServer(createdServerId);
+      assertNotNull(requestId);
 
-        Server server = api.serverApi().getServer(createdServerId);
-        assertEquals(server.status(), Server.Status.RUNNING);
-    }
+      waitUntilAvailable.apply(createdServerId);
 
-    @AfterClass(alwaysRun = true)
-    public void testDeleteServer() {
-        if (createdServerId != null) {
-            boolean result = api.serverApi().deleteServer(createdServerId);
+      Server server = api.serverApi().getServer(createdServerId);
+      assertEquals(server.status(), Server.Status.RUNNING);
+   }
 
-            assertTrue(result, "Created test server was not deleted.");
-        }
-    }
+   @AfterClass(alwaysRun = true)
+   public void testDeleteServer() {
+      if (createdServerId != null) {
+         boolean result = api.serverApi().deleteServer(createdServerId);
+
+         assertTrue(result, "Created test server was not deleted.");
+      }
+   }
 
 }

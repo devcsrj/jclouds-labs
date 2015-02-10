@@ -22,7 +22,7 @@ import static org.testng.Assert.assertNotNull;
 import org.jclouds.profitbricks.domain.Storage;
 import org.testng.annotations.Test;
 
-@Test( groups = "unit", testName = "ConnectStorageToServerRequestBinderTest" )
+@Test(groups = "unit", testName = "ConnectStorageToServerRequestBinderTest")
 public class ConnectStorageToServerRequestBinderTest {
 
    @Test
@@ -30,26 +30,26 @@ public class ConnectStorageToServerRequestBinderTest {
       ConnectStorageToServerRequestBinder binder = new ConnectStorageToServerRequestBinder();
 
       Storage.Request.ConnectPayload payload = Storage.Request.connectingBuilder()
-              .serverId( "qwertyui-qwer-qwer-qwer-qwertyyuiiop" )
-              .storageId( "qswdefrg-qaws-qaws-defe-rgrgdsvcxbrh" )
-              .busType( Storage.BusType.VIRTIO )
-              .deviceNumber( 2 )
+              .serverId("qwertyui-qwer-qwer-qwer-qwertyyuiiop")
+              .storageId("qswdefrg-qaws-qaws-defe-rgrgdsvcxbrh")
+              .busType(Storage.BusType.VIRTIO)
+              .deviceNumber(2)
               .build();
 
-      String actual = binder.createPayload( payload );
-      assertNotNull( actual, "Binder returned null payload" );
-      assertEquals( actual, expectedPayload );
+      String actual = binder.createPayload(payload);
+      assertNotNull(actual, "Binder returned null payload");
+      assertEquals(actual, expectedPayload);
    }
 
    private final String expectedPayload
-           = ( "      <ws:connectStorageToServer>\n"
+           = ("      <ws:connectStorageToServer>\n"
            + "         <request>\n"
            + "            <storageId>qswdefrg-qaws-qaws-defe-rgrgdsvcxbrh</storageId>\n"
            + "            <serverId>qwertyui-qwer-qwer-qwer-qwertyyuiiop</serverId>\n"
            + "            <busType>VIRTIO</busType>\n"
            + "            <deviceNumber>2</deviceNumber>\n"
            + "         </request>\n"
-           + "      </ws:connectStorageToServer>" )
-           .replaceAll( "\\s+", "" );
+           + "      </ws:connectStorageToServer>")
+           .replaceAll("\\s+", "");
 
 }

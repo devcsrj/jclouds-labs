@@ -17,16 +17,14 @@
 package org.jclouds.profitbricks.features;
 
 import com.google.common.collect.Iterables;
+import java.util.List;
 import org.jclouds.profitbricks.BaseProfitBricksLiveTest;
 import org.jclouds.profitbricks.domain.Image;
-import org.testng.annotations.Test;
-
-import java.util.List;
-
-import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
+import org.testng.annotations.Test;
 
 @Test(groups = "live", testName = "ImageApiLiveTest", singleThreaded = true)
 public class ImageApiLiveTest extends BaseProfitBricksLiveTest {

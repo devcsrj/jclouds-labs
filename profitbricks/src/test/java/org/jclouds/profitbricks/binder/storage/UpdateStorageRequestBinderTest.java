@@ -21,7 +21,7 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import org.testng.annotations.Test;
 
-@Test( groups = "unit", testName = "UpdateStorageRequestBinderTest" )
+@Test(groups = "unit", testName = "UpdateStorageRequestBinderTest")
 public class UpdateStorageRequestBinderTest {
 
    @Test
@@ -29,25 +29,25 @@ public class UpdateStorageRequestBinderTest {
       UpdateStorageRequestBinder binder = new UpdateStorageRequestBinder();
 
       Storage.Request.UpdatePayload payload = Storage.Request.updatingBuilder()
-              .id( "pppppppp-llkl-kkjk-fhgh-vnmegrdgdsgr" )
-              .size( 100f )
-              .name( "hdd-2" )
-              .mountImageId( "5f3cac96-915f-11e4-9d74-52540066fee9" )
+              .id("pppppppp-llkl-kkjk-fhgh-vnmegrdgdsgr")
+              .size(100f)
+              .name("hdd-2")
+              .mountImageId("5f3cac96-915f-11e4-9d74-52540066fee9")
               .build();
 
-      String actual = binder.createPayload( payload );
-      assertNotNull( actual, "Binder returned null payload" );
-      assertEquals( actual, expectedPayload );
+      String actual = binder.createPayload(payload);
+      assertNotNull(actual, "Binder returned null payload");
+      assertEquals(actual, expectedPayload);
    }
 
    private final String expectedPayload
-           = ( "      <ws:updateStorage>\n"
+           = ("      <ws:updateStorage>\n"
            + "         <request>\n"
            + "            <storageId>pppppppp-llkl-kkjk-fhgh-vnmegrdgdsgr</storageId>\n"
            + "            <size>100</size>\n"
            + "            <storageName>hdd-2</storageName>\n"
            + "            <mountImageId>5f3cac96-915f-11e4-9d74-52540066fee9</mountImageId>\n"
            + "         </request>\n"
-           + "      </ws:updateStorage>" )
-           .replaceAll( "\\s+", "" );
+           + "      </ws:updateStorage>")
+           .replaceAll("\\s+", "");
 }

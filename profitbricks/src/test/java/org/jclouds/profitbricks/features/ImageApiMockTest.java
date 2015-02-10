@@ -18,17 +18,16 @@ package org.jclouds.profitbricks.features;
 
 import com.squareup.okhttp.mockwebserver.MockResponse;
 import com.squareup.okhttp.mockwebserver.MockWebServer;
+import java.util.List;
 import org.jclouds.profitbricks.ProfitBricksApi;
 import org.jclouds.profitbricks.domain.Image;
 import org.jclouds.profitbricks.internal.BaseProfitBricksMockTest;
-import org.testng.annotations.Test;
-
-import java.util.List;
-
-import static org.testng.Assert.assertNotNull;
+import static org.jclouds.profitbricks.internal.BaseProfitBricksMockTest.mockWebServer;
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
+import static org.testng.Assert.assertTrue;
+import org.testng.annotations.Test;
 
 /**
  * Mock tests for the {@link org.jclouds.profitbricks.features.ImageApi} class
@@ -82,7 +81,7 @@ public class ImageApiMockTest extends BaseProfitBricksMockTest {
       ImageApi api = pbApi.imageApi();
 
       String id = "5ad99c9e-9166-11e4-9d74-52540066fee9";
-      
+
       String content = "<ws:getImage><imageId>" + id + "</imageId></ws:getImage>";
       try {
          Image image = api.getImage(id);

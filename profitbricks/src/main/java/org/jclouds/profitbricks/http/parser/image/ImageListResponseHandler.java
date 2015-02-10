@@ -32,10 +32,10 @@ public class ImageListResponseHandler extends BaseImageResponseHandler<List<Imag
    }
 
    @Override
-   public void endElement( String uri, String localName, String qName ) throws SAXException {
-      setPropertyOnEndTag( qName );
-      if ( "return".equals( qName ) ) {
-         images.add( builder.build() );
+   public void endElement(String uri, String localName, String qName) throws SAXException {
+      setPropertyOnEndTag(qName);
+      if ("return".equals(qName)) {
+         images.add(builder.build());
          builder = Image.builder();
       }
       clearTextBuffer();

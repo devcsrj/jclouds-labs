@@ -25,21 +25,21 @@ public class UpdateStorageRequestBinder extends BaseProfitBricksRequestBinder<St
    protected final StringBuilder requestBuilder;
 
    UpdateStorageRequestBinder() {
-      super( "storage" );
-      this.requestBuilder = new StringBuilder( 128 * 2 );
+      super("storage");
+      this.requestBuilder = new StringBuilder(128 * 2);
    }
 
    @Override
-   protected String createPayload( Storage.Request.UpdatePayload payload ) {
+   protected String createPayload(Storage.Request.UpdatePayload payload) {
       requestBuilder
-              .append( "<ws:updateStorage>" )
-              .append( "<request>" )
-              .append( format( "<storageId>%s</storageId>", payload.id() ) )
-              .append( formatIfNotEmpty( "<size>%.0f</size>", payload.size() ) )
-              .append( formatIfNotEmpty( "<storageName>%s</storageName>", payload.name() ) )
-              .append( formatIfNotEmpty( "<mountImageId>%s</mountImageId>", payload.mountImageId() ) )
-              .append( "</request>" )
-              .append( "</ws:updateStorage>" );
+              .append("<ws:updateStorage>")
+              .append("<request>")
+              .append(format("<storageId>%s</storageId>", payload.id()))
+              .append(formatIfNotEmpty("<size>%.0f</size>", payload.size()))
+              .append(formatIfNotEmpty("<storageName>%s</storageName>", payload.name()))
+              .append(formatIfNotEmpty("<mountImageId>%s</mountImageId>", payload.mountImageId()))
+              .append("</request>")
+              .append("</ws:updateStorage>");
 
       return requestBuilder.toString();
    }

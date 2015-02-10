@@ -46,53 +46,59 @@ public class DataCenterInfoResponseHandlerTest extends BaseResponseHandlerTest<D
       return injector.getInstance( DateCodecFactory.class );
    }
 
+   protected DateCodecFactory createDateParser() {
+      return injector.getInstance(DateCodecFactory.class);
+   }
+
    @Test
    public void testParseResponseFromGetDataCenter() {
       ParseSax<DataCenter> parser = createParser();
-      
+
       DataCenter actual = parser.parse(payloadFromResource("/datacenter/datacenter.xml"));
       assertNotNull(actual, "Parsed content returned null");
       
       DateCodec dateParser = createDateParser().iso8601();
 
+      DateCodec dateParser = createDateParser().iso8601();
+
       DataCenter expected = DataCenter.builder()
-	      .id("12345678-abcd-efgh-ijkl-987654321000")
-	      .version(10)
-	      .name("JClouds-DC")
-	      .state(ProvisioningState.AVAILABLE)
-	      .location(Location.US_LAS)
-              .servers( ImmutableList.<Server>of(
+              .id("12345678-abcd-efgh-ijkl-987654321000")
+              .version(10)
+              .name("JClouds-DC")
+              .state(ProvisioningState.AVAILABLE)
+              .location(Location.US_LAS)
+              .servers(ImmutableList.<Server>of(
                               Server.builder()
-                              .id( "12345678-abcd-efgh-ijkl-987654321000")
-                              .name( "jnode1")
-                              .cores( 4 )
-                              .ram( 4096 )
-                              .hasInternetAccess( true )
-                              .state( ProvisioningState.AVAILABLE )
-                              .status( Server.Status.RUNNING )
-                              .creationTime( dateParser.toDate( "2014-12-04T07:09:23.138Z") )
-                              .lastModificationTime( dateParser.toDate( "2014-12-12T03:08:35.629Z") )
-                              .osType( OsType.LINUX )
-                              .availabilityZone( AvailabilityZone.AUTO )
-                              .isCpuHotPlug( true )
-                              .isRamHotPlug( true )
-                              .isNicHotPlug( true )
-                              .isNicHotUnPlug( true )
-                              .isDiscVirtioHotPlug( true )
-                              .isDiscVirtioHotUnPlug( true )
+                              .id("12345678-abcd-efgh-ijkl-987654321000")
+                              .name("jnode1")
+                              .cores(4)
+                              .ram(4096)
+                              .hasInternetAccess(true)
+                              .state(ProvisioningState.AVAILABLE)
+                              .status(Server.Status.RUNNING)
+                              .creationTime(dateParser.toDate("2014-12-04T07:09:23.138Z"))
+                              .lastModificationTime(dateParser.toDate("2014-12-12T03:08:35.629Z"))
+                              .osType(OsType.LINUX)
+                              .availabilityZone(AvailabilityZone.AUTO)
+                              .isCpuHotPlug(true)
+                              .isRamHotPlug(true)
+                              .isNicHotPlug(true)
+                              .isNicHotUnPlug(true)
+                              .isDiscVirtioHotPlug(true)
+                              .isDiscVirtioHotUnPlug(true)
                               .build()
-              ))
-              .storages( ImmutableList.<Storage>of(
-                      Storage.builder()
-                              .id( "ssssssss-aaaa-ffff-gggg-hhhhhhhhhhhh")
-                              .size( 40)
-                              .name( "jnode1-disk1")
-                              .state( ProvisioningState.AVAILABLE )
-                              .creationTime( dateParser.toDate( "2014-12-04T07:09:23.138Z" ) )
-                              .lastModificationTime( dateParser.toDate( "2014-12-12T03:14:48.316Z" ) )
-                      .build()
-              ))
-	      .build();
+                      ))
+              .storages(ImmutableList.<Storage>of(
+                              Storage.builder()
+                              .id("ssssssss-aaaa-ffff-gggg-hhhhhhhhhhhh")
+                              .size(40)
+                              .name("jnode1-disk1")
+                              .state(ProvisioningState.AVAILABLE)
+                              .creationTime(dateParser.toDate("2014-12-04T07:09:23.138Z"))
+                              .lastModificationTime(dateParser.toDate("2014-12-12T03:14:48.316Z"))
+                              .build()
+                      ))
+              .build();
       assertEquals(actual, expected);
    }
 }

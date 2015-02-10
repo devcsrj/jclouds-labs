@@ -26,18 +26,18 @@ public class StorageInfoResponseHandler extends BaseStorageResponseHandler<Stora
    private boolean done = false;
 
    @Inject
-   StorageInfoResponseHandler( DateCodecFactory dateCodec ) {
-      super( dateCodec );
+   StorageInfoResponseHandler(DateCodecFactory dateCodec) {
+      super(dateCodec);
    }
 
    @Override
-   public void endElement( String uri, String localName, String qName ) throws SAXException {
-      if ( done )
+   public void endElement(String uri, String localName, String qName) throws SAXException {
+      if (done)
          return;
-      setPropertyOnEndTag( qName );
-      if ( "return".equals( qName ) ){
+      setPropertyOnEndTag(qName);
+      if ("return".equals(qName)) {
          done = true;
-         builder.serverIds( serverIds );
+         builder.serverIds(serverIds);
       }
       clearTextBuffer();
    }

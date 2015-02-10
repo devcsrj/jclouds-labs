@@ -38,21 +38,21 @@ public class DataCenterListResponseHandler extends BaseDataCenterResponseHandler
    }
 
    @Override
-   protected void setPropertyOnEndTag( String qName ) {
-      super.setPropertyOnEndTag( qName );
-      if ( "dataCenterName".equals( qName ) )
-         builder.name( textToStringValue() );
-      else if ( "location".equals( qName ) )
-         builder.location( Location.fromValue( textToStringValue() ) );
-      else if ( "provisioningState".equals( qName ) )
-         builder.state( ProvisioningState.fromValue( textToStringValue() ) );
+   protected void setPropertyOnEndTag(String qName) {
+      super.setPropertyOnEndTag(qName);
+      if ("dataCenterName".equals(qName))
+         builder.name(textToStringValue());
+      else if ("location".equals(qName))
+         builder.location(Location.fromValue(textToStringValue()));
+      else if ("provisioningState".equals(qName))
+         builder.state(ProvisioningState.fromValue(textToStringValue()));
    }
 
    @Override
-   public void endElement( String uri, String localName, String qName ) throws SAXException {
-      setPropertyOnEndTag( qName );
-      if ( "return".equals( qName ) ) {
-         dataCenters.add( builder.build() );
+   public void endElement(String uri, String localName, String qName) throws SAXException {
+      setPropertyOnEndTag(qName);
+      if ("return".equals(qName)) {
+         dataCenters.add(builder.build());
          builder = DataCenter.builder();
       }
       clearTextBuffer();

@@ -26,6 +26,9 @@ import java.util.List;
 
 import org.jclouds.javax.annotation.Nullable;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
+
 @AutoValue
 public abstract class Storage {
 
@@ -33,10 +36,10 @@ public abstract class Storage {
 
       IDE, SCSI, VIRTIO, UNRECOGNIZED;
 
-      public static BusType fromValue( String value ) {
+      public static BusType fromValue(String value) {
          try {
-            return valueOf( value );
-         } catch ( IllegalArgumentException ex ) {
+            return valueOf(value);
+         } catch (IllegalArgumentException ex) {
             return UNRECOGNIZED;
          }
       }
@@ -69,9 +72,11 @@ public abstract class Storage {
    @Nullable
    public abstract Integer deviceNumber();
 
-   public static Storage create( String id, String name, float size, Date creationTime, Date lastModificationTime,
-           ProvisioningState state, List<String> serverIds, Boolean bootDevice, BusType busType, Integer deviceNumber ) {
-      return new AutoValue_Storage( id, name, size, creationTime, lastModificationTime, state, serverIds, bootDevice, busType, deviceNumber );
+   public static Storage create(String id, String name, float size, Date creationTime, Date lastModificationTime,
+           ProvisioningState state, List<String> serverIds, Boolean bootDevice, BusType busType, Integer deviceNumber) {
+      return new AutoValue_Storage(id, name, size, creationTime, lastModificationTime, state,
+              serverIds != null ? ImmutableList.copyOf(serverIds) : Lists.<String>newArrayList(),
+              bootDevice, busType, deviceNumber);
    }
 
    public static Builder builder() {
@@ -79,7 +84,7 @@ public abstract class Storage {
    }
 
    public Builder toBuilder() {
-      return builder().fromStorage( this );
+      return builder().fromStorage(this);
    }
 
    public static class Builder {
@@ -95,64 +100,64 @@ public abstract class Storage {
       private BusType busType;
       private Integer deviceNumber;
 
-      public Builder id( String id ) {
+      public Builder id(String id) {
          this.id = id;
          return this;
       }
 
-      public Builder name( String name ) {
+      public Builder name(String name) {
          this.name = name;
          return this;
       }
 
-      public Builder size( float size ) {
+      public Builder size(float size) {
          this.size = size;
          return this;
       }
 
-      public Builder creationTime( Date creationTime ) {
+      public Builder creationTime(Date creationTime) {
          this.creationTime = creationTime;
          return this;
       }
 
-      public Builder lastModificationTime( Date lastModificationTime ) {
+      public Builder lastModificationTime(Date lastModificationTime) {
          this.lastModificationTime = lastModificationTime;
          return this;
       }
 
-      public Builder state( ProvisioningState state ) {
+      public Builder state(ProvisioningState state) {
          this.state = state;
          return this;
       }
 
-      public Builder serverIds( List<String> serverIds ) {
+      public Builder serverIds(List<String> serverIds) {
          this.serverIds = serverIds;
          return this;
       }
 
-      public Builder bootDevice( Boolean bootDevice ) {
+      public Builder bootDevice(Boolean bootDevice) {
          this.bootDevice = bootDevice;
          return this;
       }
 
-      public Builder busType( BusType busType ) {
+      public Builder busType(BusType busType) {
          this.busType = busType;
          return this;
       }
 
-      public Builder deviceNumber( Integer deviceNumber ) {
+      public Builder deviceNumber(Integer deviceNumber) {
          this.deviceNumber = deviceNumber;
          return this;
       }
 
-      private Builder fromStorage( Storage in ) {
-         return this.id( in.id() ).name( in.name() ).size( in.size() ).creationTime( in.creationTime() )
-                 .lastModificationTime( in.lastModificationTime() ).state( in.state() ).serverIds( in.serverIds() )
-                 .bootDevice( in.bootDevice() ).busType( in.busType() ).deviceNumber( in.deviceNumber() );
+      private Builder fromStorage(Storage in) {
+         return this.id(in.id()).name(in.name()).size(in.size()).creationTime(in.creationTime())
+                 .lastModificationTime(in.lastModificationTime()).state(in.state()).serverIds(in.serverIds())
+                 .bootDevice(in.bootDevice()).busType(in.busType()).deviceNumber(in.deviceNumber());
       }
 
       public Storage build() {
-         return Storage.create( id, name, size, creationTime, lastModificationTime, state, serverIds, bootDevice, busType, deviceNumber );
+         return Storage.create(id, name, size, creationTime, lastModificationTime, state, serverIds, bootDevice, busType, deviceNumber);
       }
 
    }
@@ -187,9 +192,9 @@ public abstract class Storage {
          @Nullable
          public abstract String profitBricksImagePassword();
 
-         public static CreatePayload create( String dataCenterId, float size, String name, String mountImageId, String imagePassword ) {
-            validateSize( size );
-            return new AutoValue_Storage_Request_CreatePayload( dataCenterId, size, name, mountImageId, imagePassword );
+         public static CreatePayload create(String dataCenterId, float size, String name, String mountImageId, String imagePassword) {
+            validateSize(size);
+            return new AutoValue_Storage_Request_CreatePayload(dataCenterId, size, name, mountImageId, imagePassword);
          }
 
          public static class Builder {
@@ -200,38 +205,38 @@ public abstract class Storage {
             private String mountImageId;
             private String profitBricksImagePassword;
 
-            public Builder dataCenterId( String dataCenterId ) {
+            public Builder dataCenterId(String dataCenterId) {
                this.dataCenterId = dataCenterId;
                return this;
             }
 
-            public Builder dataCenterId( DataCenter dataCenter ) {
-               this.dataCenterId = checkNotNull( dataCenter, "Cannot pass null datacenter" ).id();
+            public Builder dataCenterId(DataCenter dataCenter) {
+               this.dataCenterId = checkNotNull(dataCenter, "Cannot pass null datacenter").id();
                return this;
             }
 
-            public Builder size( float size ) {
+            public Builder size(float size) {
                this.size = size;
                return this;
             }
 
-            public Builder mountImageId( String mountImageId ) {
+            public Builder mountImageId(String mountImageId) {
                this.mountImageId = mountImageId;
                return this;
             }
 
-            public Builder name( String name ) {
+            public Builder name(String name) {
                this.name = name;
                return this;
             }
 
-            public Builder imagePassword( String password ) {
+            public Builder imagePassword(String password) {
                this.profitBricksImagePassword = password;
                return this;
             }
 
             public CreatePayload build() {
-               return CreatePayload.create( dataCenterId, size, name, mountImageId, profitBricksImagePassword );
+               return CreatePayload.create(dataCenterId, size, name, mountImageId, profitBricksImagePassword);
             }
          }
 
@@ -251,9 +256,9 @@ public abstract class Storage {
          @Nullable
          public abstract String mountImageId();
 
-         public static UpdatePayload create( String id, Float size, String name, String mountImageId ) {
-            validateSize( size );
-            return new AutoValue_Storage_Request_UpdatePayload( id, size, name, mountImageId );
+         public static UpdatePayload create(String id, Float size, String name, String mountImageId) {
+            validateSize(size);
+            return new AutoValue_Storage_Request_UpdatePayload(id, size, name, mountImageId);
          }
 
          public static class Builder {
@@ -263,28 +268,28 @@ public abstract class Storage {
             private String name;
             private String mountImageId;
 
-            public Builder id( String id ) {
+            public Builder id(String id) {
                this.id = id;
                return this;
             }
 
-            public Builder size( float size ) {
+            public Builder size(float size) {
                this.size = size;
                return this;
             }
 
-            public Builder name( String name ) {
+            public Builder name(String name) {
                this.name = name;
                return this;
             }
 
-            public Builder mountImageId( String mountImageId ) {
+            public Builder mountImageId(String mountImageId) {
                this.mountImageId = mountImageId;
                return this;
             }
 
             public UpdatePayload build() {
-               return UpdatePayload.create( id, size, name, mountImageId );
+               return UpdatePayload.create(id, size, name, mountImageId);
             }
          }
       }
@@ -302,8 +307,8 @@ public abstract class Storage {
          @Nullable
          public abstract Integer deviceNumber();
 
-         public static ConnectPayload create( String storageId, String serverId, BusType busType, Integer deviceNumber ) {
-            return new AutoValue_Storage_Request_ConnectPayload( storageId, serverId, busType, deviceNumber );
+         public static ConnectPayload create(String storageId, String serverId, BusType busType, Integer deviceNumber) {
+            return new AutoValue_Storage_Request_ConnectPayload(storageId, serverId, busType, deviceNumber);
          }
 
          public static class Builder {
@@ -313,36 +318,36 @@ public abstract class Storage {
             private BusType busType;
             private Integer deviceNumber;
 
-            public Builder storageId( String storageId ) {
+            public Builder storageId(String storageId) {
                this.storageId = storageId;
                return this;
             }
 
-            public Builder serverId( String serverId ) {
+            public Builder serverId(String serverId) {
                this.serverId = serverId;
                return this;
             }
 
-            public Builder busType( BusType busType ) {
+            public Builder busType(BusType busType) {
                this.busType = busType;
                return this;
             }
 
-            public Builder deviceNumber( Integer deviceNumber ) {
+            public Builder deviceNumber(Integer deviceNumber) {
                this.deviceNumber = deviceNumber;
                return this;
             }
 
             public ConnectPayload build() {
-               return ConnectPayload.create( storageId, serverId, busType, deviceNumber );
+               return ConnectPayload.create(storageId, serverId, busType, deviceNumber);
             }
 
          }
       }
 
-      private static void validateSize( Float size ) {
-         if ( size != null )
-            checkArgument( size > 1, "Storage size must be > 1GB" );
+      private static void validateSize(Float size) {
+         if (size != null)
+            checkArgument(size > 1, "Storage size must be > 1GB");
 
       }
    }

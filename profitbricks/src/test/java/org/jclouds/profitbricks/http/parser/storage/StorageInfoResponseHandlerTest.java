@@ -29,38 +29,38 @@ import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableList;
 
-@Test( groups = "unit", testName = "StorageInfoResponseHandlerTest" )
+@Test(groups = "unit", testName = "StorageInfoResponseHandlerTest")
 public class StorageInfoResponseHandlerTest extends BaseResponseHandlerTest<Storage> {
 
    @Override
    protected ParseSax<Storage> createParser() {
-      return factory.create( injector.getInstance( StorageInfoResponseHandler.class ) );
+      return factory.create(injector.getInstance(StorageInfoResponseHandler.class));
    }
 
    protected DateCodecFactory createDateParser() {
-      return injector.getInstance( DateCodecFactory.class );
+      return injector.getInstance(DateCodecFactory.class);
    }
 
    @Test
    public void testParseResponseFromGetStorage() {
       ParseSax<Storage> parser = createParser();
 
-      Storage actual = parser.parse( payloadFromResource( "/storage/storage.xml" ) );
-      assertNotNull( actual, "Parsed content returned null" );
+      Storage actual = parser.parse(payloadFromResource("/storage/storage.xml"));
+      assertNotNull(actual, "Parsed content returned null");
 
       DateCodec dateParser = createDateParser().iso8601();
 
       Storage expected = Storage.builder()
-              .id( "qswdefrg-qaws-qaws-defe-rgrgdsvcxbrh" )
-              .size( 40 )
-              .name( "hdd-1" )
-              .state( ProvisioningState.AVAILABLE )
-              .serverIds( ImmutableList.<String>of( "qwertyui-qwer-qwer-qwer-qwertyyuiiop" ) )
-              .creationTime( dateParser.toDate( "2014-12-04T07:09:23.138Z" ) )
-              .lastModificationTime( dateParser.toDate( "2014-12-12T03:14:48.316Z" ) )
+              .id("qswdefrg-qaws-qaws-defe-rgrgdsvcxbrh")
+              .size(40)
+              .name("hdd-1")
+              .state(ProvisioningState.AVAILABLE)
+              .serverIds(ImmutableList.<String>of("qwertyui-qwer-qwer-qwer-qwertyyuiiop"))
+              .creationTime(dateParser.toDate("2014-12-04T07:09:23.138Z"))
+              .lastModificationTime(dateParser.toDate("2014-12-12T03:14:48.316Z"))
               .build();
 
-      assertEquals( actual, expected );
+      assertEquals(actual, expected);
    }
 
 }

@@ -34,9 +34,9 @@ public class GetProvisioningStateResponseHandler extends BaseProfitBricksRespons
    }
 
    @Override
-   protected void setPropertyOnEndTag( String qName ) {
-      if ( "return".equals( qName ) )
-         state = ProvisioningState.fromValue( textToStringValue() );
+   protected void setPropertyOnEndTag(String qName) {
+      if ("return".equals(qName))
+         state = ProvisioningState.fromValue(textToStringValue());
    }
 
    @Override
