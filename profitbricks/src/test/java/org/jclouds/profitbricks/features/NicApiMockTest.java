@@ -18,15 +18,16 @@ package org.jclouds.profitbricks.features;
 
 import com.squareup.okhttp.mockwebserver.MockResponse;
 import com.squareup.okhttp.mockwebserver.MockWebServer;
+import java.util.List;
 import org.jclouds.profitbricks.ProfitBricksApi;
 import org.jclouds.profitbricks.domain.Nic;
 import org.jclouds.profitbricks.internal.BaseProfitBricksMockTest;
-import org.testng.annotations.Test;
-
-import java.util.List;
-
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertNull;
+import static org.testng.Assert.assertTrue;
+import org.testng.annotations.Test;
 
 @Test(groups = "unit", testName = "NicApiMockTest")
 
@@ -47,7 +48,27 @@ public class NicApiMockTest extends BaseProfitBricksMockTest {
             Nic nic = api.getNic(id);
             assertRequestHasCommonProperties(server.takeRequest(), content);
             assertNotNull(nic);
-            assertEquals(nic.nicId(), id);
+            assertEquals(nic.id(), id);
+        } finally {
+            pbApi.close();
+            server.shutdown();
+        }
+    }
+
+    @Test
+    public void testGetNonExistingNic() throws Exception {
+        MockWebServer server = mockWebServer();
+        server.enqueue(new MockResponse().setResponseCode(404));
+
+        ProfitBricksApi pbApi = api(server.getUrl(rootUrl));
+        NicApi api = pbApi.nicApi();
+
+        String id = "nonexisting-nic-id";
+
+        try {
+            Nic nic = api.getNic(id);
+            assertRequestHasCommonProperties(server.takeRequest());
+            assertNull(nic);
         } finally {
             pbApi.close();
             server.shutdown();
@@ -57,7 +78,7 @@ public class NicApiMockTest extends BaseProfitBricksMockTest {
     @Test
     public void testGetAllNic() throws Exception {
         MockWebServer server = mockWebServer();
-        server.enqueue(new MockResponse().setBody(payloadFromResource("/nic/nic.xml")));
+        server.enqueue(new MockResponse().setBody(payloadFromResource("/nic/nics.xml")));
 
         ProfitBricksApi pbApi = api(server.getUrl(rootUrl));
         NicApi api = pbApi.nicApi();
@@ -79,28 +100,28 @@ public class NicApiMockTest extends BaseProfitBricksMockTest {
         ProfitBricksApi pbApi = api(server.getUrl(rootUrl));
         NicApi api = pbApi.nicApi();
 
-        String content = "<ws:createNic>" +
-                "<request>" +
-                "<ip>ip</ip>" +
-                "<nicName>nic-name</nicName>" +
-                "<dhcpActive>true</dhcpActive>" +
-                "<serverId>server-id</serverId>" +
-                "<lanId>lan-id</lanId>" +
-                "</request>" +
-                "</ws:createNic>";
+        String content = "<ws:createNic>"
+                + "<request>"
+                + "<ip>ip</ip>"
+                + "<nicName>nic-name</nicName>"
+                + "<dhcpActive>true</dhcpActive>"
+                + "<serverId>server-id</serverId>"
+                + "<lanId>lan-id</lanId>"
+                + "</request>"
+                + "</ws:createNic>";
 
         try {
             Nic nic = api.createNic(
-                    Nic.Request.create()
-                            .ip("ip")
-                            .nicName("nic-name")
-                            .dhcpActive(true)
-                            .lanId("lan-id")
-                            .serverId("server-id")
-                            .build());
+                    Nic.Request.creatingBuilder()
+                    .ip("ip")
+                    .nicName("nic-name")
+                    .dhcpActive(true)
+                    .lanId("lan-id")
+                    .serverId("server-id")
+                    .build());
 
             assertRequestHasCommonProperties(server.takeRequest(), content);
-            assertNotNull(nic.nicId());
+            assertNotNull(nic.id());
 
         } finally {
             pbApi.close();
@@ -116,15 +137,15 @@ public class NicApiMockTest extends BaseProfitBricksMockTest {
         ProfitBricksApi pbApi = api(server.getUrl(rootUrl));
         NicApi api = pbApi.nicApi();
 
-        String content = "<ws:updateNic>" +
-                "<request>" +
-                "<nicId>nic-id</nicId>" +
-                "<ip>ip</ip>" +
-                "<nicName>nic-name</nicName>" +
-                "<dhcpActive>true</dhcpActive>" +
-                "<lanId>lan-id</lanId>" +
-                "</request>" +
-                "</ws:updateNic>";
+        String content = "<ws:updateNic>"
+                + "<request>"
+                + "<nicId>nic-id</nicId>"
+                + "<ip>ip</ip>"
+                + "<nicName>nic-name</nicName>"
+                + "<dhcpActive>true</dhcpActive>"
+                + "<lanId>lan-id</lanId>"
+                + "</request>"
+                + "</ws:updateNic>";
         try {
             Nic nic = api.updateNic(Nic.Request.UpdatePayload.create("nic-id", "ip", "nic-name", true, "lan-id"));
             assertRequestHasCommonProperties(server.takeRequest(), content);
@@ -142,17 +163,60 @@ public class NicApiMockTest extends BaseProfitBricksMockTest {
         ProfitBricksApi pbApi = api(server.getUrl(rootUrl));
         NicApi api = pbApi.nicApi();
 
-        String content = "<ws:setInternetAccess>" +
-                "<dataCenterId>datacenter-id</dataCenterId>" +
-                "<lanId>lan-id</lanId>" +
-                "<internetAccess>true</internetAccess>" +
-                "</ws:setInternetAccess>";
+        String content = "<ws:setInternetAccess>"
+                + "<dataCenterId>datacenter-id</dataCenterId>"
+                + "<lanId>lan-id</lanId>"
+                + "<internetAccess>true</internetAccess>"
+                + "</ws:setInternetAccess>";
         try {
             Nic nic = api.setInternetAccess(Nic.Request.SetInternetAccessPayload.create("datacenter-id", "lan-id", true));
-            assertRequestHasCommonProperties(server.takeRequest(),content);
+            assertRequestHasCommonProperties(server.takeRequest(), content);
         } finally {
             pbApi.close();
             server.shutdown();
         }
     }
+
+    @Test
+    public void testDeleteNic() throws Exception {
+        MockWebServer server = mockWebServer();
+        server.enqueue(new MockResponse().setBody(payloadFromResource("/nic/nic-delete.xml")));
+
+        ProfitBricksApi pbApi = api(server.getUrl(rootUrl));
+        NicApi api = pbApi.nicApi();
+
+        String id = "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee";
+
+        String content = "<ws:deleteNic><nicId>" + id + "</nicId></ws:deleteNic>";
+
+        try {
+            boolean result = api.deleteNic(id);
+            assertRequestHasCommonProperties(server.takeRequest(), content);
+            assertTrue(result);
+        } finally {
+            pbApi.close();
+            server.shutdown();
+        }
+    }
+
+    @Test
+    public void testDeleteNonExistingNic() throws Exception {
+        MockWebServer server = mockWebServer();
+        server.enqueue(new MockResponse().setResponseCode(404));
+
+        ProfitBricksApi pbApi = api(server.getUrl(rootUrl));
+        NicApi api = pbApi.nicApi();
+
+        String id = "nonexisting-nic-id";
+
+        try {
+            boolean result = api.deleteNic(id);
+            assertRequestHasCommonProperties(server.takeRequest());
+            assertFalse(result);
+        } finally {
+            pbApi.close();
+            server.shutdown();
+        }
+    }
+
 }

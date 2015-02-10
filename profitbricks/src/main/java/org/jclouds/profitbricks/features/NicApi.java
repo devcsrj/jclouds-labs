@@ -14,7 +14,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.jclouds.profitbricks.features;
 
 import org.jclouds.Fallbacks;
@@ -32,7 +31,6 @@ import org.jclouds.rest.annotations.RequestFilters;
 import org.jclouds.rest.annotations.XMLResponseParser;
 import org.jclouds.rest.annotations.MapBinder;
 import org.jclouds.rest.annotations.PayloadParam;
-
 
 import javax.inject.Named;
 import javax.ws.rs.Consumes;
@@ -63,7 +61,7 @@ public interface NicApi {
     @Named("nic:get")
     @Payload("<ws:getNic><nicId>{id}</nicId></ws:getNic>")
     @XMLResponseParser(NicResponseHandler.class)
-    @Fallback(Fallbacks.EmptyListOnNotFoundOr404.class)
+    @Fallback(Fallbacks.NullOnNotFoundOr404.class)
     Nic getNic(@PayloadParam("id") String identifier);
 
     @POST
@@ -77,4 +75,10 @@ public interface NicApi {
     @MapBinder(SetInternetAccessBinder.class)
     @XMLResponseParser(NicResponseHandler.class)
     Nic setInternetAccess(@PayloadParam("nic") Nic.Request.SetInternetAccessPayload payload);
+
+    @POST
+    @Named("nic:delete")
+    @Payload("<ws:deleteNic><nicId>{id}</nicId></ws:deleteNic>")
+    @Fallback(Fallbacks.FalseOnNotFoundOr404.class)
+    boolean deleteNic(@PayloadParam("id") String id);
 }

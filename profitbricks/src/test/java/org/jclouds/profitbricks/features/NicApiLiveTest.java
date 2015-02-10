@@ -16,111 +16,86 @@
  */
 package org.jclouds.profitbricks.features;
 
+import com.google.common.base.Predicate;
+import java.util.List;
 import org.jclouds.profitbricks.BaseProfitBricksLiveTest;
 import org.jclouds.profitbricks.domain.Nic;
-import org.jclouds.profitbricks.domain.ProvisioningState;
-import org.testng.annotations.Test;
-
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
-
-import java.util.List;
+import static org.testng.Assert.assertTrue;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.Test;
 
 @Test(groups = "live", testName = "NicApiLiveTest", singleThreaded = true)
 public class NicApiLiveTest extends BaseProfitBricksLiveTest {
 
+    protected Predicate<String> nicWaitingPredicate;
+    String nicId;
+    String dataCenterId;
+    String serverId = /*"e7427f92-0ccf-4061-83ea-2fbfe53c68d6";*/ "ce48c54a-3e61-482a-8345-988431893607";
+
     @Test
     public void testGetAllNics() {
         List<Nic> nics = api.nicApi().getAllNics();
-        System.out.println("*****NICS*****");
-        for (Nic nic : nics) {
-
-            System.out.println("NIC");
-
-            System.out.println(nic.nicId());
-            System.out.println(nic.dataCenterId());
-            System.out.println(nic.internetAccess());
-            System.out.println(nic.provisioningState().toString());
-        }
 
         assertNotNull(nics);
     }
 
     @Test
     public void testGetNic() {
-        List<Nic> nics = api.nicApi().getAllNics();
+        Nic nic = api.nicApi().getNic(nicId);
 
-        Nic nic = api.nicApi().getNic(nics.get(0).nicId());
-
-        System.out.println(nic.lanId());
         assertNotNull(nic);
     }
 
     @Test
     public void testCreateNic() {
-        Nic.Request.CreatePayload toCreate = Nic.Request
-                .CreatePayload.create("123.123.123.123", "test name", true, "565fe4c3-12fe-4bcd-a629-aa1f973bd279", "1");
+        Nic.Request.CreatePayload payload = Nic.Request.creatingBuilder()
+                .nicName("name nr1")
+                .dhcpActive(true)
+                .serverId(serverId)
+                .lanId("1")
+                .build();
 
-        Nic nic = api.nicApi().createNic(toCreate);
+        Nic nic = api.nicApi().createNic(payload);
 
-        assertNotNull(nic);
+        assertNotNull(nic.id());
+
+        dataCenterId = nic.dataCenterId();
+        nicId = nic.id();
     }
 
     @Test
     public void testUpdateNic() {
-        System.out.println("Getting all nics");
-        List<Nic> nics = api.nicApi().getAllNics();
+        Nic.Request.UpdatePayload toUpdate = Nic.Request.updatingBuilder()
+                .nicName("name nr2")
+                .id(nicId)
+                .build();
 
-        System.out.println("Getting one specific to update, its id is " + (nics.size() - 2));
-        Nic originalnic = nics.get(nics.size() - 2);
+        api.nicApi().updateNic(toUpdate);
 
-        System.out.println("provisioningState " + originalnic.provisioningState().toString());
+        Nic updatedNic = api.nicApi().getNic(toUpdate.id());
 
-        Nic.Request.UpdatePayload toUpdate = Nic.Request.UpdatePayload.create(originalnic.nicId(), "192.168.1.138", "new name", originalnic.dhcpActive(), "0");
-
-        System.out.println("Updating one with id " + originalnic.nicId());
-
-        System.out.println("Done updating");
-
-        Nic newNic = api.nicApi().getNic(toUpdate.nicId());
-
-        System.out.println("nicId " + newNic.nicId());
-        System.out.println("dataCenterId " + newNic.dataCenterId());
-        System.out.println("dataCenterVersion " + newNic.dataCenterVersion());
-        System.out.println("ips " + newNic.ips());
-        System.out.println("lanId " + newNic.lanId());
-        System.out.println("provisioningState " + newNic.provisioningState().toString());
-        assertEquals(newNic.provisioningState(), ProvisioningState.INPROCESS);
+        assertEquals(updatedNic.name(), toUpdate.nicName());
     }
 
     @Test
     void testSetInternetAccess() {
-        List<Nic> nics = api.nicApi().getAllNics();
 
-        System.out.println("Getting one specific to update, its id is " + nics.get(nics.size() - 2).nicId());
-        Nic originalnic = Nic.create("", "", "", 0, "", true, "", "", "", true, "", ProvisioningState.UNRECOGNIZED);
+        Nic.Request.SetInternetAccessPayload toUpdate = Nic.Request.setInternetAccessBuilder()
+                .dataCenterId(dataCenterId)
+                .lanId("1")
+                .internetAccess(true)
+                .build();
 
-        for (Nic n : nics) {
-            if (!n.lanId().equals("0")) {
-                originalnic = n;
-                break;
-            }
-        }
-        System.out.println("Original internet access " + originalnic.internetAccess());
+        Nic result = api.nicApi().setInternetAccess(toUpdate);
 
-        System.out.println("Updating one with id " + originalnic.nicId());
+        assertNotNull(result);
+    }
 
-        Nic.Request.SetInternetAccessPayload toUpdate = Nic.Request.SetInternetAccessPayload.create(originalnic.dataCenterId(), "0", !originalnic.internetAccess());
-        System.out.println("LANID " + toUpdate.lanId());
-        System.out.println("origina LANID " + originalnic.lanId());
-
-        api.nicApi().setInternetAccess(toUpdate);
-
-        System.out.println("Done updating");
-
-        Nic newNic = api.nicApi().getNic(originalnic.nicId());
-
-        assertEquals(originalnic.internetAccess(), newNic.internetAccess());
-
+    @AfterClass(alwaysRun = true)
+    void testDeleteNic() {
+        boolean result = api.nicApi().deleteNic(nicId);
+        assertTrue(result);
     }
 }

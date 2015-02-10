@@ -22,6 +22,7 @@ import org.jclouds.profitbricks.domain.Nic;
 import static java.lang.String.format;
 
 public class UpdateNicRequestBinder extends BaseProfitBricksRequestBinder<Nic.Request.UpdatePayload> {
+
     final StringBuilder requestBuilder;
 
     UpdateNicRequestBinder() {
@@ -29,14 +30,15 @@ public class UpdateNicRequestBinder extends BaseProfitBricksRequestBinder<Nic.Re
         this.requestBuilder = new StringBuilder(128 * 2);
     }
 
+    @Override
     protected String createPayload(Nic.Request.UpdatePayload payload) {
-       requestBuilder.append("<ws:updateNic>")
+        requestBuilder.append("<ws:updateNic>")
                 .append("<request>")
-                .append(format("<nicId>%s</nicId>", payload.nicId()))
-                .append(format("<ip>%s</ip>", payload.ip()))
-                .append(format("<nicName>%s</nicName>", payload.nicName()))
-                .append(format("<dhcpActive>%s</dhcpActive>", payload.dhcpActive()))
-                .append(format("<lanId>%s</lanId>", payload.lanId()))
+                .append(format("<nicId>%s</nicId>", payload.id()))
+                .append(formatIfNotEmpty("<ip>%s</ip>", payload.ip()))
+                .append(formatIfNotEmpty("<nicName>%s</nicName>", payload.nicName()))
+                .append(formatIfNotEmpty("<dhcpActive>%s</dhcpActive>", payload.dhcpActive()))
+                .append(formatIfNotEmpty("<lanId>%s</lanId>", payload.lanId()))
                 .append("</request>")
                 .append("</ws:updateNic>");
         return requestBuilder.toString();

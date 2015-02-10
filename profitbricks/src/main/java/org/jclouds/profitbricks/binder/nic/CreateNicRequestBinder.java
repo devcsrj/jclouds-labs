@@ -16,8 +16,6 @@
  */
 package org.jclouds.profitbricks.binder.nic;
 
-import static java.lang.String.format;
-
 import org.jclouds.profitbricks.binder.BaseProfitBricksRequestBinder;
 import org.jclouds.profitbricks.domain.Nic;
 
@@ -34,11 +32,11 @@ public class CreateNicRequestBinder extends BaseProfitBricksRequestBinder<Nic.Re
     protected String createPayload(Nic.Request.CreatePayload payload) {
         requestBuilder.append("<ws:createNic>")
                 .append("<request>")
-                .append(format("<ip>%s</ip>", payload.ip()))
-                .append(format("<nicName>%s</nicName>", payload.nicName()))
-                .append(format("<dhcpActive>%s</dhcpActive>", payload.dhcpActive()))
-                .append(format("<serverId>%s</serverId>", payload.serverId()))
-                .append(format("<lanId>%s</lanId>", payload.lanId()))
+                .append(formatIfNotEmpty("<ip>%s</ip>", payload.ip()))
+                .append(formatIfNotEmpty("<nicName>%s</nicName>", payload.nicName()))
+                .append(formatIfNotEmpty("<dhcpActive>%s</dhcpActive>", payload.dhcpActive()))
+                .append(formatIfNotEmpty("<serverId>%s</serverId>", payload.serverId()))
+                .append(formatIfNotEmpty("<lanId>%s</lanId>", payload.lanId()))
                 .append("</request>")
                 .append("</ws:createNic>");
         return requestBuilder.toString();

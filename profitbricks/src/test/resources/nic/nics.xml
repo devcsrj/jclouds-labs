@@ -4,7 +4,7 @@
         <ns2:getAllNicResponse xmlns:ns2="http://ws.api.profitbricks.com/">
             <return>
                 <dataCenterId>datacenter-id</dataCenterId>
-                <dataCenterVersion>datacenter-version</dataCenterVersion>
+                <dataCenterVersion>12</dataCenterVersion>
                 <nicId>nic-id</nicId>
                 <lanId>lan-id</lanId>
                 <internetAccess>internet-access</internetAccess>
@@ -23,7 +23,7 @@
             </return>
             <return>
                 <dataCenterId>datacenter-id</dataCenterId>
-                <dataCenterVersion>datacenter-version</dataCenterVersion>
+                <dataCenterVersion>21</dataCenterVersion>
                 <nicId>nic-id</nicId>
                 <lanId>lan-id</lanId>
                 <internetAccess>internet-access</internetAccess>

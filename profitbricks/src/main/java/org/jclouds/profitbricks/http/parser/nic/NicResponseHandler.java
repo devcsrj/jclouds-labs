@@ -25,8 +25,9 @@ public class NicResponseHandler extends BaseNicResponseHandler<Nic> {
 
     @Override
     public void endElement(String uri, String localName, String qName) throws SAXException {
-        if (done)
+        if (done) {
             return;
+        }
         setPropertyOnEndTag(qName);
 
         if ("return".equals(qName)) {

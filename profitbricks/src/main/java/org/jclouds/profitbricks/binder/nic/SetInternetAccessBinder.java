@@ -22,6 +22,7 @@ import org.jclouds.profitbricks.domain.Nic;
 import static java.lang.String.format;
 
 public class SetInternetAccessBinder extends BaseProfitBricksRequestBinder<Nic.Request.SetInternetAccessPayload> {
+
     final StringBuilder requestBuilder;
 
     SetInternetAccessBinder() {
