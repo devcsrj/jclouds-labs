@@ -16,22 +16,21 @@
  */
 package org.jclouds.profitbricks.http;
 
-import static org.jclouds.util.Closeables2.closeQuietly;
-
+import com.google.common.base.Function;
+import com.google.common.base.Supplier;
+import com.google.common.io.ByteStreams;
+import com.google.inject.Inject;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.Proxy;
 import java.net.URI;
 import java.util.regex.Pattern;
-
 import javax.inject.Named;
 import javax.inject.Singleton;
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
-
 import org.jclouds.http.HttpResponse;
 import org.jclouds.http.HttpUtils;
 import org.jclouds.http.IOExceptionRetryHandler;
@@ -44,13 +43,7 @@ import org.jclouds.io.ContentMetadataCodec;
 import org.jclouds.io.Payload;
 import org.jclouds.io.Payloads;
 import org.jclouds.profitbricks.domain.ServiceFault;
-
-import com.google.common.base.Charsets;
-import com.google.common.base.Function;
-import com.google.common.base.Supplier;
-import com.google.common.io.ByteStreams;
-import com.google.common.io.CharStreams;
-import com.google.inject.Inject;
+import static org.jclouds.util.Closeables2.closeQuietly;
 
 /**
  * Custom implementation of the HTTP driver to read actual http status and message from SOAP Fault.
