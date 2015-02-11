@@ -18,6 +18,7 @@ package org.jclouds.profitbricks;
 
 import java.io.Closeable;
 import org.jclouds.profitbricks.features.DataCenterApi;
+import org.jclouds.profitbricks.features.FirewallApi;
 import org.jclouds.profitbricks.features.ImageApi;
 import org.jclouds.profitbricks.features.ServerApi;
 import org.jclouds.profitbricks.features.SnapshotApi;
@@ -27,18 +28,21 @@ import org.jclouds.rest.annotations.Delegate;
 
 public interface ProfitBricksApi extends Closeable {
 
-   @Delegate
-   DataCenterApi dataCenterApi();
+    @Delegate
+    DataCenterApi dataCenterApi();
 
-   @Delegate
-   ImageApi imageApi();
+    @Delegate
+    ImageApi imageApi();
 
-   @Delegate
-   ServerApi serverApi();
+    @Delegate
+    ServerApi serverApi();
 
-   @Delegate
-   StorageApi storageApi();
+    @Delegate
+    StorageApi storageApi();
 
-   @Delegate
-   SnapshotApi snapshotApi();
+    @Delegate
+    SnapshotApi snapshotApi();
+
+    @Delegate
+    FirewallApi firewallApi();
 }

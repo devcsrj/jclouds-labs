@@ -16,16 +16,31 @@
  */
 package org.jclouds.profitbricks.features;
 
+import javax.inject.Named;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.POST;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import org.jclouds.Fallbacks;
 import org.jclouds.http.filters.BasicAuthentication;
+import org.jclouds.profitbricks.domain.Firewall;
 import org.jclouds.profitbricks.http.filters.ProfitBricksSoapMessageEnvelope;
+import org.jclouds.profitbricks.http.parser.firewall.FirewallResponseHandler;
+import org.jclouds.rest.annotations.Fallback;
+import org.jclouds.rest.annotations.Payload;
+import org.jclouds.rest.annotations.PayloadParam;
 import org.jclouds.rest.annotations.RequestFilters;
+import org.jclouds.rest.annotations.XMLResponseParser;
 
 @RequestFilters({BasicAuthentication.class, ProfitBricksSoapMessageEnvelope.class})
 @Consumes(MediaType.TEXT_XML)
 @Produces(MediaType.TEXT_XML)
-public class FirewallApi {
-    
+public interface FirewallApi {
+
+    @POST
+    @Named("firewall:get")
+    @Payload("<ws:getFirewall><firewallId>{id}</firewallId></ws:getFirewall>")
+    @XMLResponseParser(FirewallResponseHandler.class)
+    @Fallback(Fallbacks.NullOnNotFoundOr404.class)
+    Firewall getFirewall(@PayloadParam("id") String identifier);
 }

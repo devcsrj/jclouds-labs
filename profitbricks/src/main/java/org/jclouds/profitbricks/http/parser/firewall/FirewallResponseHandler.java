@@ -66,6 +66,14 @@ public class FirewallResponseHandler extends BaseFirewallResponseHandler<Firewal
         }
     }
 
+     @Override
+    public void characters(char[] ch, int start, int length) {
+        if (useFirewallRuleParser) {
+            firewallRuleResponseHandler.characters(ch, start, length);
+        } else {
+            super.characters(ch, start, length);
+        }
+    }
     @Override
     public Firewall getResult() {
         return builder.build();

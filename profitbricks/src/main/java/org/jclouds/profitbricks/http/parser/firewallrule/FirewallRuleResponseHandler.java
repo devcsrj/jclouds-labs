@@ -21,14 +21,23 @@ import org.xml.sax.SAXException;
 
 public class FirewallRuleResponseHandler extends BaseFirewallRuleResponseHandler<FirewallRule> {
 
+    private boolean done = false;
+
     @Override
     public void endElement(String uri, String localName, String qName) throws SAXException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (done) {
+            return;
+        }
+        setPropertyOnEndTag(qName);
+        if ("return".equals(qName)) {
+            done = true;
+        }
+        clearTextBuffer();
     }
 
     @Override
     public FirewallRule getResult() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return builder.build();
     }
-    
+
 }

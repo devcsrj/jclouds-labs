@@ -16,6 +16,7 @@
  */
 package org.jclouds.profitbricks.http.parser.firewall;
 
+import com.google.inject.Inject;
 import org.jclouds.profitbricks.domain.Firewall;
 import org.jclouds.profitbricks.domain.ProvisioningState;
 import org.jclouds.profitbricks.http.parser.BaseProfitBricksResponseHandler;
@@ -24,6 +25,7 @@ public abstract class BaseFirewallResponseHandler<T> extends BaseProfitBricksRes
 
     protected Firewall.Builder builder;
 
+    @Inject
     BaseFirewallResponseHandler() {
         this.builder = Firewall.builder();
     }
