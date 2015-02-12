@@ -16,10 +16,8 @@
  */
 package org.jclouds.profitbricks.binder.firewall;
 
-import org.jclouds.profitbricks.binder.snapshot.CreateSnapshotRequestBinder;
 import org.jclouds.profitbricks.domain.Firewall;
 import org.jclouds.profitbricks.domain.Protocol;
-import org.jclouds.profitbricks.domain.Snapshot;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import org.testng.annotations.Test;
