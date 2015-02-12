@@ -18,6 +18,7 @@ package org.jclouds.profitbricks.domain;
 
 import com.google.auto.value.AutoValue;
 import java.util.List;
+import org.jclouds.javax.annotation.Nullable;
 
 @AutoValue
 public abstract class Firewall {
@@ -85,22 +86,115 @@ public abstract class Firewall {
 
     public static class Request {
 
-        public static CreatePayload.Builder creatingBuilder() {
-            return new CreatePayload.Builder();
+        public static AddFirewallRulePayload.Builder addFirewallRuleBuilder() {
+            return new AddFirewallRulePayload.Builder();
         }
 
         @AutoValue
-        public abstract static class CreatePayload {
+        public abstract static class AddFirewallRulePayload {
 
-            public abstract String nicid();
+            public abstract String nicId();
 
-            public static CreatePayload create(String nicid) {
-                return new AutoValue_Firewall_Request_CreatePayload(nicid);
+            @Nullable
+            public abstract String icmpCode();
+
+            @Nullable
+            public abstract String icmpType();
+
+            @Nullable
+            public abstract String name();
+
+            @Nullable
+            public abstract String portRangeEnd();
+
+            @Nullable
+            public abstract String portRangeStart();
+
+            @Nullable
+            public abstract Protocol protocol();
+
+            @Nullable
+            public abstract String sourceIp();
+
+            @Nullable
+            public abstract String sourceMac();
+
+            @Nullable
+            public abstract String targetIp();
+
+            public static AddFirewallRulePayload create(String nicid, String icmpCode, String icmpType, String name, String portRangeEnd, String portRangeStart,
+                    Protocol protocol, String sourceIp, String sourceMAc, String targetIp) {
+                return new AutoValue_Firewall_Request_AddFirewallRulePayload(nicid, icmpCode, icmpType, name, portRangeEnd, portRangeStart, protocol, sourceIp, sourceMAc, targetIp);
             }
 
             public static class Builder {
 
+                private String nicId;
+                private String icmpCode;
+                private String icmpType;
+                private String name;
+                private String portRangeEnd;
+                private String portRangeStart;
+                private Protocol protocol;
+                private String sourceIp;
+                private String sourceMac;
+                private String targetIp;
+
+                public Builder nicid(String nicId) {
+                    this.nicId = nicId;
+                    return this;
+                }
+
+                public Builder icmpCode(String icmpCode) {
+                    this.icmpCode = icmpCode;
+                    return this;
+                }
+
+                public Builder icmpType(String icmpType) {
+                    this.icmpType = icmpType;
+                    return this;
+                }
+
+                public Builder name(String name) {
+                    this.name = name;
+                    return this;
+                }
+
+                public Builder portRangeEnd(String portRangeEnd) {
+                    this.portRangeEnd = portRangeEnd;
+                    return this;
+                }
+
+                public Builder portRangeStart(String portRangeStart) {
+                    this.portRangeStart = portRangeStart;
+                    return this;
+                }
+
+                public Builder protocol(Protocol protocol) {
+                    this.protocol = protocol;
+                    return this;
+                }
+
+                public Builder sourceIp(String sourceIp) {
+                    this.sourceIp = sourceIp;
+                    return this;
+                }
+
+                public Builder sourceMac(String sourceMac) {
+                    this.sourceMac = sourceMac;
+                    return this;
+                }
+
+                public Builder targetIp(String targetIp) {
+                    this.targetIp = targetIp;
+                    return this;
+                }
+
+                public AddFirewallRulePayload build() {
+                    return AddFirewallRulePayload.create(nicId, icmpCode, icmpType, name, portRangeEnd, portRangeStart, protocol, sourceIp, sourceMac, targetIp);
+                }
             }
         }
+
     }
 }

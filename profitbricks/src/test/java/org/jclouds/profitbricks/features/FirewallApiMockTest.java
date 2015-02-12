@@ -26,6 +26,7 @@ import static org.jclouds.profitbricks.internal.BaseProfitBricksMockTest.mockWeb
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertNull;
 import org.testng.annotations.Test;
 
 @Test(groups = "live", testName = "FirewallApiMockTest", singleThreaded = true)
@@ -72,6 +73,27 @@ public class FirewallApiMockTest extends BaseProfitBricksMockTest {
             assertEquals(firewall.id(), id);
             assertFalse(firewall.firewallRules().isEmpty());
             assertEquals(firewall.firewallRules().get(0).id(), firewallruleid);
+        } finally {
+            pbApi.close();
+            server.shutdown();
+        }
+    }
+
+    @Test
+    public void testGetNonExistingFirewall() throws Exception {
+        MockWebServer server = mockWebServer();
+        server.enqueue(new MockResponse().setResponseCode(404));
+
+        ProfitBricksApi pbApi = api(server.getUrl(rootUrl));
+
+        FirewallApi api = pbApi.firewallApi();
+
+        String id = "firewall-id";
+
+        try {
+            Firewall firewall = api.getFirewall(id);
+            assertRequestHasCommonProperties(server.takeRequest());
+            assertNull(firewall);
         } finally {
             pbApi.close();
             server.shutdown();
