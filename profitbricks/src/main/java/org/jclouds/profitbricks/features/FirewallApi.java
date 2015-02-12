@@ -29,12 +29,12 @@ import org.jclouds.profitbricks.domain.Firewall;
 import org.jclouds.profitbricks.http.filters.ProfitBricksSoapMessageEnvelope;
 import org.jclouds.profitbricks.http.parser.firewall.FirewallListResponseHandler;
 import org.jclouds.profitbricks.http.parser.firewall.FirewallResponseHandler;
-import org.jclouds.rest.annotations.Fallback;
 import org.jclouds.rest.annotations.MapBinder;
 import org.jclouds.rest.annotations.Payload;
 import org.jclouds.rest.annotations.PayloadParam;
 import org.jclouds.rest.annotations.RequestFilters;
 import org.jclouds.rest.annotations.XMLResponseParser;
+import org.jclouds.rest.annotations.Fallback;
 
 @RequestFilters({BasicAuthentication.class, ProfitBricksSoapMessageEnvelope.class})
 @Consumes(MediaType.TEXT_XML)
@@ -60,4 +60,28 @@ public interface FirewallApi {
     @MapBinder(AddFirewallRuleToNicRequestBinder.class)
     @XMLResponseParser(FirewallResponseHandler.class)
     Firewall addFirewallRuleToNic(@PayloadParam("firewall") Firewall.Request.AddFirewallRulePayload payload);
+
+    @POST
+    @Named("firewall:remove")
+    @Payload("<ws:removeFirewallRules><firewallRuleIds>{id}</firewallRuleIds></ws:removeFirewallRules>")
+    @Fallback(Fallbacks.FalseOnNotFoundOr404.class)
+    boolean removeFirewall(@PayloadParam("id") String id);
+
+    @POST
+    @Named("firewall:activate")
+    @Payload("<ws:activateFirewalls><firewallIds>{id}</firewallIds></ws:activateFirewalls>")
+    @Fallback(Fallbacks.FalseOnNotFoundOr404.class)
+    boolean activateFirewall(@PayloadParam("id") String id);
+
+    @POST
+    @Named("firewall:activate")
+    @Payload("<ws:deactivateFirewalls><firewallIds>{id}</firewallIds></ws:deactivateFirewalls>")
+    @Fallback(Fallbacks.FalseOnNotFoundOr404.class)
+    boolean deactivateFirewall(@PayloadParam("id") String id);
+
+    @POST
+    @Named("firewall:activate")
+    @Payload("<ws:deleteFirewalls><firewallIds>{id}</firewallIds></ws:deleteFirewalls>")
+    @Fallback(Fallbacks.FalseOnNotFoundOr404.class)
+    boolean deleteFirewall(@PayloadParam("id") String id);
 }

@@ -28,6 +28,7 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
+import static org.testng.Assert.assertTrue;
 import org.testng.annotations.Test;
 
 @Test(groups = "live", testName = "FirewallApiMockTest", singleThreaded = true)
@@ -101,7 +102,7 @@ public class FirewallApiMockTest extends BaseProfitBricksMockTest {
     }
 
     @Test
-    public void addFirewallRuleToNic() throws Exception {
+    public void testAddFirewallRuleToNic() throws Exception {
         MockWebServer server = mockWebServer();
         server.enqueue(new MockResponse().setBody(payloadFromResource("/firewall/firewall-addtonic.xml")));
 
@@ -139,6 +140,178 @@ public class FirewallApiMockTest extends BaseProfitBricksMockTest {
 
             assertRequestHasCommonProperties(server.takeRequest(), content);
             assertNotNull(response);
+        } finally {
+            pbApi.close();
+            server.shutdown();
+        }
+    }
+
+    @Test
+    public void testRemoveFirewall() throws Exception {
+        MockWebServer server = mockWebServer();
+        server.enqueue(new MockResponse().setBody(payloadFromResource("/firewall/firewall-remove.xml")));
+
+        ProfitBricksApi pbApi = api(server.getUrl(rootUrl));
+        FirewallApi api = pbApi.firewallApi();
+
+        String firewallId = "12345";
+        String content = "<ws:removeFirewallRules>"
+                + "<firewallRuleIds>" + firewallId + "</firewallRuleIds>"
+                + "</ws:removeFirewallRules>";
+
+        try {
+            boolean result = api.removeFirewall(firewallId);
+            assertRequestHasCommonProperties(server.takeRequest(), content);
+            assertTrue(result);
+        } finally {
+            pbApi.close();
+            server.shutdown();
+        }
+    }
+
+    @Test
+    public void testRemoveNonExitingFirewall() throws Exception {
+        MockWebServer server = mockWebServer();
+        server.enqueue(new MockResponse().setResponseCode(404));
+
+        ProfitBricksApi pbApi = api(server.getUrl(rootUrl));
+        FirewallApi api = pbApi.firewallApi();
+
+        String firewallId = "12345";
+
+        try {
+            boolean result = api.removeFirewall(firewallId);
+            assertRequestHasCommonProperties(server.takeRequest());
+            assertFalse(result);
+        } finally {
+            pbApi.close();
+            server.shutdown();
+        }
+    }
+
+    @Test
+    public void testActivateFirewall() throws Exception {
+        MockWebServer server = mockWebServer();
+        server.enqueue(new MockResponse().setBody(payloadFromResource("/firewall/firewall-activate.xml")));
+
+        ProfitBricksApi pbApi = api(server.getUrl(rootUrl));
+        FirewallApi api = pbApi.firewallApi();
+
+        String firewallId = "12345";
+        String content = "<ws:activateFirewalls>"
+                + "<firewallIds>" + firewallId + "</firewallIds>"
+                + "</ws:activateFirewalls>";
+
+        try {
+            boolean result = api.activateFirewall(firewallId);
+            assertRequestHasCommonProperties(server.takeRequest(), content);
+            assertTrue(result);
+        } finally {
+            pbApi.close();
+            server.shutdown();
+        }
+    }
+
+    @Test
+    public void testActivateNonExitingFirewall() throws Exception {
+        MockWebServer server = mockWebServer();
+        server.enqueue(new MockResponse().setResponseCode(404));
+
+        ProfitBricksApi pbApi = api(server.getUrl(rootUrl));
+        FirewallApi api = pbApi.firewallApi();
+
+        String firewallId = "12345";
+
+        try {
+            boolean result = api.activateFirewall(firewallId);
+            assertRequestHasCommonProperties(server.takeRequest());
+            assertFalse(result);
+        } finally {
+            pbApi.close();
+            server.shutdown();
+        }
+    }
+
+    @Test
+    public void testDeactivateFirewall() throws Exception {
+        MockWebServer server = mockWebServer();
+        server.enqueue(new MockResponse().setBody(payloadFromResource("/firewall/firewall-deactivate.xml")));
+
+        ProfitBricksApi pbApi = api(server.getUrl(rootUrl));
+        FirewallApi api = pbApi.firewallApi();
+
+        String firewallId = "12345";
+        String content = "<ws:deactivateFirewalls>"
+                + "<firewallIds>" + firewallId + "</firewallIds>"
+                + "</ws:deactivateFirewalls>";
+
+        try {
+            boolean result = api.deactivateFirewall(firewallId);
+            assertRequestHasCommonProperties(server.takeRequest(), content);
+            assertTrue(result);
+        } finally {
+            pbApi.close();
+            server.shutdown();
+        }
+    }
+
+    @Test
+    public void testDeactivateNonExitingFirewall() throws Exception {
+        MockWebServer server = mockWebServer();
+        server.enqueue(new MockResponse().setResponseCode(404));
+
+        ProfitBricksApi pbApi = api(server.getUrl(rootUrl));
+        FirewallApi api = pbApi.firewallApi();
+
+        String firewallId = "12345";
+
+        try {
+            boolean result = api.deactivateFirewall(firewallId);
+            assertRequestHasCommonProperties(server.takeRequest());
+            assertFalse(result);
+        } finally {
+            pbApi.close();
+            server.shutdown();
+        }
+    }
+    
+     @Test
+    public void testDeleteFirewall() throws Exception {
+        MockWebServer server = mockWebServer();
+        server.enqueue(new MockResponse().setBody(payloadFromResource("/firewall/firewall-delete.xml")));
+
+        ProfitBricksApi pbApi = api(server.getUrl(rootUrl));
+        FirewallApi api = pbApi.firewallApi();
+
+        String firewallId = "12345";
+        String content = "<ws:deleteFirewalls>"
+                + "<firewallIds>" + firewallId + "</firewallIds>"
+                + "</ws:deleteFirewalls>";
+
+        try {
+            boolean result = api.deleteFirewall(firewallId);
+            assertRequestHasCommonProperties(server.takeRequest(), content);
+            assertTrue(result);
+        } finally {
+            pbApi.close();
+            server.shutdown();
+        }
+    }
+
+    @Test
+    public void testDeleteNonExitingFirewall() throws Exception {
+        MockWebServer server = mockWebServer();
+        server.enqueue(new MockResponse().setResponseCode(404));
+
+        ProfitBricksApi pbApi = api(server.getUrl(rootUrl));
+        FirewallApi api = pbApi.firewallApi();
+
+        String firewallId = "12345";
+
+        try {
+            boolean result = api.deleteFirewall(firewallId);
+            assertRequestHasCommonProperties(server.takeRequest());
+            assertFalse(result);
         } finally {
             pbApi.close();
             server.shutdown();
