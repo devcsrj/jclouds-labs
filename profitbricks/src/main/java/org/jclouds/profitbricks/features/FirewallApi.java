@@ -16,6 +16,7 @@
  */
 package org.jclouds.profitbricks.features;
 
+import java.util.List;
 import javax.inject.Named;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -25,6 +26,7 @@ import org.jclouds.Fallbacks;
 import org.jclouds.http.filters.BasicAuthentication;
 import org.jclouds.profitbricks.domain.Firewall;
 import org.jclouds.profitbricks.http.filters.ProfitBricksSoapMessageEnvelope;
+import org.jclouds.profitbricks.http.parser.firewall.FirewallListResponseHandler;
 import org.jclouds.profitbricks.http.parser.firewall.FirewallResponseHandler;
 import org.jclouds.rest.annotations.Fallback;
 import org.jclouds.rest.annotations.Payload;
@@ -43,4 +45,11 @@ public interface FirewallApi {
     @XMLResponseParser(FirewallResponseHandler.class)
     @Fallback(Fallbacks.NullOnNotFoundOr404.class)
     Firewall getFirewall(@PayloadParam("id") String identifier);
+
+    @POST
+    @Named("firewall:getall")
+    @Payload("<ws:getAllFirewalls/>")
+    @XMLResponseParser(FirewallListResponseHandler.class)
+    @Fallback(Fallbacks.EmptyListOnNotFoundOr404.class)
+    List<Firewall> getAllFirewalls();
 }

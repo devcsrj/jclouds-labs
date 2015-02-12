@@ -93,10 +93,11 @@ public abstract class Firewall {
         public abstract static class CreatePayload {
 
             public abstract String nicid();
-            
-            public static CreatePayload create(String nicid){
+
+            public static CreatePayload create(String nicid) {
                 return new AutoValue_Firewall_Request_CreatePayload(nicid);
             }
+
             public static class Builder {
 
             }

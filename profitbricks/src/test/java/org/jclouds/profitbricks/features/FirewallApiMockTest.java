@@ -18,6 +18,7 @@ package org.jclouds.profitbricks.features;
 
 import com.squareup.okhttp.mockwebserver.MockResponse;
 import com.squareup.okhttp.mockwebserver.MockWebServer;
+import java.util.List;
 import org.jclouds.profitbricks.ProfitBricksApi;
 import org.jclouds.profitbricks.domain.Firewall;
 import org.jclouds.profitbricks.internal.BaseProfitBricksMockTest;
@@ -29,6 +30,26 @@ import org.testng.annotations.Test;
 
 @Test(groups = "live", testName = "FirewallApiMockTest", singleThreaded = true)
 public class FirewallApiMockTest extends BaseProfitBricksMockTest {
+
+    @Test
+    public void testGetAllFirewalls() throws Exception {
+        MockWebServer server = mockWebServer();
+        server.enqueue(new MockResponse().setBody(payloadFromResource("/firewall/firewalls.xml")));
+
+        ProfitBricksApi pbApi = api(server.getUrl(rootUrl));
+
+        FirewallApi api = pbApi.firewallApi();
+
+        try {
+            List<Firewall> firewalls = api.getAllFirewalls();
+            assertRequestHasCommonProperties(server.takeRequest(), "<ws:getAllFirewalls/>");
+            assertNotNull(firewalls);
+            assertEquals(firewalls.size(), 2);
+        } finally {
+            pbApi.close();
+            server.shutdown();
+        }
+    }
 
     @Test
     public void testGetFirewall() throws Exception {
@@ -43,6 +64,7 @@ public class FirewallApiMockTest extends BaseProfitBricksMockTest {
         String firewallruleid = "firewall-rule-id";
 
         String content = "<ws:getFirewall><firewallId>" + id + "</firewallId></ws:getFirewall>";
+
         try {
             Firewall firewall = api.getFirewall(id);
             assertRequestHasCommonProperties(server.takeRequest(), content);

@@ -16,18 +16,47 @@
  */
 package org.jclouds.profitbricks.http.parser.firewall;
 
+import com.google.common.collect.Lists;
 import com.google.inject.Inject;
+import java.util.List;
 import org.jclouds.profitbricks.domain.Firewall;
+import org.jclouds.profitbricks.domain.FirewallRule;
 import org.jclouds.profitbricks.domain.ProvisioningState;
 import org.jclouds.profitbricks.http.parser.BaseProfitBricksResponseHandler;
+import org.jclouds.profitbricks.http.parser.firewallrule.FirewallRuleResponseHandler;
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
 
 public abstract class BaseFirewallResponseHandler<T> extends BaseProfitBricksResponseHandler<T> {
 
+    protected final FirewallRuleResponseHandler firewallRuleResponseHandler;
+    protected final List<FirewallRule> firewallRules = Lists.newArrayList();
+    protected boolean useFirewallRuleParser = false;
     protected Firewall.Builder builder;
 
     @Inject
-    BaseFirewallResponseHandler() {
+    BaseFirewallResponseHandler(FirewallRuleResponseHandler firewallRuleResponseHandler) {
         this.builder = Firewall.builder();
+        this.firewallRuleResponseHandler = firewallRuleResponseHandler;
+    }
+
+    @Override
+    public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
+        if ("firewallRules".equals(qName)) {
+            useFirewallRuleParser = true;
+        }
+        if (useFirewallRuleParser) {
+            firewallRuleResponseHandler.startElement(uri, localName, qName, attributes);
+        }
+    }
+
+    @Override
+    public void characters(char[] ch, int start, int length) {
+        if (useFirewallRuleParser) {
+            firewallRuleResponseHandler.characters(ch, start, length);
+        } else {
+            super.characters(ch, start, length);
+        }
     }
 
     @Override

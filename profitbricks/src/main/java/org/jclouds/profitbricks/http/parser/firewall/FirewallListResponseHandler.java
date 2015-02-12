@@ -16,26 +16,25 @@
  */
 package org.jclouds.profitbricks.http.parser.firewall;
 
+import autovalue.shaded.com.google.common.common.collect.Lists;
 import com.google.inject.Inject;
+import java.util.List;
 import org.jclouds.profitbricks.domain.Firewall;
 import org.jclouds.profitbricks.http.parser.firewallrule.FirewallRuleResponseHandler;
 import org.xml.sax.SAXException;
 
-public class FirewallResponseHandler extends BaseFirewallResponseHandler<Firewall> {
+public class FirewallListResponseHandler extends BaseFirewallResponseHandler<List<Firewall>> {
 
-    private boolean done = false;
+    private final List<Firewall> firewalls;
 
     @Inject
-    FirewallResponseHandler(FirewallRuleResponseHandler firewallRuleResponseHandler) {
+    public FirewallListResponseHandler(FirewallRuleResponseHandler firewallRuleResponseHandler) {
         super(firewallRuleResponseHandler);
+        this.firewalls = Lists.newArrayList();
     }
 
     @Override
     public void endElement(String uri, String localName, String qName) throws SAXException {
-        if (done) {
-            return;
-        }
-
         if ("firewallRules".equals(qName)) {
             useFirewallRuleParser = false;
             firewallRules.add(firewallRuleResponseHandler.getResult());
@@ -45,15 +44,16 @@ public class FirewallResponseHandler extends BaseFirewallResponseHandler<Firewal
         } else {
             setPropertyOnEndTag(qName);
             if ("return".equals(qName)) {
-                done = true;
-                builder.firewallRules(firewallRules);
+                firewalls.add(builder.firewallRules(firewallRules).build());
+                builder = Firewall.builder();
             }
             clearTextBuffer();
         }
     }
 
     @Override
-    public Firewall getResult() {
-        return builder.build();
+    public List<Firewall> getResult() {
+        return firewalls;
     }
+
 }
