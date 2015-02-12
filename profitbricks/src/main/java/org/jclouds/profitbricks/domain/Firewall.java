@@ -82,4 +82,24 @@ public abstract class Firewall {
             return Firewall.create(id, nicId, active, state, firewallRules);
         }
     }
+
+    public static class Request {
+
+        public static CreatePayload.Builder creatingBuilder() {
+            return new CreatePayload.Builder();
+        }
+
+        @AutoValue
+        public abstract static class CreatePayload {
+
+            public abstract String nicid();
+            
+            public static CreatePayload create(String nicid){
+                return new AutoValue_Firewall_Request_CreatePayload(nicid);
+            }
+            public static class Builder {
+
+            }
+        }
+    }
 }
