@@ -24,11 +24,13 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import org.jclouds.Fallbacks;
 import org.jclouds.http.filters.BasicAuthentication;
+import org.jclouds.profitbricks.binder.firewall.AddFirewallRuleToNicRequestBinder;
 import org.jclouds.profitbricks.domain.Firewall;
 import org.jclouds.profitbricks.http.filters.ProfitBricksSoapMessageEnvelope;
 import org.jclouds.profitbricks.http.parser.firewall.FirewallListResponseHandler;
 import org.jclouds.profitbricks.http.parser.firewall.FirewallResponseHandler;
 import org.jclouds.rest.annotations.Fallback;
+import org.jclouds.rest.annotations.MapBinder;
 import org.jclouds.rest.annotations.Payload;
 import org.jclouds.rest.annotations.PayloadParam;
 import org.jclouds.rest.annotations.RequestFilters;
@@ -52,4 +54,10 @@ public interface FirewallApi {
     @XMLResponseParser(FirewallListResponseHandler.class)
     @Fallback(Fallbacks.EmptyListOnNotFoundOr404.class)
     List<Firewall> getAllFirewalls();
+
+    @POST
+    @Named("firewall:create")
+    @MapBinder(AddFirewallRuleToNicRequestBinder.class)
+    @XMLResponseParser(FirewallResponseHandler.class)
+    Firewall addFirewallRuleToNic(@PayloadParam("firewall") Firewall.Request.AddFirewallRulePayload payload);
 }
