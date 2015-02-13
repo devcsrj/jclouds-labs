@@ -25,12 +25,16 @@ public abstract class Firewall {
 
     public abstract String id();
 
+    @Nullable
     public abstract String nicId();
 
+    @Nullable
     public abstract boolean active();
 
+    @Nullable
     public abstract ProvisioningState state();
 
+    @Nullable
     public abstract List<FirewallRule> firewallRules();
 
     public static Firewall create(String id, String nicId, boolean active, ProvisioningState provisioningState, List<FirewallRule> firewallRules) {

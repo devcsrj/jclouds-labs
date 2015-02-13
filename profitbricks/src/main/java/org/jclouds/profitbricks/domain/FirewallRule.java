@@ -24,18 +24,25 @@ public abstract class FirewallRule {
 
     public abstract String id();
 
+    @Nullable
     public abstract String name();
 
+    @Nullable
     public abstract String portRangeEnd();
 
+    @Nullable
     public abstract String portRangeStart();
 
+    @Nullable
     public abstract Protocol protocol();
 
+    @Nullable
     public abstract String sourceIp();
 
+    @Nullable
     public abstract String sourceMac();
 
+    @Nullable
     public abstract String targetIp();
 
     public static FirewallRule create(String id, String name, String portRangeEnd, String portRangeStart, Protocol protocol, String sourceIp, String sourceMac, String targetIp) {
@@ -49,8 +56,9 @@ public abstract class FirewallRule {
     public static class Builder {
 
         private String id;
-        @Nullable
+        
         private String name;
+        
         private String portRangeEnd;
 
         private String portRangeStart;
