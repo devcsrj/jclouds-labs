@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
+  <S:Body>
+    <ns2:getFirewallResponse xmlns:ns2="http://ws.api.profitbricks.com/">
+ <return>
+    <active>true</active>
+    <firewallId>firewall-id</firewallId>
+    <firewallRules>
+      <firewallRuleId>firewall-rule-id</firewallRuleId>
+      <name>name</name>
+      <portRangeEnd>port-range-end</portRangeEnd>
+      <portRangeStart>port-range-start</portRangeStart>
+      <protocol>TCP</protocol>
+      <sourceIp>source-ip</sourceIp>
+      <sourceMac>source-mac</sourceMac>
+      <targetIp>target-ip</targetIp>
+    </firewallRules>
+    <nicId>nic-id</nicId>
+    <provisioningState>AVAILABLE</provisioningState>
+  </return>
+    </ns2:getFirewallResponse>
+  </S:Body>
+</S:Envelope>
