@@ -32,7 +32,8 @@ public class DataCenterListResponseHandler extends BaseDataCenterResponseHandler
    DataCenterListResponseHandler() {
       this.dataCenters = Lists.newArrayList();
    }
-    @Override
+
+   @Override
    public List<DataCenter> getResult() {
       return dataCenters;
    }

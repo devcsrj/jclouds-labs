@@ -51,6 +51,8 @@ public class ProvisioningStatusPollingPredicate implements Predicate<String> {
             return expect == api.serverApi().getServer(input).state();
          case STORAGE:
             return expect == api.storageApi().getStorage(input).state();
+         case SNAPSHOT:
+            return expect == api.snapshotApi().getSnapshot(input).state();
          default:
             throw new IllegalArgumentException("Unknown domain '" + domain + "'");
       }

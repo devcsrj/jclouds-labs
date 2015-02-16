@@ -35,7 +35,7 @@ public class UpdateSnapshotRequestBinder extends BaseProfitBricksRequestBinder <
                 .append("<request>")
                 .append(format("<snapshotId>%s</snapshotId>", payload.snapshotId()))
                 .append(format("<description>%s</description>", payload.description()))
-                .append(format("<snapshotName>%s</snapshotName>", payload.snapshotName()))
+                .append(format("<snapshotName>%s</snapshotName>", payload.name()))
                 .append(formatIfNotEmpty("<bootable>%s</bootable>", payload.bootable()))
                 .append(formatIfNotEmpty("<osType>%s</osType>", payload.osType()))
                 .append(formatIfNotEmpty("<cpuHotPlug>%s</cpuHotPlug>", payload.cpuHotplug()))

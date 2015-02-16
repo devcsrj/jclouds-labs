@@ -14,7 +14,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.jclouds.profitbricks.features;
 
 
@@ -33,6 +32,7 @@ import org.jclouds.profitbricks.binder.snapshot.RollbackSnapshotRequestHandler;
 import org.jclouds.profitbricks.binder.snapshot.UpdateSnapshotRequestBinder;
 import org.jclouds.profitbricks.domain.Snapshot;
 import org.jclouds.profitbricks.http.filters.ProfitBricksSoapMessageEnvelope;
+import org.jclouds.profitbricks.http.parser.RequestIdOnlyResponseHandler;
 import org.jclouds.profitbricks.http.parser.snapshot.SnapshotResponseHandler;
 import org.jclouds.profitbricks.http.parser.snapshot.SnapshotListResponseHandler;
 import org.jclouds.rest.annotations.Fallback;
@@ -71,8 +71,8 @@ public interface SnapshotApi {
     @POST
     @Named("snapshot:update")
     @MapBinder(UpdateSnapshotRequestBinder.class)
-    @XMLResponseParser(SnapshotResponseHandler.class)
-    Snapshot updateSnapshot(@PayloadParam("snapshot") Snapshot.Request.UpdatePayload payload);
+    @XMLResponseParser(RequestIdOnlyResponseHandler.class)
+    String updateSnapshot(@PayloadParam("snapshot") Snapshot.Request.UpdatePayload payload);
 
     @POST
     @Named( "snapshot:delete" )

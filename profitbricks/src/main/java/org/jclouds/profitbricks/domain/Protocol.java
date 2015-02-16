@@ -20,10 +20,10 @@ public enum Protocol {
 
     TCP, UDP, ICMP, ANY, UNRECOGNIZED;
 
-    public static Protocol fromValue(String v) {
+    public static Protocol fromValue(String value) {
         try {
-            return valueOf(v);
-        } catch (IllegalArgumentException ex) {
+            return valueOf(value);
+        } catch (IllegalArgumentException e) {
             return UNRECOGNIZED;
         }
     }

@@ -14,6 +14,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+
 package org.jclouds.profitbricks.binder.snapshot;
 
 import org.jclouds.profitbricks.domain.Snapshot;
@@ -31,7 +33,7 @@ public class CreateSnapshotRequestBinderTest {
         Snapshot.Request.CreatePayload payload = Snapshot.Request.CreatePayload.create("123-1233-1324", "describingthesnapshot", "snapshotname");
 
         String actual = binder.createPayload(payload);
-        assertNotNull(actual, "Binder returned null payload");
+        assertNotNull(actual, "Binder returned null payload");  
         assertEquals(expectedPayload, actual);
     }
 

@@ -14,7 +14,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.jclouds.profitbricks.http.parser.datacenter;
 
 import java.util.List;

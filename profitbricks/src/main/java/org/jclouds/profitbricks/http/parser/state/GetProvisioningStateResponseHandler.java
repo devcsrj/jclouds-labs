@@ -28,8 +28,8 @@ public class GetProvisioningStateResponseHandler extends BaseProfitBricksRespons
    }
 
    @Override
-   public void endElement( String uri, String localName, String qName ) throws SAXException {
-      setPropertyOnEndTag( qName );
+   public void endElement(String uri, String localName, String qName) throws SAXException {
+      setPropertyOnEndTag(qName);
       clearTextBuffer();
    }
 

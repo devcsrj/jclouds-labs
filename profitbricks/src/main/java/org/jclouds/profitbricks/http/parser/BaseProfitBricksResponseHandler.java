@@ -45,20 +45,20 @@ public abstract class BaseProfitBricksResponseHandler<T> extends ParseSax.Handle
    }
 
    protected int textToIntValue() {
-      return Integer.parseInt( textToStringValue() );
+      return Integer.parseInt(textToStringValue());
    }
 
    protected boolean textToBooleanValue() {
-      return Boolean.parseBoolean( textToStringValue() );
+      return Boolean.parseBoolean(textToStringValue());
    }
 
    protected void clearTextBuffer() {
-      strBuilder.setLength( 0 );
+      strBuilder.setLength(0);
    }
 
    @Override
-   public abstract void endElement( String uri, String localName, String qName ) throws SAXException;
+   public abstract void endElement(String uri, String localName, String qName) throws SAXException;
 
-   protected abstract void setPropertyOnEndTag( String qName );
+   protected abstract void setPropertyOnEndTag(String qName);
 
 }
