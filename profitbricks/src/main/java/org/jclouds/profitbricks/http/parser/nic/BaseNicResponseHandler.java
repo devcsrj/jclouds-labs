@@ -16,16 +16,48 @@
  */
 package org.jclouds.profitbricks.http.parser.nic;
 
+import autovalue.shaded.com.google.common.common.collect.Lists;
+import com.google.inject.Inject;
+import java.util.List;
+import org.jclouds.profitbricks.domain.Firewall;
 import org.jclouds.profitbricks.domain.Nic;
 import org.jclouds.profitbricks.domain.ProvisioningState;
 import org.jclouds.profitbricks.http.parser.BaseProfitBricksResponseHandler;
+import org.jclouds.profitbricks.http.parser.firewall.FirewallResponseHandler;
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
 
 public abstract class BaseNicResponseHandler<T> extends BaseProfitBricksResponseHandler<T> {
 
+    protected final FirewallResponseHandler firewallResponseHandler;
+    protected final List<Firewall> firewalls;
+    protected boolean useFirewallParser = false;
     protected Nic.Builder builder;
 
-    BaseNicResponseHandler() {
+    @Inject
+    BaseNicResponseHandler(FirewallResponseHandler firewallResponseHandler) {
         this.builder = Nic.builder();
+        this.firewallResponseHandler = firewallResponseHandler;
+        this.firewalls = Lists.newArrayList();
+    }
+
+    @Override
+    public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
+        if ("firewall".equals(qName)) {
+            useFirewallParser = true;
+        }
+        if (useFirewallParser) {
+            firewallResponseHandler.startElement(uri, localName, qName, attributes);
+        }
+    }
+
+    @Override
+    public void characters(char[] ch, int start, int length) {
+        if (useFirewallParser) {
+            firewallResponseHandler.characters(ch, start, length);
+        } else {
+            super.characters(ch, start, length);
+        }
     }
 
     @Override
@@ -35,7 +67,7 @@ public abstract class BaseNicResponseHandler<T> extends BaseProfitBricksResponse
         } else if ("nicName".equals(qName)) {
             builder.name(textToStringValue());
         } else if ("dataCenterVersion".equals(qName)) {
-            builder.dataCenterVersion(textToIntValue());
+            builder.dataCenterVersion(textToStringValue());
         } else if ("nicId".equals(qName)) {
             builder.id(textToStringValue());
         } else if ("lanId".equals(qName)) {

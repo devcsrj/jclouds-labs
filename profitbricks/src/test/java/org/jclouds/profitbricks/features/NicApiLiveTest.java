@@ -37,7 +37,7 @@ public class NicApiLiveTest extends BaseProfitBricksLiveTest {
     @Test
     public void testGetAllNics() {
         List<Nic> nics = api.nicApi().getAllNics();
-
+        
         assertNotNull(nics);
     }
 

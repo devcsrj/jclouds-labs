@@ -3,8 +3,8 @@
     <S:Body>
         <ns2:getNicResponse xmlns:ns2="http://ws.api.profitbricks.com/">
             <return>
-                <requestId>request-id</requestId>
-                <nicId>nic-id</nicId>
+                <requestId>123456</requestId>
+                <nicId>12345678-abcd-efgh-ijkl-987654321000</nicId>
                 <dataCenterId>0</dataCenterId>
                 <dataCenterVersion>1</dataCenterVersion>
                 <lanId>lan-id</lanId>
@@ -16,11 +16,11 @@
                     <active>active</active>
                     <firewallId>firewall-id</firewallId>
                     <nicId>nic-id</nicId>
-                    <provisioningState>provisioning-state</provisioningState>
+                    <provisioningState>AVAILABLE</provisioningState>
                 </firewall>
-                <dhcpActive>dhcp-active</dhcpActive>
+                <dhcpActive>true</dhcpActive>
                 <gatewayIp>gateway-ip</gatewayIp>
-                <provisioningState>provisioning-state</provisioningState>
+                <provisioningState>AVAILABLE</provisioningState>
             </return>
         </ns2:getNicResponse>
     </S:Body>

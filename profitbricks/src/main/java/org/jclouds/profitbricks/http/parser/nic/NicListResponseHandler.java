@@ -17,23 +17,40 @@
 package org.jclouds.profitbricks.http.parser.nic;
 
 import autovalue.shaded.com.google.common.common.collect.Lists;
+import com.google.inject.Inject;
 import org.jclouds.profitbricks.domain.Nic;
 import org.xml.sax.SAXException;
 
 import java.util.List;
+import org.jclouds.profitbricks.http.parser.firewall.FirewallResponseHandler;
 
 public class NicListResponseHandler extends BaseNicResponseHandler<List<Nic>> {
 
-    List<Nic> nics = Lists.newArrayList();
+    List<Nic> nics;
+
+    @Inject
+    public NicListResponseHandler(FirewallResponseHandler firewallResponseHandler) {
+        super(firewallResponseHandler);
+        this.nics = Lists.newArrayList();
+    }
 
     @Override
     public void endElement(String uri, String localName, String qName) throws SAXException {
-        setPropertyOnEndTag(qName);
-        if ("return".equals(qName)) {
-            nics.add(builder.build());
-            builder = Nic.builder();
+        if ("firewall".equals(qName)) {
+            useFirewallParser = false;
+            firewalls.add(firewallResponseHandler.getResult());
         }
-        clearTextBuffer();
+
+        if (useFirewallParser) {
+            firewallResponseHandler.endElement(uri, localName, qName);
+        } else {
+            setPropertyOnEndTag(qName);
+            if ("return".equals(qName)) {
+                nics.add(builder.firewalls(firewalls).build());
+                builder = Nic.builder();
+            }
+            clearTextBuffer();
+        }
     }
 
     @Override

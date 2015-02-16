@@ -17,6 +17,7 @@
 package org.jclouds.profitbricks.domain;
 
 import com.google.auto.value.AutoValue;
+import java.util.List;
 import org.jclouds.javax.annotation.Nullable;
 
 @AutoValue
@@ -35,7 +36,7 @@ public abstract class Nic {
     public abstract String dataCenterId();
 
     @Nullable
-    public abstract int dataCenterVersion();
+    public abstract String dataCenterVersion();
 
     @Nullable
     public abstract String lanId();
@@ -52,8 +53,9 @@ public abstract class Nic {
     @Nullable
     public abstract String macAddress();
 
-    // @Nullable
-    // public abstract List<Firewall> firewalls();
+    @Nullable
+    public abstract List<Firewall> firewalls();
+
     @Nullable
     public abstract boolean dhcpActive();
 
@@ -63,11 +65,11 @@ public abstract class Nic {
     @Nullable
     public abstract ProvisioningState provisioningState();
 
-    public static Nic create(String requestId, String id, String name, String dataCenterId, int dataCenterVersion,
+    public static Nic create(String requestId, String id, String name, String dataCenterId, String dataCenterVersion,
             String lanId, boolean internetAccess, String serverId,
-            String ips, String macAddress,
+            String ips, String macAddress, List<Firewall> firewalls,
             boolean dhcpActive, String gatewayIp, ProvisioningState provisioningState) {
-        return new AutoValue_Nic(requestId, id, name, dataCenterId, dataCenterVersion, lanId, internetAccess, serverId, ips, macAddress, dhcpActive, gatewayIp, provisioningState);
+        return new AutoValue_Nic(requestId, id, name, dataCenterId, dataCenterVersion, lanId, internetAccess, serverId, ips, macAddress, firewalls, dhcpActive, gatewayIp, provisioningState);
     }
 
     public static Builder builder() {
@@ -88,7 +90,7 @@ public abstract class Nic {
 
         public String dataCenterId;
 
-        public int dataCenterVersion;
+        public String dataCenterVersion;
 
         @Nullable
         public String lanId;
@@ -101,6 +103,8 @@ public abstract class Nic {
         public String ips;
 
         public String macAddress;
+
+        public List<Firewall> firewalls;
 
         public boolean dhcpActive;
 
@@ -129,7 +133,7 @@ public abstract class Nic {
             return this;
         }
 
-        public Builder dataCenterVersion(int dataCenterVersion) {
+        public Builder dataCenterVersion(String dataCenterVersion) {
             this.dataCenterVersion = dataCenterVersion;
             return this;
         }
@@ -174,8 +178,13 @@ public abstract class Nic {
             return this;
         }
 
+        public Builder firewalls(List<Firewall> firewalls) {
+            this.firewalls = firewalls;
+            return this;
+        }
+
         public Nic build() {
-            return Nic.create(requestId, id, name, dataCenterId, dataCenterVersion, lanId, internetAccess, serverId, ips, macAddress, dhcpActive, gatewayIp, provisioningState);
+            return Nic.create(requestId, id, name, dataCenterId, dataCenterVersion, lanId, internetAccess, serverId, ips, macAddress, firewalls, dhcpActive, gatewayIp, provisioningState);
         }
 
         private Builder fromNic(Nic in) {
@@ -195,7 +204,7 @@ public abstract class Nic {
             return new UpdatePayload.Builder();
         }
 
-            public static SetInternetAccessPayload.Builder setInternetAccessBuilder() {
+        public static SetInternetAccessPayload.Builder setInternetAccessBuilder() {
             return new SetInternetAccessPayload.Builder();
         }
 

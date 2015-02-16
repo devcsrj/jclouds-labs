@@ -16,12 +16,19 @@
  */
 package org.jclouds.profitbricks.http.parser.nic;
 
+import com.google.inject.Inject;
 import org.jclouds.profitbricks.domain.Nic;
+import org.jclouds.profitbricks.http.parser.firewall.FirewallResponseHandler;
 import org.xml.sax.SAXException;
 
 public class NicResponseHandler extends BaseNicResponseHandler<Nic> {
 
     private boolean done = false;
+
+    @Inject
+    public NicResponseHandler(FirewallResponseHandler firewallResponseHandler) {
+        super(firewallResponseHandler);
+    }
 
     @Override
     public void endElement(String uri, String localName, String qName) throws SAXException {
@@ -30,8 +37,18 @@ public class NicResponseHandler extends BaseNicResponseHandler<Nic> {
         }
         setPropertyOnEndTag(qName);
 
-        if ("return".equals(qName)) {
-            done = true;
+        if ("firewall".equals(qName)) {
+            useFirewallParser = false;
+            firewalls.add(firewallResponseHandler.getResult());
+        }
+        if (useFirewallParser) {
+            firewallResponseHandler.endElement(uri, localName, qName);
+        } else {
+            setPropertyOnEndTag(qName);
+            if ("return".equals(qName)) {
+                done = true;
+                builder.firewalls(firewalls);
+            }
         }
         clearTextBuffer();
     }
