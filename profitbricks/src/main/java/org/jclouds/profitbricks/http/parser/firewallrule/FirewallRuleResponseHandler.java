@@ -14,35 +14,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.profitbricks;
+package org.jclouds.profitbricks.http.parser.firewallrule;
 
-import java.io.Closeable;
+import org.jclouds.profitbricks.domain.FirewallRule;
+import org.xml.sax.SAXException;
 
-import org.jclouds.profitbricks.features.DataCenterApi;
-import org.jclouds.profitbricks.features.FirewallApi;
-import org.jclouds.profitbricks.features.ImageApi;
-import org.jclouds.profitbricks.features.NicApi;
-import org.jclouds.profitbricks.features.ServerApi;
-import org.jclouds.profitbricks.features.StorageApi;
-import org.jclouds.rest.annotations.Delegate;
+public class FirewallRuleResponseHandler extends BaseFirewallRuleResponseHandler<FirewallRule> {
 
-public interface ProfitBricksApi extends Closeable {
+    private boolean done = false;
 
-    @Delegate
-    DataCenterApi dataCenterApi();
+    @Override
+    public void endElement(String uri, String localName, String qName) throws SAXException {
+        if (done) {
+            return;
+        }
+        setPropertyOnEndTag(qName);
+        if ("return".equals(qName)) {
+            done = true;
+        }
+        clearTextBuffer();
+    }
 
-    @Delegate
-    ImageApi imageApi();
+    @Override
+    public FirewallRule getResult() {
+        return builder.build();
+    }
 
-    @Delegate
-    ServerApi serverApi();
-
-    @Delegate
-    StorageApi storageApi();
-
-    @Delegate
-    NicApi nicApi();
-
-    @Delegate
-    FirewallApi firewallApi();
 }
