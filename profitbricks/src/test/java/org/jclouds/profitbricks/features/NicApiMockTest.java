@@ -93,7 +93,7 @@ public class NicApiMockTest extends BaseProfitBricksMockTest {
     }
 
     @Test
-    public void testCreateSnapshot() throws Exception {
+    public void testCreateNic() throws Exception {
         MockWebServer server = mockWebServer();
         server.enqueue(new MockResponse().setBody(payloadFromResource("/nic/nic-create.xml")));
 
@@ -114,7 +114,7 @@ public class NicApiMockTest extends BaseProfitBricksMockTest {
             Nic nic = api.createNic(
                     Nic.Request.creatingBuilder()
                     .ip("ip")
-                    .nicName("nic-name")
+                    .name("nic-name")
                     .dhcpActive(true)
                     .lanId("lan-id")
                     .serverId("server-id")

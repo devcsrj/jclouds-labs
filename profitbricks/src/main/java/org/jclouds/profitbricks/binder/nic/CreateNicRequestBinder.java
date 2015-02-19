@@ -33,7 +33,7 @@ public class CreateNicRequestBinder extends BaseProfitBricksRequestBinder<Nic.Re
         requestBuilder.append("<ws:createNic>")
                 .append("<request>")
                 .append(formatIfNotEmpty("<ip>%s</ip>", payload.ip()))
-                .append(formatIfNotEmpty("<nicName>%s</nicName>", payload.nicName()))
+                .append(formatIfNotEmpty("<nicName>%s</nicName>", payload.name()))
                 .append(formatIfNotEmpty("<dhcpActive>%s</dhcpActive>", payload.dhcpActive()))
                 .append(formatIfNotEmpty("<serverId>%s</serverId>", payload.serverId()))
                 .append(formatIfNotEmpty("<lanId>%s</lanId>", payload.lanId()))

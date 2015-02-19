@@ -63,13 +63,13 @@ public abstract class Nic {
     public abstract String gatewayIp();
 
     @Nullable
-    public abstract ProvisioningState provisioningState();
+    public abstract ProvisioningState state();
 
     public static Nic create(String requestId, String id, String name, String dataCenterId, String dataCenterVersion,
             String lanId, boolean internetAccess, String serverId,
             String ips, String macAddress, List<Firewall> firewalls,
-            boolean dhcpActive, String gatewayIp, ProvisioningState provisioningState) {
-        return new AutoValue_Nic(requestId, id, name, dataCenterId, dataCenterVersion, lanId, internetAccess, serverId, ips, macAddress, firewalls, dhcpActive, gatewayIp, provisioningState);
+            boolean dhcpActive, String gatewayIp, ProvisioningState state) {
+        return new AutoValue_Nic(requestId, id, name, dataCenterId, dataCenterVersion, lanId, internetAccess, serverId, ips, macAddress, firewalls, dhcpActive, gatewayIp, state);
     }
 
     public static Builder builder() {
@@ -110,7 +110,7 @@ public abstract class Nic {
 
         public String gatewayIp;
 
-        public ProvisioningState provisioningState;
+        public ProvisioningState state;
 
         // private List<Firewall> firewalls;
         public Builder requestId(String requestId) {
@@ -173,8 +173,8 @@ public abstract class Nic {
             return this;
         }
 
-        public Builder provisioningState(ProvisioningState provisioningState) {
-            this.provisioningState = provisioningState;
+        public Builder state(ProvisioningState state) {
+            this.state = state;
             return this;
         }
 
@@ -184,7 +184,7 @@ public abstract class Nic {
         }
 
         public Nic build() {
-            return Nic.create(requestId, id, name, dataCenterId, dataCenterVersion, lanId, internetAccess, serverId, ips, macAddress, firewalls, dhcpActive, gatewayIp, provisioningState);
+            return Nic.create(requestId, id, name, dataCenterId, dataCenterVersion, lanId, internetAccess, serverId, ips, macAddress, firewalls, dhcpActive, gatewayIp, state);
         }
 
         private Builder fromNic(Nic in) {
@@ -214,7 +214,7 @@ public abstract class Nic {
             @Nullable
             public abstract String ip();
 
-            public abstract String nicName();
+            public abstract String name();
 
             public abstract boolean dhcpActive();
 
@@ -223,15 +223,15 @@ public abstract class Nic {
             @Nullable
             public abstract String lanId();
 
-            public static CreatePayload create(String ip, String nicName, boolean dhcpActive, String serverId, String lanId) {
-                return new AutoValue_Nic_Request_CreatePayload(ip, nicName, dhcpActive, serverId, lanId);
+            public static CreatePayload create(String ip, String name, boolean dhcpActive, String serverId, String lanId) {
+                return new AutoValue_Nic_Request_CreatePayload(ip, name, dhcpActive, serverId, lanId);
             }
 
             public static class Builder {
 
                 @Nullable
                 private String ip;
-                private String nicName;
+                private String name;
                 private boolean dhcpActive;
                 private String serverId;
                 @Nullable
@@ -242,8 +242,8 @@ public abstract class Nic {
                     return this;
                 }
 
-                public Builder nicName(String nicName) {
-                    this.nicName = nicName;
+                public Builder name(String name) {
+                    this.name = name;
                     return this;
                 }
 
@@ -263,7 +263,7 @@ public abstract class Nic {
                 }
 
                 public CreatePayload build() {
-                    return CreatePayload.create(ip, nicName, dhcpActive, serverId, lanId);
+                    return CreatePayload.create(ip, name, dhcpActive, serverId, lanId);
                 }
 
             }
@@ -279,7 +279,7 @@ public abstract class Nic {
             public abstract String ip();
 
             @Nullable
-            public abstract String nicName();
+            public abstract String name();
 
             @Nullable
             public abstract boolean dhcpActive();
@@ -287,8 +287,8 @@ public abstract class Nic {
             @Nullable
             public abstract String lanId();
 
-            public static UpdatePayload create(String id, String ip, String nicName, boolean dhcpActive, String lanId) {
-                return new AutoValue_Nic_Request_UpdatePayload(id, ip, nicName, dhcpActive, lanId);
+            public static UpdatePayload create(String id, String ip, String name, boolean dhcpActive, String lanId) {
+                return new AutoValue_Nic_Request_UpdatePayload(id, ip, name, dhcpActive, lanId);
             }
 
             public static class Builder {
@@ -297,7 +297,7 @@ public abstract class Nic {
                 @Nullable
                 private String ip;
                 @Nullable
-                private String nicName;
+                private String name;
                 @Nullable
                 private boolean dhcpActive;
                 @Nullable
@@ -308,8 +308,8 @@ public abstract class Nic {
                     return this;
                 }
 
-                public Builder nicName(String nicName) {
-                    this.nicName = nicName;
+                public Builder name(String name) {
+                    this.name = name;
                     return this;
                 }
 
@@ -329,7 +329,7 @@ public abstract class Nic {
                 }
 
                 public UpdatePayload build() {
-                    return UpdatePayload.create(id, ip, nicName, dhcpActive, lanId);
+                    return UpdatePayload.create(id, ip, name, dhcpActive, lanId);
                 }
             }
         }

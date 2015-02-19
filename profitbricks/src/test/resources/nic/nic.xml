@@ -3,12 +3,12 @@
     <S:Body>
         <ns2:getNicResponse xmlns:ns2="http://ws.api.profitbricks.com/">
             <return>
-                <requestId>123456</requestId>
                 <nicId>12345678-abcd-efgh-ijkl-987654321000</nicId>
                 <dataCenterId>0</dataCenterId>
                 <dataCenterVersion>1</dataCenterVersion>
                 <lanId>lan-id</lanId>
-                <internetAccess>internet-access</internetAccess>
+				<nicName>name</nicName>
+                <internetAccess>true</internetAccess>
                 <serverId>server-id</serverId>
                 <ips>ips</ips>
                 <macAddress>mac-address</macAddress>

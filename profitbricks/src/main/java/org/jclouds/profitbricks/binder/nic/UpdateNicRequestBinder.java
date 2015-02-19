@@ -36,7 +36,7 @@ public class UpdateNicRequestBinder extends BaseProfitBricksRequestBinder<Nic.Re
                 .append("<request>")
                 .append(format("<nicId>%s</nicId>", payload.id()))
                 .append(formatIfNotEmpty("<ip>%s</ip>", payload.ip()))
-                .append(formatIfNotEmpty("<nicName>%s</nicName>", payload.nicName()))
+                .append(formatIfNotEmpty("<nicName>%s</nicName>", payload.name()))
                 .append(formatIfNotEmpty("<dhcpActive>%s</dhcpActive>", payload.dhcpActive()))
                 .append(formatIfNotEmpty("<lanId>%s</lanId>", payload.lanId()))
                 .append("</request>")

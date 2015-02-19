@@ -51,7 +51,7 @@ public class NicApiLiveTest extends BaseProfitBricksLiveTest {
     @Test
     public void testCreateNic() {
         Nic.Request.CreatePayload payload = Nic.Request.creatingBuilder()
-                .nicName("name nr1")
+                .name("name nr1")
                 .dhcpActive(true)
                 .serverId(serverId)
                 .lanId("1")
@@ -68,7 +68,7 @@ public class NicApiLiveTest extends BaseProfitBricksLiveTest {
     @Test
     public void testUpdateNic() {
         Nic.Request.UpdatePayload toUpdate = Nic.Request.updatingBuilder()
-                .nicName("name nr2")
+                .name("name nr2")
                 .id(nicId)
                 .build();
 
@@ -76,7 +76,7 @@ public class NicApiLiveTest extends BaseProfitBricksLiveTest {
 
         Nic updatedNic = api.nicApi().getNic(toUpdate.id());
 
-        assertEquals(updatedNic.name(), toUpdate.nicName());
+        assertEquals(updatedNic.name(), toUpdate.name());
     }
 
     @Test
