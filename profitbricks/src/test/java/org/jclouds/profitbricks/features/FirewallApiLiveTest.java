@@ -16,9 +16,11 @@
  */
 package org.jclouds.profitbricks.features;
 
+import com.google.common.collect.Iterables;
 import java.util.List;
 import org.jclouds.profitbricks.BaseProfitBricksLiveTest;
 import org.jclouds.profitbricks.domain.Firewall;
+import org.jclouds.profitbricks.domain.Nic;
 import org.jclouds.profitbricks.domain.Protocol;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
@@ -30,66 +32,75 @@ import org.testng.annotations.Test;
 @Test(groups = "live", testName = "FirewallApiLiveTest", singleThreaded = true)
 public class FirewallApiLiveTest extends BaseProfitBricksLiveTest {
 
-    String nicId = "84cd2a5a-a6b4-43fe-8a52-8d0e601d1cd6";
-    String firewallId;
-    String firewallRuleId;
+   Nic nic;
+   String firewallId;
+   String firewallRuleId;
 
-    @Test
-    public void testGetAllFirewalls() {
-        List<Firewall> firewalls = api.firewallApi().getAllFirewalls();
+   @Override
+   protected void initialize() {
+      super.initialize();
+      List<Nic> nics = api.nicApi().getAllNics();
+      assertFalse(nics.isEmpty());
 
-        assertFalse(firewalls.isEmpty());
-    }
+      this.nic = Iterables.getFirst(nics, null);
+   }
 
-    @Test
-    public void testAddFirewallRuleToNic() {
-        Firewall firewall = api.firewallApi().addFirewallRuleToNic(Firewall.Request.addFirewallRuleBuilder()
-                .nicid(nicId)
-                .name("TCP")
-                .protocol(Protocol.ICMP)
-                .build());
+   @Test
+   public void testGetAllFirewalls() {
+      List<Firewall> firewalls = api.firewallApi().getAllFirewalls();
 
-        assertNotNull(firewall);
-        assertNotNull(firewall.firewallRules());
-        
-        firewallId = firewall.id();
-        firewallRuleId = firewall.firewallRules().get(firewall.firewallRules().size() - 1).id();        
-    }
+      assertFalse(firewalls.isEmpty());
+   }
 
-    @Test
-    public void testGetFirewall() {
-        Firewall firewall = api.firewallApi().getFirewall(firewallId);
+   @Test
+   public void testAddFirewallRuleToNic() {
+      Firewall firewall = api.firewallApi().addFirewallRuleToNic(Firewall.Request.addFirewallRuleBuilder()
+	      .nicid(nic.id())
+	      .name("TCP")
+	      .protocol(Protocol.ICMP)
+	      .build());
 
-        assertNotNull(firewall);
-        assertEquals(firewallId, firewall.id());
-    }
+      assertNotNull(firewall);
+      assertNotNull(firewall.firewallRules());
 
-    @Test
-    public void testActivateFirewall() {
-        boolean result = api.firewallApi().activateFirewall(firewallId);
+      firewallId = firewall.id();
+      firewallRuleId = firewall.firewallRules().get(firewall.firewallRules().size() - 1).id();
+   }
 
-        assertTrue(result);
-    }
+   @Test(dependsOnMethods = "testAddFirewallRuleToNic")
+   public void testGetFirewall() {
+      Firewall firewall = api.firewallApi().getFirewall(firewallId);
 
-    @Test
-    void testDeactivateFirewall() {
-        boolean result = api.firewallApi().deactivateFirewall(firewallRuleId);
+      assertNotNull(firewall);
+      assertEquals(firewallId, firewall.id());
+   }
 
-        assertTrue(result);
-    }
+   @Test
+   public void testActivateFirewall() {
+      boolean result = api.firewallApi().activateFirewall(firewallId);
 
-    @Test
-    void testRemoveFirewallRule() {
-        boolean result = api.firewallApi().removeFirewall(firewallRuleId);
+      assertTrue(result);
+   }
 
-        assertTrue(result);
-    }
+   @Test
+   void testDeactivateFirewall() {
+      boolean result = api.firewallApi().deactivateFirewall(firewallRuleId);
 
-    @Test
-    @AfterClass(alwaysRun = true)
-    public void testDeleteFirewall() {
-        boolean result = api.firewallApi().deleteFirewall(firewallId);
-        
-        assertTrue(result);
-    }
+      assertTrue(result);
+   }
+
+   @Test
+   void testRemoveFirewallRule() {
+      boolean result = api.firewallApi().removeFirewall(firewallRuleId);
+
+      assertTrue(result);
+   }
+
+   @Test
+   @AfterClass(alwaysRun = true)
+   public void testDeleteFirewall() {
+      boolean result = api.firewallApi().deleteFirewall(firewallId);
+
+      assertTrue(result);
+   }
 }
