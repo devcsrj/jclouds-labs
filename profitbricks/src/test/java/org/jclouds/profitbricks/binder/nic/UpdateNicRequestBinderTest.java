@@ -33,7 +33,7 @@ public class UpdateNicRequestBinderTest {
                 .ip("ip")
                 .name("nic-name")
                 .dhcpActive(true)
-                .lanId("lan-id")
+                .lanId(1)
                 .build();
 
         String actual = binder.createPayload(payload);
@@ -48,7 +48,7 @@ public class UpdateNicRequestBinderTest {
             + "                <ip>ip</ip>\n"
             + "                <nicName>nic-name</nicName>\n"
             + "                <dhcpActive>true</dhcpActive>\n"
-            + "                <lanId>lan-id</lanId>\n"
+            + "                <lanId>1</lanId>\n"
             + "            </request>\n"
             + "        </ws:updateNic>").replaceAll("\\s+", "");
 }

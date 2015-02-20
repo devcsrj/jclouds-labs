@@ -8,7 +8,7 @@
                 <ip>ip</ip>
                 <nicName>nic-name</nicName>
                 <dhcpActive>true</dhcpActive>
-                <lanId>lan-id</lanId>
+                <lanId>1</lanId>
             </request>
         </ws:updateNic>
     </soapenv:Body>

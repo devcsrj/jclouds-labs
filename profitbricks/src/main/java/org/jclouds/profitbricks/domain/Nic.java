@@ -38,10 +38,8 @@ public abstract class Nic {
     @Nullable
     public abstract String dataCenterVersion();
 
-    @Nullable
-    public abstract String lanId();
+    public abstract int lanId();
 
-    @Nullable
     public abstract boolean internetAccess();
 
     @Nullable
@@ -56,7 +54,6 @@ public abstract class Nic {
     @Nullable
     public abstract List<Firewall> firewalls();
 
-    @Nullable
     public abstract boolean dhcpActive();
 
     @Nullable
@@ -66,7 +63,7 @@ public abstract class Nic {
     public abstract ProvisioningState state();
 
     public static Nic create(String requestId, String id, String name, String dataCenterId, String dataCenterVersion,
-            String lanId, boolean internetAccess, String serverId,
+            int lanId, boolean internetAccess, String serverId,
             String ips, String macAddress, List<Firewall> firewalls,
             boolean dhcpActive, String gatewayIp, ProvisioningState state) {
         return new AutoValue_Nic(requestId, id, name, dataCenterId, dataCenterVersion, lanId, internetAccess, serverId, ips, macAddress, firewalls, dhcpActive, gatewayIp, state);
@@ -92,8 +89,7 @@ public abstract class Nic {
 
         public String dataCenterVersion;
 
-        @Nullable
-        public String lanId;
+        public int lanId;
 
         public boolean internetAccess;
 
@@ -112,7 +108,6 @@ public abstract class Nic {
 
         public ProvisioningState state;
 
-        // private List<Firewall> firewalls;
         public Builder requestId(String requestId) {
             this.requestId = requestId;
             return this;
@@ -138,7 +133,7 @@ public abstract class Nic {
             return this;
         }
 
-        public Builder lanId(String lanId) {
+        public Builder lanId(int lanId) {
             this.lanId = lanId;
             return this;
         }
@@ -221,21 +216,19 @@ public abstract class Nic {
             public abstract String serverId();
 
             @Nullable
-            public abstract String lanId();
+            public abstract int lanId();
 
-            public static CreatePayload create(String ip, String name, boolean dhcpActive, String serverId, String lanId) {
+            public static CreatePayload create(String ip, String name, boolean dhcpActive, String serverId, int lanId) {
                 return new AutoValue_Nic_Request_CreatePayload(ip, name, dhcpActive, serverId, lanId);
             }
 
             public static class Builder {
 
-                @Nullable
                 private String ip;
                 private String name;
                 private boolean dhcpActive;
                 private String serverId;
-                @Nullable
-                private String lanId;
+                private int lanId;
 
                 public Builder ip(String ip) {
                     this.ip = ip;
@@ -257,7 +250,7 @@ public abstract class Nic {
                     return this;
                 }
 
-                public Builder lanId(String lanId) {
+                public Builder lanId(int lanId) {
                     this.lanId = lanId;
                     return this;
                 }
@@ -284,24 +277,19 @@ public abstract class Nic {
             @Nullable
             public abstract boolean dhcpActive();
 
-            @Nullable
-            public abstract String lanId();
+            public abstract int lanId();
 
-            public static UpdatePayload create(String id, String ip, String name, boolean dhcpActive, String lanId) {
+            public static UpdatePayload create(String id, String ip, String name, boolean dhcpActive, int lanId) {
                 return new AutoValue_Nic_Request_UpdatePayload(id, ip, name, dhcpActive, lanId);
             }
 
             public static class Builder {
 
                 private String id;
-                @Nullable
                 private String ip;
-                @Nullable
                 private String name;
-                @Nullable
                 private boolean dhcpActive;
-                @Nullable
-                private String lanId;
+                private int lanId;
 
                 public Builder ip(String ip) {
                     this.ip = ip;
@@ -318,7 +306,7 @@ public abstract class Nic {
                     return this;
                 }
 
-                public Builder lanId(String lanId) {
+                public Builder lanId(int lanId) {
                     this.lanId = lanId;
                     return this;
                 }
@@ -339,18 +327,18 @@ public abstract class Nic {
 
             public abstract String dataCenterId();
 
-            public abstract String lanId();
+            public abstract int lanId();
 
             public abstract boolean internetAccess();
 
-            public static SetInternetAccessPayload create(String dataCenterId, String lanId, boolean internetAccess) {
+            public static SetInternetAccessPayload create(String dataCenterId, int lanId, boolean internetAccess) {
                 return new AutoValue_Nic_Request_SetInternetAccessPayload(dataCenterId, lanId, internetAccess);
             }
 
             public static class Builder {
 
                 public String dataCenterId;
-                public String lanId;
+                public int lanId;
                 public boolean internetAccess;
 
                 public Builder dataCenterId(String dataCenterId) {
@@ -358,7 +346,7 @@ public abstract class Nic {
                     return this;
                 }
 
-                public Builder lanId(String lanId) {
+                public Builder lanId(int lanId) {
                     this.lanId = lanId;
                     return this;
                 }

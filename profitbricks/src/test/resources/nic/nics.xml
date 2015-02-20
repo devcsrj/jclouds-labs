@@ -6,7 +6,7 @@
                 <dataCenterId>datacenter-id</dataCenterId>
                 <dataCenterVersion>12</dataCenterVersion>
                 <nicId>nic-id</nicId>
-                <lanId>lan-id</lanId>
+                <lanId>1</lanId>
                 <internetAccess>internet-access</internetAccess>
                 <serverId>server-id</serverId>
                 <ips>ips</ips>
@@ -25,7 +25,7 @@
                 <dataCenterId>datacenter-id</dataCenterId>
                 <dataCenterVersion>21</dataCenterVersion>
                 <nicId>nic-id</nicId>
-                <lanId>lan-id</lanId>
+                <lanId>1</lanId>
                 <internetAccess>internet-access</internetAccess>
                 <serverId>server-id</serverId>
                 <ips>ips</ips>

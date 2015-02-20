@@ -32,7 +32,7 @@ public class NicApiLiveTest extends BaseProfitBricksLiveTest {
     protected Predicate<String> nicWaitingPredicate;
     String nicId;
     String dataCenterId;
-    String serverId = /*"e7427f92-0ccf-4061-83ea-2fbfe53c68d6";*/ "ce48c54a-3e61-482a-8345-988431893607";
+    String serverId = "ce48c54a-3e61-482a-8345-988431893607";
 
     @Test
     public void testGetAllNics() {
@@ -54,7 +54,7 @@ public class NicApiLiveTest extends BaseProfitBricksLiveTest {
                 .name("name nr1")
                 .dhcpActive(true)
                 .serverId(serverId)
-                .lanId("1")
+                .lanId(1)
                 .build();
 
         Nic nic = api.nicApi().createNic(payload);
@@ -84,7 +84,7 @@ public class NicApiLiveTest extends BaseProfitBricksLiveTest {
 
         Nic.Request.SetInternetAccessPayload toUpdate = Nic.Request.setInternetAccessBuilder()
                 .dataCenterId(dataCenterId)
-                .lanId("1")
+                .lanId(1)
                 .internetAccess(true)
                 .build();
 

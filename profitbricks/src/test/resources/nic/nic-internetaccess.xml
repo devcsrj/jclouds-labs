@@ -4,7 +4,7 @@
     <soapenv:Body>
         <ws:setInternetAccess>
             <dataCenterId>datacenter-id</dataCenterId>
-            <lanId>lan-id</lanId>
+            <lanId>1</lanId>
             <internetAccess>internet-access</internetAccess>
         </ws:setInternetAccess>
     </soapenv:Body>

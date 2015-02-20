@@ -55,7 +55,7 @@ public class NicResponseHandlerTest extends BaseResponseHandlerTest<Nic> {
                 .dataCenterId("0")
                 .dataCenterVersion("1")
                 .name("name")
-                .lanId("lan-id")
+                .lanId(1)
                 .internetAccess(true)
                 .serverId("server-id")
                 .ips("ips")

@@ -31,7 +31,7 @@ public class SetInternetAccessBinderTest {
         Nic.Request.SetInternetAccessPayload payload = Nic.Request.setInternetAccessBuilder()
                 .dataCenterId("datacenter-id")
                 .internetAccess(true)
-                .lanId("lan-id")
+                .lanId(1)
                 .build();
 
         String actual = binder.createPayload(payload);
@@ -42,7 +42,7 @@ public class SetInternetAccessBinderTest {
 
     private final String expectedPayload = (" <ws:setInternetAccess>\n"
             + "                <dataCenterId>datacenter-id</dataCenterId>\n"
-            + "                <lanId>lan-id</lanId>\n"
+            + "                <lanId>1</lanId>\n"
             + "                <internetAccess>true</internetAccess>\n"
             + "        </ws:setInternetAccess>").replaceAll("\\s+", "");
 }

@@ -26,7 +26,7 @@ import org.jclouds.profitbricks.http.parser.firewall.FirewallResponseHandler;
 
 public class NicListResponseHandler extends BaseNicResponseHandler<List<Nic>> {
 
-    List<Nic> nics;
+    private List<Nic> nics;
 
     @Inject
     public NicListResponseHandler(FirewallResponseHandler firewallResponseHandler) {

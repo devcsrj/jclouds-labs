@@ -106,7 +106,7 @@ public class NicApiMockTest extends BaseProfitBricksMockTest {
                 + "<nicName>nic-name</nicName>"
                 + "<dhcpActive>true</dhcpActive>"
                 + "<serverId>server-id</serverId>"
-                + "<lanId>lan-id</lanId>"
+                + "<lanId>1</lanId>"
                 + "</request>"
                 + "</ws:createNic>";
 
@@ -116,7 +116,7 @@ public class NicApiMockTest extends BaseProfitBricksMockTest {
                     .ip("ip")
                     .name("nic-name")
                     .dhcpActive(true)
-                    .lanId("lan-id")
+                    .lanId(1)
                     .serverId("server-id")
                     .build());
 
@@ -143,11 +143,11 @@ public class NicApiMockTest extends BaseProfitBricksMockTest {
                 + "<ip>ip</ip>"
                 + "<nicName>nic-name</nicName>"
                 + "<dhcpActive>true</dhcpActive>"
-                + "<lanId>lan-id</lanId>"
+                + "<lanId>1</lanId>"
                 + "</request>"
                 + "</ws:updateNic>";
         try {
-            Nic nic = api.updateNic(Nic.Request.UpdatePayload.create("nic-id", "ip", "nic-name", true, "lan-id"));
+            Nic nic = api.updateNic(Nic.Request.UpdatePayload.create("nic-id", "ip", "nic-name", true, 1));
             assertRequestHasCommonProperties(server.takeRequest(), content);
         } finally {
             pbApi.close();
@@ -165,11 +165,11 @@ public class NicApiMockTest extends BaseProfitBricksMockTest {
 
         String content = "<ws:setInternetAccess>"
                 + "<dataCenterId>datacenter-id</dataCenterId>"
-                + "<lanId>lan-id</lanId>"
+                + "<lanId>1</lanId>"
                 + "<internetAccess>true</internetAccess>"
                 + "</ws:setInternetAccess>";
         try {
-            Nic nic = api.setInternetAccess(Nic.Request.SetInternetAccessPayload.create("datacenter-id", "lan-id", true));
+            Nic nic = api.setInternetAccess(Nic.Request.SetInternetAccessPayload.create("datacenter-id", 1, true));
             assertRequestHasCommonProperties(server.takeRequest(), content);
         } finally {
             pbApi.close();

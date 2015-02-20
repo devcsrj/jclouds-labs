@@ -28,7 +28,6 @@ public abstract class Firewall {
     @Nullable
     public abstract String nicId();
 
-    @Nullable
     public abstract boolean active();
 
     @Nullable

@@ -71,7 +71,7 @@ public abstract class BaseNicResponseHandler<T> extends BaseProfitBricksResponse
         } else if ("nicId".equals(qName)) {
             builder.id(textToStringValue());
         } else if ("lanId".equals(qName)) {
-            builder.lanId(textToStringValue());
+            builder.lanId(textToIntValue());
         } else if ("internetAccess".equals(qName)) {
             builder.internetAccess(textToBooleanValue());
         } else if ("serverId".equals(qName)) {

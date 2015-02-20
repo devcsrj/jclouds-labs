@@ -6,7 +6,7 @@
                 <nicId>12345678-abcd-efgh-ijkl-987654321000</nicId>
                 <dataCenterId>0</dataCenterId>
                 <dataCenterVersion>1</dataCenterVersion>
-                <lanId>lan-id</lanId>
+                <lanId>1</lanId>
 				<nicName>name</nicName>
                 <internetAccess>true</internetAccess>
                 <serverId>server-id</serverId>
