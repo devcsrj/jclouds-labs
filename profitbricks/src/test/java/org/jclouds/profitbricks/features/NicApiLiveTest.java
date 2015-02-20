@@ -17,10 +17,13 @@
 package org.jclouds.profitbricks.features;
 
 import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
 import java.util.List;
 import org.jclouds.profitbricks.BaseProfitBricksLiveTest;
 import org.jclouds.profitbricks.domain.Nic;
+import org.jclouds.profitbricks.domain.Server;
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
 import org.testng.annotations.AfterClass;
@@ -29,73 +32,82 @@ import org.testng.annotations.Test;
 @Test(groups = "live", testName = "NicApiLiveTest", singleThreaded = true)
 public class NicApiLiveTest extends BaseProfitBricksLiveTest {
 
-    protected Predicate<String> nicWaitingPredicate;
-    String nicId;
-    String dataCenterId;
-    String serverId = "ce48c54a-3e61-482a-8345-988431893607";
+   protected Predicate<String> nicWaitingPredicate;
+   String nicId;
+   String dataCenterId;
+   Server server;
 
-    @Test
-    public void testGetAllNics() {
-        List<Nic> nics = api.nicApi().getAllNics();
-        
-        assertNotNull(nics);
-    }
+   @Override
+   protected void initialize() {
+      super.initialize();
+      List<Server> servers = api.serverApi().getAllServers();
+      assertFalse(servers.isEmpty(), "Must atleast have 1 server available for NIC testing.");
 
-    @Test
-    public void testGetNic() {
-        Nic nic = api.nicApi().getNic(nicId);
+      this.server = Iterables.getFirst(servers, null);
+   }
 
-        assertNotNull(nic);
-    }
+   @Test
+   public void testGetAllNics() {
+      List<Nic> nics = api.nicApi().getAllNics();
 
-    @Test
-    public void testCreateNic() {
-        Nic.Request.CreatePayload payload = Nic.Request.creatingBuilder()
-                .name("name nr1")
-                .dhcpActive(true)
-                .serverId(serverId)
-                .lanId(1)
-                .build();
+      assertNotNull(nics);
+   }
 
-        Nic nic = api.nicApi().createNic(payload);
+   @Test
+   public void testGetNic() {
+      Nic nic = api.nicApi().getNic(nicId);
 
-        assertNotNull(nic.id());
+      assertNotNull(nic);
+   }
 
-        dataCenterId = nic.dataCenterId();
-        nicId = nic.id();
-    }
+   @Test
+   public void testCreateNic() {
+      Nic.Request.CreatePayload payload = Nic.Request.creatingBuilder()
+	      .name("name nr1")
+	      .dhcpActive(true)
+	      .serverId(server.id())
+	      .lanId(1)
+	      .build();
 
-    @Test
-    public void testUpdateNic() {
-        Nic.Request.UpdatePayload toUpdate = Nic.Request.updatingBuilder()
-                .name("name nr2")
-                .id(nicId)
-                .build();
+      Nic nic = api.nicApi().createNic(payload);
 
-        api.nicApi().updateNic(toUpdate);
+      assertNotNull(nic.id());
 
-        Nic updatedNic = api.nicApi().getNic(toUpdate.id());
+      dataCenterId = nic.dataCenterId();
+      nicId = nic.id();
+   }
 
-        assertEquals(updatedNic.name(), toUpdate.name());
-    }
+   @Test
+   public void testUpdateNic() {
+      Nic.Request.UpdatePayload toUpdate = Nic.Request.updatingBuilder()
+	      .name("name nr2")
+	      .id(nicId)
+	      .build();
 
-    @Test
-    void testSetInternetAccess() {
+      api.nicApi().updateNic(toUpdate);
 
-        Nic.Request.SetInternetAccessPayload toUpdate = Nic.Request.setInternetAccessBuilder()
-                .dataCenterId(dataCenterId)
-                .lanId(1)
-                .internetAccess(true)
-                .build();
+      Nic updatedNic = api.nicApi().getNic(toUpdate.id());
 
-        Nic result = api.nicApi().setInternetAccess(toUpdate);
+      assertEquals(updatedNic.name(), toUpdate.name());
+   }
 
-        assertNotNull(result);
-    }
+   @Test
+   void testSetInternetAccess() {
 
-    @AfterClass(alwaysRun = true)
-    void testDeleteNic() {
-        boolean result = api.nicApi().deleteNic(nicId);
-        assertTrue(result);
-    }
+      Nic.Request.SetInternetAccessPayload toUpdate = Nic.Request.setInternetAccessBuilder()
+	      .dataCenterId(dataCenterId)
+	      .lanId(1)
+	      .internetAccess(true)
+	      .build();
+
+      Nic result = api.nicApi().setInternetAccess(toUpdate);
+
+      assertNotNull(result);
+   }
+
+   @AfterClass(alwaysRun = true)
+   void testDeleteNic() {
+      boolean result = api.nicApi().deleteNic(nicId);
+      assertTrue(result);
+   }
 }

@@ -40,7 +40,7 @@ public class FirewallApiLiveTest extends BaseProfitBricksLiveTest {
    protected void initialize() {
       super.initialize();
       List<Nic> nics = api.nicApi().getAllNics();
-      assertFalse(nics.isEmpty());
+      assertFalse(nics.isEmpty(),"Must atleast have 1 NIC available for firewall testing.");
 
       this.nic = Iterables.getFirst(nics, null);
    }
