@@ -209,6 +209,7 @@ public abstract class Nic {
             @Nullable
             public abstract String ip();
 
+            @Nullable
             public abstract String name();
 
             @Nullable
