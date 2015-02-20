@@ -23,37 +23,36 @@ import org.xml.sax.SAXException;
 
 public class NicResponseHandler extends BaseNicResponseHandler<Nic> {
 
-    private boolean done = false;
+   private boolean done = false;
 
-    @Inject
-    public NicResponseHandler(FirewallResponseHandler firewallResponseHandler) {
-        super(firewallResponseHandler);
-    }
+   @Inject
+   NicResponseHandler(FirewallResponseHandler firewallResponseHandler) {
+      super(firewallResponseHandler);
+   }
 
-    @Override
-    public void endElement(String uri, String localName, String qName) throws SAXException {
-        if (done) {
-            return;
-        }
+   @Override
+   public void endElement(String uri, String localName, String qName) throws SAXException {
+      if (done)
+	 return;
 
-        if ("firewall".equals(qName)) {
-            useFirewallParser = false;
-            firewalls.add(firewallResponseHandler.getResult());
-        }
-        if (useFirewallParser) {
-            firewallResponseHandler.endElement(uri, localName, qName);
-        } else {
-            setPropertyOnEndTag(qName);
-            if ("return".equals(qName)) {
-                done = true;
-                builder.firewalls(firewalls);
-            }
-        }
-        clearTextBuffer();
-    }
+      if ("firewall".equals(qName)) {
+	 useFirewallParser = false;
+	 firewalls.add(firewallResponseHandler.getResult());
+      }
+      if (useFirewallParser)
+	 firewallResponseHandler.endElement(uri, localName, qName);
+      else {
+	 setPropertyOnEndTag(qName);
+	 if ("return".equals(qName)) {
+	    done = true;
+	    builder.firewalls(firewalls);
+	 }
+      }
+      clearTextBuffer();
+   }
 
-    @Override
-    public Nic getResult() {
-        return builder.build();
-    }
+   @Override
+   public Nic getResult() {
+      return builder.build();
+   }
 }

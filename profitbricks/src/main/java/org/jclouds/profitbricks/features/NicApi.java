@@ -44,41 +44,41 @@ import java.util.List;
 @Produces(MediaType.TEXT_XML)
 public interface NicApi {
 
-    @POST
-    @Named("nics:getall")
-    @Payload("<ws:getAllNic/>")
-    @XMLResponseParser(NicListResponseHandler.class)
-    @Fallback(Fallbacks.EmptyListOnNotFoundOr404.class)
-    List<Nic> getAllNics();
+   @POST
+   @Named("nics:getall")
+   @Payload("<ws:getAllNic/>")
+   @XMLResponseParser(NicListResponseHandler.class)
+   @Fallback(Fallbacks.EmptyListOnNotFoundOr404.class)
+   List<Nic> getAllNics();
 
-    @POST
-    @Named("nic:create")
-    @MapBinder(CreateNicRequestBinder.class)
-    @XMLResponseParser(NicResponseHandler.class)
-    Nic createNic(@PayloadParam("nic") Nic.Request.CreatePayload payload);
+   @POST
+   @Named("nic:create")
+   @MapBinder(CreateNicRequestBinder.class)
+   @XMLResponseParser(NicResponseHandler.class)
+   Nic createNic(@PayloadParam("nic") Nic.Request.CreatePayload payload);
 
-    @POST
-    @Named("nic:get")
-    @Payload("<ws:getNic><nicId>{id}</nicId></ws:getNic>")
-    @XMLResponseParser(NicResponseHandler.class)
-    @Fallback(Fallbacks.NullOnNotFoundOr404.class)
-    Nic getNic(@PayloadParam("id") String identifier);
+   @POST
+   @Named("nic:get")
+   @Payload("<ws:getNic><nicId>{id}</nicId></ws:getNic>")
+   @XMLResponseParser(NicResponseHandler.class)
+   @Fallback(Fallbacks.NullOnNotFoundOr404.class)
+   Nic getNic(@PayloadParam("id") String identifier);
 
-    @POST
-    @Named("nic:update")
-    @MapBinder(UpdateNicRequestBinder.class)
-    @XMLResponseParser(NicResponseHandler.class)
-    Nic updateNic(@PayloadParam("nic") Nic.Request.UpdatePayload payload);
+   @POST
+   @Named("nic:update")
+   @MapBinder(UpdateNicRequestBinder.class)
+   @XMLResponseParser(NicResponseHandler.class)
+   Nic updateNic(@PayloadParam("nic") Nic.Request.UpdatePayload payload);
 
-    @POST
-    @Named("nic:setInternetAccess")
-    @MapBinder(SetInternetAccessBinder.class)
-    @XMLResponseParser(NicResponseHandler.class)
-    Nic setInternetAccess(@PayloadParam("nic") Nic.Request.SetInternetAccessPayload payload);
+   @POST
+   @Named("nic:setInternetAccess")
+   @MapBinder(SetInternetAccessBinder.class)
+   @XMLResponseParser(NicResponseHandler.class)
+   Nic setInternetAccess(@PayloadParam("nic") Nic.Request.SetInternetAccessPayload payload);
 
-    @POST
-    @Named("nic:delete")
-    @Payload("<ws:deleteNic><nicId>{id}</nicId></ws:deleteNic>")
-    @Fallback(Fallbacks.FalseOnNotFoundOr404.class)
-    boolean deleteNic(@PayloadParam("id") String id);
+   @POST
+   @Named("nic:delete")
+   @Payload("<ws:deleteNic><nicId>{id}</nicId></ws:deleteNic>")
+   @Fallback(Fallbacks.FalseOnNotFoundOr404.class)
+   boolean deleteNic(@PayloadParam("id") String id);
 }

@@ -23,24 +23,24 @@ import static java.lang.String.format;
 
 public class UpdateNicRequestBinder extends BaseProfitBricksRequestBinder<Nic.Request.UpdatePayload> {
 
-    final StringBuilder requestBuilder;
+   final StringBuilder requestBuilder;
 
-    UpdateNicRequestBinder() {
-        super("nic");
-        this.requestBuilder = new StringBuilder(128 * 2);
-    }
+   UpdateNicRequestBinder() {
+      super("nic");
+      this.requestBuilder = new StringBuilder(128 * 2);
+   }
 
-    @Override
-    protected String createPayload(Nic.Request.UpdatePayload payload) {
-        requestBuilder.append("<ws:updateNic>")
-                .append("<request>")
-                .append(format("<nicId>%s</nicId>", payload.id()))
-                .append(formatIfNotEmpty("<ip>%s</ip>", payload.ip()))
-                .append(formatIfNotEmpty("<nicName>%s</nicName>", payload.name()))
-                .append(formatIfNotEmpty("<dhcpActive>%s</dhcpActive>", payload.dhcpActive()))
-                .append(formatIfNotEmpty("<lanId>%s</lanId>", payload.lanId()))
-                .append("</request>")
-                .append("</ws:updateNic>");
-        return requestBuilder.toString();
-    }
+   @Override
+   protected String createPayload(Nic.Request.UpdatePayload payload) {
+      requestBuilder.append("<ws:updateNic>")
+	      .append("<request>")
+	      .append(format("<nicId>%s</nicId>", payload.id()))
+	      .append(formatIfNotEmpty("<ip>%s</ip>", payload.ip()))
+	      .append(formatIfNotEmpty("<nicName>%s</nicName>", payload.name()))
+	      .append(formatIfNotEmpty("<dhcpActive>%s</dhcpActive>", payload.dhcpActive()))
+	      .append(formatIfNotEmpty("<lanId>%s</lanId>", payload.lanId()))
+	      .append("</request>")
+	      .append("</ws:updateNic>");
+      return requestBuilder.toString();
+   }
 }

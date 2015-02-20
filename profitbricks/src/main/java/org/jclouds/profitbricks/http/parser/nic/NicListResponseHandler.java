@@ -16,7 +16,7 @@
  */
 package org.jclouds.profitbricks.http.parser.nic;
 
-import autovalue.shaded.com.google.common.common.collect.Lists;
+import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import org.jclouds.profitbricks.domain.Nic;
 import org.xml.sax.SAXException;
@@ -26,35 +26,35 @@ import org.jclouds.profitbricks.http.parser.firewall.FirewallResponseHandler;
 
 public class NicListResponseHandler extends BaseNicResponseHandler<List<Nic>> {
 
-    private List<Nic> nics;
+   private List<Nic> nics;
 
-    @Inject
-    public NicListResponseHandler(FirewallResponseHandler firewallResponseHandler) {
-        super(firewallResponseHandler);
-        this.nics = Lists.newArrayList();
-    }
+   @Inject
+   public NicListResponseHandler(FirewallResponseHandler firewallResponseHandler) {
+      super(firewallResponseHandler);
+      this.nics = Lists.newArrayList();
+   }
 
-    @Override
-    public void endElement(String uri, String localName, String qName) throws SAXException {
-        if ("firewall".equals(qName)) {
-            useFirewallParser = false;
-            firewalls.add(firewallResponseHandler.getResult());
-        }
+   @Override
+   public void endElement(String uri, String localName, String qName) throws SAXException {
+      if ("firewall".equals(qName)) {
+	 useFirewallParser = false;
+	 firewalls.add(firewallResponseHandler.getResult());
+      }
 
-        if (useFirewallParser) {
-            firewallResponseHandler.endElement(uri, localName, qName);
-        } else {
-            setPropertyOnEndTag(qName);
-            if ("return".equals(qName)) {
-                nics.add(builder.firewalls(firewalls).build());
-                builder = Nic.builder();
-            }
-            clearTextBuffer();
-        }
-    }
+      if (useFirewallParser)
+	 firewallResponseHandler.endElement(uri, localName, qName);
+      else {
+	 setPropertyOnEndTag(qName);
+	 if ("return".equals(qName)) {
+	    nics.add(builder.firewalls(firewalls).build());
+	    builder = Nic.builder();
+	 }
+	 clearTextBuffer();
+      }
+   }
 
-    @Override
-    public List<Nic> getResult() {
-        return nics;
-    }
+   @Override
+   public List<Nic> getResult() {
+      return nics;
+   }
 }

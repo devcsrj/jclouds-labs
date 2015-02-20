@@ -30,42 +30,42 @@ import org.testng.annotations.Test;
 @Test(groups = "unit", testName = "NicResponseHandlerTest")
 public class NicResponseHandlerTest extends BaseResponseHandlerTest<Nic> {
 
-    @Override
-    protected ParseSax<Nic> createParser() {
-        return factory.create(injector.getInstance(NicResponseHandler.class));
-    }
+   @Override
+   protected ParseSax<Nic> createParser() {
+      return factory.create(injector.getInstance(NicResponseHandler.class));
+   }
 
-    @Test
-    public void testParseResponseFromGetNic() {
-        ParseSax<Nic> parser = createParser();
-        Nic actual = parser.parse(payloadFromResource("/nic/nic.xml"));
-        assertNotNull(actual, "Parsed content returned null");
+   @Test
+   public void testParseResponseFromGetNic() {
+      ParseSax<Nic> parser = createParser();
+      Nic actual = parser.parse(payloadFromResource("/nic/nic.xml"));
+      assertNotNull(actual, "Parsed content returned null");
 
-        List<Firewall> firewalls = Lists.newArrayList();
-        firewalls.add(Firewall.builder()
-                .active(true)
-                .id("firewall-id")
-                .nicId("nic-id")
-                .state(ProvisioningState.AVAILABLE)
-                .active(false)
-                .build());
+      List<Firewall> firewalls = Lists.newArrayList();
+      firewalls.add(Firewall.builder()
+	      .active(true)
+	      .id("firewall-id")
+	      .nicId("nic-id")
+	      .state(ProvisioningState.AVAILABLE)
+	      .active(false)
+	      .build());
 
-        Nic expected = Nic.builder()
-                .id("12345678-abcd-efgh-ijkl-987654321000")
-                .dataCenterId("0")
-                .dataCenterVersion("1")
-                .name("name")
-                .lanId(1)
-                .internetAccess(true)
-                .serverId("server-id")
-                .ips("ips")
-                .macAddress("mac-address")
-                .dhcpActive(true)
-                .gatewayIp("gateway-ip")
-                .state(ProvisioningState.AVAILABLE)
-                .firewalls(firewalls)
-                .build();
+      Nic expected = Nic.builder()
+	      .id("12345678-abcd-efgh-ijkl-987654321000")
+	      .dataCenterId("0")
+	      .dataCenterVersion("1")
+	      .name("name")
+	      .lanId(1)
+	      .internetAccess(true)
+	      .serverId("server-id")
+	      .ips("ips")
+	      .macAddress("mac-address")
+	      .dhcpActive(true)
+	      .gatewayIp("gateway-ip")
+	      .state(ProvisioningState.AVAILABLE)
+	      .firewalls(firewalls)
+	      .build();
 
-        assertEquals(expected, actual);
-    }
+      assertEquals(expected, actual);
+   }
 }
