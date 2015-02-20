@@ -16,7 +16,7 @@
  */
 package org.jclouds.profitbricks.http.parser.nic;
 
-import com.google.common.collect.Lists;
+import autovalue.shaded.com.google.common.common.collect.Lists;
 import com.google.inject.Inject;
 import java.util.List;
 import org.jclouds.profitbricks.domain.Firewall;
@@ -29,61 +29,65 @@ import org.xml.sax.SAXException;
 
 public abstract class BaseNicResponseHandler<T> extends BaseProfitBricksResponseHandler<T> {
 
-   protected final FirewallResponseHandler firewallResponseHandler;
-   protected final List<Firewall> firewalls;
-   protected boolean useFirewallParser = false;
-   protected Nic.Builder builder;
+    protected final FirewallResponseHandler firewallResponseHandler;
+    protected final List<Firewall> firewalls;
+    protected boolean useFirewallParser = false;
+    protected Nic.Builder builder;
 
-   @Inject
-   BaseNicResponseHandler(FirewallResponseHandler firewallResponseHandler) {
-      this.builder = Nic.builder();
-      this.firewallResponseHandler = firewallResponseHandler;
-      this.firewalls = Lists.newArrayList();
-   }
+    @Inject
+    BaseNicResponseHandler(FirewallResponseHandler firewallResponseHandler) {
+        this.builder = Nic.builder();
+        this.firewallResponseHandler = firewallResponseHandler;
+        this.firewalls = Lists.newArrayList();
+    }
 
-   @Override
-   public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
-      if ("firewall".equals(qName))
-	 useFirewallParser = true;
-      if (useFirewallParser)
-	 firewallResponseHandler.startElement(uri, localName, qName, attributes);
-   }
+    @Override
+    public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
+        if ("firewall".equals(qName)) {
+            useFirewallParser = true;
+        }
+        if (useFirewallParser) {
+            firewallResponseHandler.startElement(uri, localName, qName, attributes);
+        }
+    }
 
-   @Override
-   public void characters(char[] ch, int start, int length) {
-      if (useFirewallParser)
-	 firewallResponseHandler.characters(ch, start, length);
-      else
-	 super.characters(ch, start, length);
-   }
+    @Override
+    public void characters(char[] ch, int start, int length) {
+        if (useFirewallParser) {
+            firewallResponseHandler.characters(ch, start, length);
+        } else {
+            super.characters(ch, start, length);
+        }
+    }
 
-   @Override
-   protected void setPropertyOnEndTag(String qName) {
-      if ("dataCenterId".equals(qName))
-	 builder.dataCenterId(textToStringValue());
-      else if ("nicName".equals(qName))
-	 builder.name(textToStringValue());
-      else if ("dataCenterVersion".equals(qName))
-	 builder.dataCenterVersion(textToStringValue());
-      else if ("nicId".equals(qName))
-	 builder.id(textToStringValue());
-      else if ("lanId".equals(qName))
-	 builder.lanId(textToIntValue());
-      else if ("internetAccess".equals(qName))
-	 builder.internetAccess(textToBooleanValue());
-      else if ("serverId".equals(qName))
-	 builder.serverId(textToStringValue());
-      else if ("ips".equals(qName))
-	 builder.ips(textToStringValue());
-      else if ("macAddress".equals(qName))
-	 builder.macAddress(textToStringValue());
-      else if ("dhcpActive".equals(qName))
-	 builder.dhcpActive(textToBooleanValue());
-      else if ("gatewayIp".equals(qName))
-	 builder.gatewayIp(textToStringValue());
-      else if ("provisioningState".equals(qName))
-	 builder.state(ProvisioningState.fromValue(textToStringValue()));
-      else if ("requestId".equals(qName))
-	 builder.requestId(textToStringValue());
-   }
+    @Override
+    protected void setPropertyOnEndTag(String qName) {
+        if ("dataCenterId".equals(qName)) {
+            builder.dataCenterId(textToStringValue());
+        } else if ("nicName".equals(qName)) {
+            builder.name(textToStringValue());
+        } else if ("dataCenterVersion".equals(qName)) {
+            builder.dataCenterVersion(textToStringValue());
+        } else if ("nicId".equals(qName)) {
+            builder.id(textToStringValue());
+        } else if ("lanId".equals(qName)) {
+            builder.lanId(textToIntValue());
+        } else if ("internetAccess".equals(qName)) {
+            builder.internetAccess(textToBooleanValue());
+        } else if ("serverId".equals(qName)) {
+            builder.serverId(textToStringValue());
+        } else if ("ips".equals(qName)) {
+            builder.ips(textToStringValue());
+        } else if ("macAddress".equals(qName)) {
+            builder.macAddress(textToStringValue());
+        } else if ("dhcpActive".equals(qName)) {
+            builder.dhcpActive(textToBooleanValue());
+        } else if ("gatewayIp".equals(qName)) {
+            builder.gatewayIp(textToStringValue());
+        } else if ("provisioningState".equals(qName)) {
+            builder.state(ProvisioningState.fromValue(textToStringValue()));
+        } else if ("requestId".equals(qName)) {
+            builder.requestId(textToStringValue());
+        }
+    }
 }

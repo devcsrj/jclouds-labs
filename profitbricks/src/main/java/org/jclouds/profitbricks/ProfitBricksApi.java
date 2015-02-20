@@ -28,21 +28,21 @@ import org.jclouds.rest.annotations.Delegate;
 
 public interface ProfitBricksApi extends Closeable {
 
-   @Delegate
-   DataCenterApi dataCenterApi();
+    @Delegate
+    DataCenterApi dataCenterApi();
 
-   @Delegate
-   ImageApi imageApi();
+    @Delegate
+    ImageApi imageApi();
 
-   @Delegate
-   ServerApi serverApi();
+    @Delegate
+    ServerApi serverApi();
 
-   @Delegate
-   StorageApi storageApi();
+    @Delegate
+    StorageApi storageApi();
 
-   @Delegate
-   NicApi nicApi();
+    @Delegate
+    NicApi nicApi();
 
-   @Delegate
-   FirewallApi firewallApi();
+    @Delegate
+    FirewallApi firewallApi();
 }

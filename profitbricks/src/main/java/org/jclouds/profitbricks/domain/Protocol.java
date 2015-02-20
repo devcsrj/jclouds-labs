@@ -18,13 +18,13 @@ package org.jclouds.profitbricks.domain;
 
 public enum Protocol {
 
-   TCP, UDP, ICMP, ANY, UNRECOGNIZED;
+    TCP, UDP, ICMP, ANY, UNRECOGNIZED;
 
-   public static Protocol fromValue(String value) {
-      try {
-	 return valueOf(value);
-      } catch (IllegalArgumentException e) {
-	 return UNRECOGNIZED;
-      }
-   }
+    public static Protocol fromValue(String value) {
+        try {
+            return valueOf(value);
+        } catch (IllegalArgumentException e) {
+            return UNRECOGNIZED;
+        }
+    }
 }
