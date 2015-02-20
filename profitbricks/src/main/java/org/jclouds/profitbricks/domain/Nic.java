@@ -211,6 +211,7 @@ public abstract class Nic {
 
             public abstract String name();
 
+            @Nullable
             public abstract boolean dhcpActive();
 
             public abstract String serverId();
