@@ -357,7 +357,7 @@ public abstract class Nic {
                     this.internetAccess = internetAccess;
                     return this;
                 }
-
+                    
                 public SetInternetAccessPayload build() {
                     return SetInternetAccessPayload.create(dataCenterId, lanId, internetAccess);
                 }
