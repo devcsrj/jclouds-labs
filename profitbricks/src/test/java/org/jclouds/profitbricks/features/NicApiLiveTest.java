@@ -74,6 +74,7 @@ public class NicApiLiveTest extends BaseProfitBricksLiveTest {
       assertNotNull(nic.id());
 
       dataCenterId = nic.dataCenterId();
+      dcWaitingPredicate.apply(dataCenterId);
       nicId = nic.id();
    }
 
@@ -85,7 +86,9 @@ public class NicApiLiveTest extends BaseProfitBricksLiveTest {
 	      .build();
 
       api.nicApi().updateNic(toUpdate);
-
+      
+      dcWaitingPredicate.apply(dataCenterId);
+      
       Nic updatedNic = api.nicApi().getNic(toUpdate.id());
 
       assertEquals(updatedNic.name(), toUpdate.name());
