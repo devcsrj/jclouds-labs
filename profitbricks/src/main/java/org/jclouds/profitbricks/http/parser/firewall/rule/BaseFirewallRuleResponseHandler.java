@@ -14,20 +14,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.profitbricks.http.parser.firewallrule;
+package org.jclouds.profitbricks.http.parser.firewall.rule;
+
+import org.jclouds.profitbricks.domain.Firewall;
+import org.jclouds.profitbricks.domain.Firewall.Protocol;
 
 import com.google.inject.Inject;
-import org.jclouds.profitbricks.domain.FirewallRule;
-import org.jclouds.profitbricks.domain.Protocol;
+
 import org.jclouds.profitbricks.http.parser.BaseProfitBricksResponseHandler;
 
 public abstract class BaseFirewallRuleResponseHandler<T> extends BaseProfitBricksResponseHandler<T> {
 
-   protected FirewallRule.Builder builder;
+   protected Firewall.Rule.DescribingBuilder builder;
 
    @Inject
    BaseFirewallRuleResponseHandler() {
-      this.builder = FirewallRule.builder();
+      this.builder = Firewall.Rule.describingBuilder();
    }
 
    @Override

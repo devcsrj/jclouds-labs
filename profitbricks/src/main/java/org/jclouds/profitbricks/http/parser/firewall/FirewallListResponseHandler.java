@@ -17,10 +17,13 @@
 package org.jclouds.profitbricks.http.parser.firewall;
 
 import autovalue.shaded.com.google.common.common.collect.Lists;
+
 import com.google.inject.Inject;
+
 import java.util.List;
+
 import org.jclouds.profitbricks.domain.Firewall;
-import org.jclouds.profitbricks.http.parser.firewallrule.FirewallRuleResponseHandler;
+import org.jclouds.profitbricks.http.parser.firewall.rule.FirewallRuleResponseHandler;
 import org.xml.sax.SAXException;
 
 public class FirewallListResponseHandler extends BaseFirewallResponseHandler<List<Firewall>> {

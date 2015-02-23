@@ -17,9 +17,11 @@
 package org.jclouds.profitbricks.binder.firewall;
 
 import org.jclouds.profitbricks.domain.Firewall;
-import org.jclouds.profitbricks.domain.Protocol;
+
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
+
+import org.jclouds.profitbricks.domain.Firewall.Protocol;
 import org.testng.annotations.Test;
 
 @Test(groups = "unit", testName = "AddFirewallRuleToNicRequestBinderTest")
@@ -29,7 +31,7 @@ public class AddFirewallRuleToNicRequestBinderTest {
    public void testCreatePayload() {
       AddFirewallRuleToNicRequestBinder binder = new AddFirewallRuleToNicRequestBinder();
 
-      Firewall.Request.AddFirewallRulePayload payload = Firewall.Request.addFirewallRuleBuilder()
+      Firewall.Rule.Request.CreatePayload payload = Firewall.Rule.creatingBuilder()
 	      .nicid("nic-id")
 	      .icmpCode("icmp-code")
 	      .icmpType("icmp-type")

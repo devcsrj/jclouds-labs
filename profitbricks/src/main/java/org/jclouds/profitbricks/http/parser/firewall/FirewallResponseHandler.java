@@ -17,8 +17,9 @@
 package org.jclouds.profitbricks.http.parser.firewall;
 
 import com.google.inject.Inject;
+
 import org.jclouds.profitbricks.domain.Firewall;
-import org.jclouds.profitbricks.http.parser.firewallrule.FirewallRuleResponseHandler;
+import org.jclouds.profitbricks.http.parser.firewall.rule.FirewallRuleResponseHandler;
 import org.xml.sax.SAXException;
 
 public class FirewallResponseHandler extends BaseFirewallResponseHandler<Firewall> {

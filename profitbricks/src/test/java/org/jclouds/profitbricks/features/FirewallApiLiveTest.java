@@ -17,15 +17,19 @@
 package org.jclouds.profitbricks.features;
 
 import com.google.common.collect.Iterables;
+
 import java.util.List;
+
 import org.jclouds.profitbricks.BaseProfitBricksLiveTest;
 import org.jclouds.profitbricks.domain.Firewall;
 import org.jclouds.profitbricks.domain.Nic;
-import org.jclouds.profitbricks.domain.Protocol;
+
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
+
+import org.jclouds.profitbricks.domain.Firewall.Protocol;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.Test;
 
@@ -40,7 +44,7 @@ public class FirewallApiLiveTest extends BaseProfitBricksLiveTest {
    protected void initialize() {
       super.initialize();
       List<Nic> nics = api.nicApi().getAllNics();
-      assertFalse(nics.isEmpty(),"Must atleast have 1 NIC available for firewall testing.");
+      assertFalse(nics.isEmpty(), "Must atleast have 1 NIC available for firewall testing.");
 
       this.nic = Iterables.getFirst(nics, null);
    }
@@ -54,7 +58,7 @@ public class FirewallApiLiveTest extends BaseProfitBricksLiveTest {
 
    @Test
    public void testAddFirewallRuleToNic() {
-      Firewall firewall = api.firewallApi().addFirewallRuleToNic(Firewall.Request.addFirewallRuleBuilder()
+      Firewall firewall = api.firewallApi().addFirewallRuleToNic(Firewall.Rule.creatingBuilder()
 	      .nicid(nic.id())
 	      .name("TCP")
 	      .protocol(Protocol.ICMP)

@@ -30,9 +30,9 @@ import java.util.List;
 
 import org.jclouds.profitbricks.ProfitBricksApi;
 import org.jclouds.profitbricks.domain.Firewall;
+import org.jclouds.profitbricks.domain.Firewall.Protocol;
 import org.jclouds.profitbricks.internal.BaseProfitBricksMockTest;
 
-import org.jclouds.profitbricks.domain.Protocol;
 import org.testng.annotations.Test;
 
 @Test(groups = "live", testName = "FirewallApiMockTest", singleThreaded = true)
@@ -128,7 +128,7 @@ public class FirewallApiMockTest extends BaseProfitBricksMockTest {
 	      + "</request>"
 	      + "</ws:addFirewallRulesToNic>";
       try {
-	 Firewall.Request.AddFirewallRulePayload payload = Firewall.Request.addFirewallRuleBuilder()
+	 Firewall.Rule.Request.CreatePayload payload = Firewall.Rule.creatingBuilder()
 		 .nicid("nic-id")
 		 .icmpCode("icmp-code")
 		 .icmpType("icmp-type")

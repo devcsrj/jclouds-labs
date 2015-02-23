@@ -14,28 +14,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.profitbricks.http.parser.firewallrule;
+package org.jclouds.profitbricks.domain.internal;
 
-import org.jclouds.profitbricks.domain.FirewallRule;
-import org.xml.sax.SAXException;
+import org.jclouds.javax.annotation.Nullable;
+import org.jclouds.profitbricks.domain.Firewall;
 
-public class FirewallRuleResponseHandler extends BaseFirewallRuleResponseHandler<FirewallRule> {
+/**
+ *
+ * @author Reijhanniel Jearl Campos <rj.campos@toro.io>
+ */
+public interface FirewallRuleCommonProperties {
 
-   private boolean done = false;
+   @Nullable
+   public abstract String name();
 
-   @Override
-   public void endElement(String uri, String localName, String qName) throws SAXException {
-      if (done)
-	 return;
-      setPropertyOnEndTag(qName);
-      if ("return".equals(qName))
-	 done = true;
-      clearTextBuffer();
-   }
+   @Nullable
+   public abstract String portRangeEnd();
 
-   @Override
-   public FirewallRule getResult() {
-      return builder.build();
-   }
+   @Nullable
+   public abstract String portRangeStart();
 
+   @Nullable
+   public abstract Firewall.Protocol protocol();
+
+   @Nullable
+   public abstract String sourceIp();
+
+   @Nullable
+   public abstract String sourceMac();
+
+   @Nullable
+   public abstract String targetIp();
 }

@@ -59,7 +59,7 @@ public interface FirewallApi {
    @Named("firewall:create")
    @MapBinder(AddFirewallRuleToNicRequestBinder.class)
    @XMLResponseParser(FirewallResponseHandler.class)
-   Firewall addFirewallRuleToNic(@PayloadParam("firewall") Firewall.Request.AddFirewallRulePayload payload);
+   Firewall addFirewallRuleToNic(@PayloadParam("firewall") Firewall.Rule.Request.CreatePayload payload);
 
    @POST
    @Named("firewall:remove")

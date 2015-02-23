@@ -20,7 +20,7 @@ import org.jclouds.profitbricks.binder.BaseProfitBricksRequestBinder;
 import org.jclouds.profitbricks.domain.Firewall;
 import static java.lang.String.format;
 
-public class AddFirewallRuleToNicRequestBinder extends BaseProfitBricksRequestBinder<Firewall.Request.AddFirewallRulePayload> {
+public class AddFirewallRuleToNicRequestBinder extends BaseProfitBricksRequestBinder<Firewall.Rule.Request.CreatePayload> {
 
    private final StringBuilder requestBuilder;
 
@@ -30,7 +30,7 @@ public class AddFirewallRuleToNicRequestBinder extends BaseProfitBricksRequestBi
    }
 
    @Override
-   protected String createPayload(Firewall.Request.AddFirewallRulePayload payload) {
+   protected String createPayload(Firewall.Rule.Request.CreatePayload payload) {
       requestBuilder.append("<ws:addFirewallRulesToNic>")
 	      .append(format("<nicId>%s</nicId>", payload.nicId()))
 	      .append("<request>")

@@ -18,19 +18,20 @@ package org.jclouds.profitbricks.http.parser.firewall;
 
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
+
 import java.util.List;
+
 import org.jclouds.profitbricks.domain.Firewall;
-import org.jclouds.profitbricks.domain.FirewallRule;
 import org.jclouds.profitbricks.domain.ProvisioningState;
 import org.jclouds.profitbricks.http.parser.BaseProfitBricksResponseHandler;
-import org.jclouds.profitbricks.http.parser.firewallrule.FirewallRuleResponseHandler;
+import org.jclouds.profitbricks.http.parser.firewall.rule.FirewallRuleResponseHandler;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
 public abstract class BaseFirewallResponseHandler<T> extends BaseProfitBricksResponseHandler<T> {
 
    protected final FirewallRuleResponseHandler firewallRuleResponseHandler;
-   protected final List<FirewallRule> firewallRules = Lists.newArrayList();
+   protected final List<Firewall.Rule> firewallRules = Lists.newArrayList();
    protected boolean useFirewallRuleParser = false;
    protected Firewall.Builder builder;
 

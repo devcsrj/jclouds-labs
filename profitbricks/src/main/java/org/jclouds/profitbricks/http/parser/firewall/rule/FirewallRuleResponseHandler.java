@@ -14,17 +14,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.profitbricks.domain;
+package org.jclouds.profitbricks.http.parser.firewall.rule;
 
-public enum Protocol {
+import org.jclouds.profitbricks.domain.Firewall;
+import org.xml.sax.SAXException;
 
-   TCP, UDP, ICMP, ANY, UNRECOGNIZED;
+public class FirewallRuleResponseHandler extends BaseFirewallRuleResponseHandler<Firewall.Rule> {
 
-   public static Protocol fromValue(String value) {
-      try {
-	 return valueOf(value);
-      } catch (IllegalArgumentException e) {
-	 return UNRECOGNIZED;
-      }
+   private boolean done = false;
+
+   @Override
+   public void endElement(String uri, String localName, String qName) throws SAXException {
+      if (done)
+	 return;
+      setPropertyOnEndTag(qName);
+      if ("return".equals(qName))
+	 done = true;
+      clearTextBuffer();
    }
+
+   @Override
+   public Firewall.Rule getResult() {
+      return builder.build();
+   }
+
 }

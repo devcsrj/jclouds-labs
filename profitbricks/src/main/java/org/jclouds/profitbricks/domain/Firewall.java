@@ -17,11 +17,27 @@
 package org.jclouds.profitbricks.domain;
 
 import com.google.auto.value.AutoValue;
+
 import java.util.List;
+
 import org.jclouds.javax.annotation.Nullable;
+import org.jclouds.profitbricks.domain.internal.FirewallRuleCommonProperties;
 
 @AutoValue
 public abstract class Firewall {
+
+   public enum Protocol {
+
+      TCP, UDP, ICMP, ANY, UNRECOGNIZED;
+
+      public static Protocol fromValue(String value) {
+	 try {
+	    return valueOf(value);
+	 } catch (IllegalArgumentException e) {
+	    return UNRECOGNIZED;
+	 }
+      }
+   }
 
    public abstract String id();
 
@@ -34,10 +50,10 @@ public abstract class Firewall {
    public abstract ProvisioningState state();
 
    @Nullable
-   public abstract List<FirewallRule> firewallRules();
+   public abstract List<Rule> firewallRules();
 
    public static Firewall create(String id, String nicId, boolean active, ProvisioningState provisioningState,
-	   List<FirewallRule> firewallRules) {
+	   List<Rule> firewallRules) {
       return new AutoValue_Firewall(id, nicId, active, provisioningState, firewallRules);
    }
 
@@ -52,7 +68,7 @@ public abstract class Firewall {
       private boolean active;
 
       private ProvisioningState state;
-      private List<FirewallRule> firewallRules;
+      private List<Rule> firewallRules;
 
       public Builder id(String id) {
 	 this.id = id;
@@ -74,13 +90,14 @@ public abstract class Firewall {
 	 return this;
       }
 
-      public Builder firewallRules(List<FirewallRule> firewallRules) {
+      public Builder firewallRules(List<Rule> firewallRules) {
 	 this.firewallRules = firewallRules;
 	 return this;
       }
 
-      private Builder fromFirewall(Firewall in) {
-	 return this.id(in.id()).nicId(in.nicId()).active(in.active()).state(in.state()).firewallRules(in.firewallRules());
+      public Builder fromFirewall(Firewall in) {
+	 return this.id(in.id()).nicId(in.nicId()).active(in.active()).state(in.state())
+		 .firewallRules(in.firewallRules());
       }
 
       public Firewall build() {
@@ -88,120 +105,157 @@ public abstract class Firewall {
       }
    }
 
-   public static class Request {
+   @AutoValue
+   public static abstract class Rule implements FirewallRuleCommonProperties {
 
-      public static AddFirewallRulePayload.Builder addFirewallRuleBuilder() {
-	 return new AddFirewallRulePayload.Builder();
+      @Nullable
+      public abstract String id();
+
+      public static Rule create(String id, String name, String portRangeEnd, String portRangeStart,
+	      Protocol protocol, String sourceIp, String sourceMac, String targetIp) {
+	 return new AutoValue_Firewall_Rule(name, portRangeEnd, portRangeStart, protocol, sourceIp, sourceMac,
+		 targetIp, id);
       }
 
-      @AutoValue
-      public abstract static class AddFirewallRulePayload {
+      public static DescribingBuilder describingBuilder() {
+	 return new DescribingBuilder();
+      }
 
-	 public abstract String nicId();
+      public static Request.CreatingBuilder creatingBuilder() {
+	 return new Request.CreatingBuilder();
+      }
 
-	 @Nullable
-	 public abstract String icmpCode();
+      public static abstract class Builder<B extends Builder, D extends FirewallRuleCommonProperties> {
 
-	 @Nullable
-	 public abstract String icmpType();
+	 protected String name;
+	 protected String portRangeEnd;
+	 protected String portRangeStart;
+	 protected Protocol protocol;
+	 protected String sourceIp;
+	 protected String sourceMac;
+	 protected String targetIp;
 
-	 @Nullable
-	 public abstract String name();
-
-	 @Nullable
-	 public abstract String portRangeEnd();
-
-	 @Nullable
-	 public abstract String portRangeStart();
-
-	 @Nullable
-	 public abstract Protocol protocol();
-
-	 @Nullable
-	 public abstract String sourceIp();
-
-	 @Nullable
-	 public abstract String sourceMac();
-
-	 @Nullable
-	 public abstract String targetIp();
-
-	 public static AddFirewallRulePayload create(String nicid, String icmpCode, String icmpType, String name, 
-		 String portRangeEnd, String portRangeStart,
-		 Protocol protocol, String sourceIp, String sourceMAc, String targetIp) {
-	    return new AutoValue_Firewall_Request_AddFirewallRulePayload(nicid, icmpCode, icmpType, name, portRangeEnd, 
-		    portRangeStart, protocol, sourceIp, sourceMAc, targetIp);
+	 public B name(String name) {
+	    this.name = name;
+	    return self();
 	 }
 
-	 public static class Builder {
+	 public B portRangeEnd(String portRangeEnd) {
+	    this.portRangeEnd = portRangeEnd;
+	    return self();
+	 }
+
+	 public B portRangeStart(String portRangeStart) {
+	    this.portRangeStart = portRangeStart;
+	    return self();
+	 }
+
+	 public B protocol(Protocol protocol) {
+	    this.protocol = protocol;
+	    return self();
+	 }
+
+	 public B sourceIp(String sourceIp) {
+	    this.sourceIp = sourceIp;
+	    return self();
+	 }
+
+	 public B sourceMac(String sourceMac) {
+	    this.sourceMac = sourceMac;
+	    return self();
+	 }
+
+	 public B targetIp(String targetIp) {
+	    this.targetIp = targetIp;
+	    return self();
+	 }
+
+	 public abstract B self();
+
+	 public abstract D build();
+
+//	 private B fromRule(Rule in) {
+//	    return this.id(in.id()).name(in.name()).portRangeEnd(in.portRangeEnd()).portRangeStart(in.portRangeStart())
+//		    .protocol(in.protocol()).sourceIp(in.sourceIp()).sourceMac(in.sourceMac()).targetIp(in.targetIp());
+//	 }
+      }
+
+      public static class DescribingBuilder extends Builder<DescribingBuilder, Rule> {
+
+	 private String id;
+
+	 public DescribingBuilder id(String id) {
+	    this.id = id;
+	    return self();
+	 }
+
+	 @Override
+	 public DescribingBuilder self() {
+	    return this;
+	 }
+
+	 @Override
+	 public Rule build() {
+	    return Rule.create(id, name, portRangeEnd, portRangeStart, protocol, sourceIp, sourceMac, targetIp);
+	 }
+
+      }
+
+      public static class Request {
+
+	 @AutoValue
+	 public abstract static class CreatePayload implements FirewallRuleCommonProperties {
+
+	    public abstract String nicId();
+
+	    @Nullable
+	    public abstract String icmpCode();
+
+	    @Nullable
+	    public abstract String icmpType();
+
+	    public static CreatePayload create(String nicid, String icmpCode, String icmpType,
+		    String name, String portRangeEnd, String portRangeStart, Protocol protocol, String sourceIp,
+		    String sourceMAc, String targetIp) {
+	       return new AutoValue_Firewall_Rule_Request_CreatePayload(name, portRangeEnd, portRangeStart,
+		       protocol, sourceIp, sourceMAc, targetIp, nicid, icmpCode, icmpType);
+	    }
+	 }
+
+	 public static class CreatingBuilder extends Builder<CreatingBuilder, CreatePayload> {
 
 	    private String nicId;
 	    private String icmpCode;
 	    private String icmpType;
-	    private String name;
-	    private String portRangeEnd;
-	    private String portRangeStart;
-	    private Protocol protocol;
-	    private String sourceIp;
-	    private String sourceMac;
-	    private String targetIp;
 
-	    public Builder nicid(String nicId) {
+	    public CreatingBuilder nicid(String nicId) {
 	       this.nicId = nicId;
 	       return this;
 	    }
 
-	    public Builder icmpCode(String icmpCode) {
+	    public CreatingBuilder icmpCode(String icmpCode) {
 	       this.icmpCode = icmpCode;
 	       return this;
 	    }
 
-	    public Builder icmpType(String icmpType) {
+	    public CreatingBuilder icmpType(String icmpType) {
 	       this.icmpType = icmpType;
 	       return this;
 	    }
 
-	    public Builder name(String name) {
-	       this.name = name;
+	    @Override
+	    public CreatingBuilder self() {
 	       return this;
 	    }
 
-	    public Builder portRangeEnd(String portRangeEnd) {
-	       this.portRangeEnd = portRangeEnd;
-	       return this;
-	    }
-
-	    public Builder portRangeStart(String portRangeStart) {
-	       this.portRangeStart = portRangeStart;
-	       return this;
-	    }
-
-	    public Builder protocol(Protocol protocol) {
-	       this.protocol = protocol;
-	       return this;
-	    }
-
-	    public Builder sourceIp(String sourceIp) {
-	       this.sourceIp = sourceIp;
-	       return this;
-	    }
-
-	    public Builder sourceMac(String sourceMac) {
-	       this.sourceMac = sourceMac;
-	       return this;
-	    }
-
-	    public Builder targetIp(String targetIp) {
-	       this.targetIp = targetIp;
-	       return this;
-	    }
-
-	    public AddFirewallRulePayload build() {
-	       return AddFirewallRulePayload.create(nicId, icmpCode, icmpType, name, portRangeEnd, portRangeStart, 
+	    @Override
+	    public CreatePayload build() {
+	       return CreatePayload.create(nicId, icmpCode, icmpType, name, portRangeEnd, portRangeStart,
 		       protocol, sourceIp, sourceMac, targetIp);
 	    }
+
 	 }
       }
-
    }
+
 }
