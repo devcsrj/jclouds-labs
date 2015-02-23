@@ -24,25 +24,25 @@ import org.testng.annotations.Test;
 @Test(groups = "unit", testName = "SetInternetAccessBinderTest")
 public class SetInternetAccessBinderTest {
 
-    @Test
-    public void testCreatePayload() {
-        SetInternetAccessBinder binder = new SetInternetAccessBinder();
+   @Test
+   public void testCreatePayload() {
+      SetInternetAccessBinder binder = new SetInternetAccessBinder();
 
-        Nic.Request.SetInternetAccessPayload payload = Nic.Request.setInternetAccessBuilder()
-                .dataCenterId("datacenter-id")
-                .internetAccess(true)
-                .lanId(1)
-                .build();
+      Nic.Request.SetInternetAccessPayload payload = Nic.Request.setInternetAccessBuilder()
+	      .dataCenterId("datacenter-id")
+	      .internetAccess(true)
+	      .lanId(1)
+	      .build();
 
-        String actual = binder.createPayload(payload);
+      String actual = binder.createPayload(payload);
 
-        assertNotNull(actual, "Binder returned null payload");
-        assertEquals(expectedPayload, actual);
-    }
+      assertNotNull(actual, "Binder returned null payload");
+      assertEquals(expectedPayload, actual);
+   }
 
-    private final String expectedPayload = (" <ws:setInternetAccess>\n"
-            + "                <dataCenterId>datacenter-id</dataCenterId>\n"
-            + "                <lanId>1</lanId>\n"
-            + "                <internetAccess>true</internetAccess>\n"
-            + "        </ws:setInternetAccess>").replaceAll("\\s+", "");
+   private final String expectedPayload = (" <ws:setInternetAccess>\n"
+	   + "                <dataCenterId>datacenter-id</dataCenterId>\n"
+	   + "                <lanId>1</lanId>\n"
+	   + "                <internetAccess>true</internetAccess>\n"
+	   + "        </ws:setInternetAccess>").replaceAll("\\s+", "");
 }

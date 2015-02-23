@@ -24,31 +24,31 @@ import org.testng.annotations.Test;
 @Test(groups = "unit", testName = "UpdateNicRequestBinderTest")
 public class UpdateNicRequestBinderTest {
 
-    @Test
-    public void testCreatePayload() {
-        UpdateNicRequestBinder binder = new UpdateNicRequestBinder();
+   @Test
+   public void testCreatePayload() {
+      UpdateNicRequestBinder binder = new UpdateNicRequestBinder();
 
-        Nic.Request.UpdatePayload payload = Nic.Request.updatingBuilder()
-                .id("nic-id")
-                .ip("ip")
-                .name("nic-name")
-                .dhcpActive(true)
-                .lanId(1)
-                .build();
+      Nic.Request.UpdatePayload payload = Nic.Request.updatingBuilder()
+	      .id("nic-id")
+	      .ip("ip")
+	      .name("nic-name")
+	      .dhcpActive(true)
+	      .lanId(1)
+	      .build();
 
-        String actual = binder.createPayload(payload);
+      String actual = binder.createPayload(payload);
 
-        assertNotNull(actual, "Binder returned null payload");
-        assertEquals(expectedPayload, actual);
-    }
+      assertNotNull(actual, "Binder returned null payload");
+      assertEquals(expectedPayload, actual);
+   }
 
-    private final String expectedPayload = (" <ws:updateNic>\n"
-            + "            <request>\n"
-            + "                <nicId>nic-id</nicId>\n"
-            + "                <ip>ip</ip>\n"
-            + "                <nicName>nic-name</nicName>\n"
-            + "                <dhcpActive>true</dhcpActive>\n"
-            + "                <lanId>1</lanId>\n"
-            + "            </request>\n"
-            + "        </ws:updateNic>").replaceAll("\\s+", "");
+   private final String expectedPayload = (" <ws:updateNic>\n"
+	   + "            <request>\n"
+	   + "                <nicId>nic-id</nicId>\n"
+	   + "                <ip>ip</ip>\n"
+	   + "                <nicName>nic-name</nicName>\n"
+	   + "                <dhcpActive>true</dhcpActive>\n"
+	   + "                <lanId>1</lanId>\n"
+	   + "            </request>\n"
+	   + "        </ws:updateNic>").replaceAll("\\s+", "");
 }

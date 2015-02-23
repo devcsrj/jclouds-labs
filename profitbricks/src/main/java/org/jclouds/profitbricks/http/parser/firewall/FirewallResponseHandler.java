@@ -23,37 +23,36 @@ import org.xml.sax.SAXException;
 
 public class FirewallResponseHandler extends BaseFirewallResponseHandler<Firewall> {
 
-    private boolean done = false;
+   private boolean done = false;
 
-    @Inject
-    FirewallResponseHandler(FirewallRuleResponseHandler firewallRuleResponseHandler) {
-        super(firewallRuleResponseHandler);
-    }
+   @Inject
+   FirewallResponseHandler(FirewallRuleResponseHandler firewallRuleResponseHandler) {
+      super(firewallRuleResponseHandler);
+   }
 
-    @Override
-    public void endElement(String uri, String localName, String qName) throws SAXException {
-        if (done) {
-            return;
-        }
+   @Override
+   public void endElement(String uri, String localName, String qName) throws SAXException {
+      if (done)
+	 return;
 
-        if ("firewallRules".equals(qName)) {
-            useFirewallRuleParser = false;
-            firewallRules.add(firewallRuleResponseHandler.getResult());
-        }
-        if (useFirewallRuleParser) {
-            firewallRuleResponseHandler.endElement(uri, localName, qName);
-        } else {
-            setPropertyOnEndTag(qName);
-            if ("return".equals(qName)) {
-                done = true;
-                builder.firewallRules(firewallRules);
-            }
-            clearTextBuffer();
-        }
-    }
+      if ("firewallRules".equals(qName)) {
+	 useFirewallRuleParser = false;
+	 firewallRules.add(firewallRuleResponseHandler.getResult());
+      }
+      if (useFirewallRuleParser)
+	 firewallRuleResponseHandler.endElement(uri, localName, qName);
+      else {
+	 setPropertyOnEndTag(qName);
+	 if ("return".equals(qName)) {
+	    done = true;
+	    builder.firewallRules(firewallRules);
+	 }
+	 clearTextBuffer();
+      }
+   }
 
-    @Override
-    public Firewall getResult() {
-        return builder.build();
-    }
+   @Override
+   public Firewall getResult() {
+      return builder.build();
+   }
 }

@@ -23,20 +23,20 @@ import static java.lang.String.format;
 
 public class SetInternetAccessBinder extends BaseProfitBricksRequestBinder<Nic.Request.SetInternetAccessPayload> {
 
-    final StringBuilder requestBuilder;
+   private final StringBuilder requestBuilder;
 
-    SetInternetAccessBinder() {
-        super("nic");
-        this.requestBuilder = new StringBuilder(128);
-    }
+   SetInternetAccessBinder() {
+      super("nic");
+      this.requestBuilder = new StringBuilder(128);
+   }
 
-    @Override
-    protected String createPayload(Nic.Request.SetInternetAccessPayload payload) {
-        requestBuilder.append("<ws:setInternetAccess>")
-                .append(format("<dataCenterId>%s</dataCenterId>", payload.dataCenterId()))
-                .append(format("<lanId>%s</lanId>", payload.lanId()))
-                .append(format("<internetAccess>%s</internetAccess>", payload.internetAccess()))
-                .append("</ws:setInternetAccess>");
-        return requestBuilder.toString();
-    }
+   @Override
+   protected String createPayload(Nic.Request.SetInternetAccessPayload payload) {
+      requestBuilder.append("<ws:setInternetAccess>")
+	      .append(format("<dataCenterId>%s</dataCenterId>", payload.dataCenterId()))
+	      .append(format("<lanId>%s</lanId>", payload.lanId()))
+	      .append(format("<internetAccess>%s</internetAccess>", payload.internetAccess()))
+	      .append("</ws:setInternetAccess>");
+      return requestBuilder.toString();
+   }
 }

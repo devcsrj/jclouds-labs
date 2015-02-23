@@ -23,31 +23,30 @@ import org.jclouds.profitbricks.http.parser.BaseProfitBricksResponseHandler;
 
 public abstract class BaseFirewallRuleResponseHandler<T> extends BaseProfitBricksResponseHandler<T> {
 
-    protected FirewallRule.Builder builder;
+   protected FirewallRule.Builder builder;
 
-    @Inject
-    BaseFirewallRuleResponseHandler() {
-        this.builder = FirewallRule.builder();
-    }
+   @Inject
+   BaseFirewallRuleResponseHandler() {
+      this.builder = FirewallRule.builder();
+   }
 
-    @Override
-    protected void setPropertyOnEndTag(String qName) {
-        if ("firewallRuleId".equals(qName)) {
-            builder.id(textToStringValue());
-        } else if ("name".equals(qName)) {
-            builder.name(textToStringValue());
-        } else if ("portRangeEnd".equals(qName)) {
-            builder.portRangeEnd(textToStringValue());
-        } else if ("portRangeStart".equals(qName)) {
-            builder.portRangeStart(textToStringValue());
-        } else if ("protocol".equals(qName)) {
-            builder.protocol(Protocol.fromValue(textToStringValue()));
-        } else if ("sourceIp".equals(qName)) {
-            builder.sourceIp(textToStringValue());
-        } else if ("sourceMac".equals(qName)) {
-            builder.sourceMac(textToStringValue());
-        } else if ("targetIp".equals(qName)) {
-            builder.targetIp(textToStringValue());
-        }
-    }
+   @Override
+   protected void setPropertyOnEndTag(String qName) {
+      if ("firewallRuleId".equals(qName))
+	 builder.id(textToStringValue());
+      else if ("name".equals(qName))
+	 builder.name(textToStringValue());
+      else if ("portRangeEnd".equals(qName))
+	 builder.portRangeEnd(textToStringValue());
+      else if ("portRangeStart".equals(qName))
+	 builder.portRangeStart(textToStringValue());
+      else if ("protocol".equals(qName))
+	 builder.protocol(Protocol.fromValue(textToStringValue()));
+      else if ("sourceIp".equals(qName))
+	 builder.sourceIp(textToStringValue());
+      else if ("sourceMac".equals(qName))
+	 builder.sourceMac(textToStringValue());
+      else if ("targetIp".equals(qName))
+	 builder.targetIp(textToStringValue());
+   }
 }

@@ -22,102 +22,103 @@ import org.jclouds.javax.annotation.Nullable;
 @AutoValue
 public abstract class FirewallRule {
 
-    public abstract String id();
+   public abstract String id();
 
-    @Nullable
-    public abstract String name();
+   @Nullable
+   public abstract String name();
 
-    @Nullable
-    public abstract String portRangeEnd();
+   @Nullable
+   public abstract String portRangeEnd();
 
-    @Nullable
-    public abstract String portRangeStart();
+   @Nullable
+   public abstract String portRangeStart();
 
-    @Nullable
-    public abstract Protocol protocol();
+   @Nullable
+   public abstract Protocol protocol();
 
-    @Nullable
-    public abstract String sourceIp();
+   @Nullable
+   public abstract String sourceIp();
 
-    @Nullable
-    public abstract String sourceMac();
+   @Nullable
+   public abstract String sourceMac();
 
-    @Nullable
-    public abstract String targetIp();
+   @Nullable
+   public abstract String targetIp();
 
-    public static FirewallRule create(String id, String name, String portRangeEnd, String portRangeStart, Protocol protocol, String sourceIp, String sourceMac, String targetIp) {
-        return new AutoValue_FirewallRule(id, name, portRangeEnd, portRangeStart, protocol, sourceIp, sourceMac, targetIp);
-    }
+   public static FirewallRule create(String id, String name, String portRangeEnd, String portRangeStart, 
+	   Protocol protocol, String sourceIp, String sourceMac, String targetIp) {
+      return new AutoValue_FirewallRule(id, name, portRangeEnd, portRangeStart, protocol, sourceIp, sourceMac, targetIp);
+   }
 
-    public static Builder builder() {
-        return new Builder();
-    }
+   public static Builder builder() {
+      return new Builder();
+   }
 
-    public static class Builder {
+   public static class Builder {
 
-        private String id;
-        
-        private String name;
-        
-        private String portRangeEnd;
+      private String id;
 
-        private String portRangeStart;
+      private String name;
 
-        private Protocol protocol;
+      private String portRangeEnd;
 
-        private String sourceIp;
+      private String portRangeStart;
 
-        private String sourceMac;
+      private Protocol protocol;
 
-        private String targetIp;
+      private String sourceIp;
 
-        public Builder id(String id) {
-            this.id = id;
-            return this;
-        }
+      private String sourceMac;
 
-        public Builder name(String name) {
-            this.name = name;
-            return this;
-        }
+      private String targetIp;
 
-        public Builder portRangeEnd(String portRangeEnd) {
-            this.portRangeEnd = portRangeEnd;
-            return this;
-        }
+      public Builder id(String id) {
+	 this.id = id;
+	 return this;
+      }
 
-        public Builder portRangeStart(String portRangeStart) {
-            this.portRangeStart = portRangeStart;
-            return this;
-        }
+      public Builder name(String name) {
+	 this.name = name;
+	 return this;
+      }
 
-        public Builder protocol(Protocol protocol) {
-            this.protocol = protocol;
-            return this;
-        }
+      public Builder portRangeEnd(String portRangeEnd) {
+	 this.portRangeEnd = portRangeEnd;
+	 return this;
+      }
 
-        public Builder sourceIp(String sourceIp) {
-            this.sourceIp = sourceIp;
-            return this;
-        }
+      public Builder portRangeStart(String portRangeStart) {
+	 this.portRangeStart = portRangeStart;
+	 return this;
+      }
 
-        public Builder sourceMac(String sourceMac) {
-            this.sourceMac = sourceMac;
-            return this;
-        }
+      public Builder protocol(Protocol protocol) {
+	 this.protocol = protocol;
+	 return this;
+      }
 
-        public Builder targetIp(String targetIp) {
-            this.targetIp = targetIp;
-            return this;
-        }
+      public Builder sourceIp(String sourceIp) {
+	 this.sourceIp = sourceIp;
+	 return this;
+      }
 
-        private Builder fromFirewallRule(FirewallRule in) {
-            return this.id(in.id()).name(in.name()).portRangeEnd(in.portRangeEnd()).portRangeStart(in.portRangeStart())
-                    .protocol(in.protocol()).sourceIp(in.sourceIp()).sourceMac(in.sourceMac()).targetIp(in.targetIp());
-        }
+      public Builder sourceMac(String sourceMac) {
+	 this.sourceMac = sourceMac;
+	 return this;
+      }
 
-        public FirewallRule build() {
-            return FirewallRule.create(id, name, portRangeEnd, portRangeStart, protocol, sourceIp, sourceMac, targetIp);
-        }
-    }
+      public Builder targetIp(String targetIp) {
+	 this.targetIp = targetIp;
+	 return this;
+      }
+
+      private Builder fromFirewallRule(FirewallRule in) {
+	 return this.id(in.id()).name(in.name()).portRangeEnd(in.portRangeEnd()).portRangeStart(in.portRangeStart())
+		 .protocol(in.protocol()).sourceIp(in.sourceIp()).sourceMac(in.sourceMac()).targetIp(in.targetIp());
+      }
+
+      public FirewallRule build() {
+	 return FirewallRule.create(id, name, portRangeEnd, portRangeStart, protocol, sourceIp, sourceMac, targetIp);
+      }
+   }
 }

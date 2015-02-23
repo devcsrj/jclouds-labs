@@ -31,38 +31,38 @@ import org.testng.annotations.Test;
 @Test(groups = "unit", testName = "FirewallResponseHandlerTest")
 public class FirewallResponseHandlerTest extends BaseResponseHandlerTest<Firewall> {
 
-    @Override
-    protected ParseSax<Firewall> createParser() {
-        return factory.create(injector.getInstance(FirewallResponseHandler.class));
-    }
+   @Override
+   protected ParseSax<Firewall> createParser() {
+      return factory.create(injector.getInstance(FirewallResponseHandler.class));
+   }
 
-    @Test
-    public void testParseResponseFromGetFirewall() {
-        ParseSax<Firewall> parser = createParser();
-        Firewall actual = parser.parse(payloadFromResource("/firewall/firewall.xml"));
-        assertNotNull(actual, "Parsed content returned null");
-        List<FirewallRule> firewallRules = Lists.newArrayList();
-        firewallRules.add(FirewallRule.builder()
-                .id("firewall-rule-id")
-                .name("name")
-                .portRangeEnd("port-range-end")
-                .portRangeStart("port-range-start")
-                .protocol(Protocol.TCP)
-                .sourceIp("source-ip")
-                .sourceMac("source-mac")
-                .targetIp("target-ip")
-                .build());
+   @Test
+   public void testParseResponseFromGetFirewall() {
+      ParseSax<Firewall> parser = createParser();
+      Firewall actual = parser.parse(payloadFromResource("/firewall/firewall.xml"));
+      assertNotNull(actual, "Parsed content returned null");
+      List<FirewallRule> firewallRules = Lists.newArrayList();
+      firewallRules.add(FirewallRule.builder()
+	      .id("firewall-rule-id")
+	      .name("name")
+	      .portRangeEnd("port-range-end")
+	      .portRangeStart("port-range-start")
+	      .protocol(Protocol.TCP)
+	      .sourceIp("source-ip")
+	      .sourceMac("source-mac")
+	      .targetIp("target-ip")
+	      .build());
 
-        Firewall expected = Firewall.builder()
-                .active(true)
-                .id("firewall-id")
-                .nicId("nic-id")
-                .state(ProvisioningState.AVAILABLE)
-                .firewallRules(firewallRules)
-                .build();
+      Firewall expected = Firewall.builder()
+	      .active(true)
+	      .id("firewall-id")
+	      .nicId("nic-id")
+	      .state(ProvisioningState.AVAILABLE)
+	      .firewallRules(firewallRules)
+	      .build();
 
-        assertEquals(expected, actual);
+      assertEquals(expected, actual);
 
-    }
+   }
 
 }

@@ -21,23 +21,21 @@ import org.xml.sax.SAXException;
 
 public class FirewallRuleResponseHandler extends BaseFirewallRuleResponseHandler<FirewallRule> {
 
-    private boolean done = false;
+   private boolean done = false;
 
-    @Override
-    public void endElement(String uri, String localName, String qName) throws SAXException {
-        if (done) {
-            return;
-        }
-        setPropertyOnEndTag(qName);
-        if ("return".equals(qName)) {
-            done = true;
-        }
-        clearTextBuffer();
-    }
+   @Override
+   public void endElement(String uri, String localName, String qName) throws SAXException {
+      if (done)
+	 return;
+      setPropertyOnEndTag(qName);
+      if ("return".equals(qName))
+	 done = true;
+      clearTextBuffer();
+   }
 
-    @Override
-    public FirewallRule getResult() {
-        return builder.build();
-    }
+   @Override
+   public FirewallRule getResult() {
+      return builder.build();
+   }
 
 }
