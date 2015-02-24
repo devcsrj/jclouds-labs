@@ -45,15 +45,15 @@ public class FirewallResponseHandlerTest extends BaseResponseHandlerTest<Firewal
       Firewall actual = parser.parse(payloadFromResource("/firewall/firewall.xml"));
       assertNotNull(actual, "Parsed content returned null");
       List<Firewall.Rule> firewallRules = Lists.newArrayList();
-      firewallRules.add(Firewall.Rule.describingBuilder()
+      firewallRules.add(Firewall.Rule.builder()
 	      .id("firewall-rule-id")
 	      .name("name")
-	      .portRangeEnd("port-range-end")
-	      .portRangeStart("port-range-start")
+	      .portRangeEnd(45678)
+	      .portRangeStart(12345)
 	      .protocol(Protocol.TCP)
-	      .sourceIp("source-ip")
-	      .sourceMac("source-mac")
-	      .targetIp("target-ip")
+	      .sourceIp("192.168.0.1")
+	      .sourceMac("aa:bb:cc:dd:ee:ff")
+	      .targetIp("192.168.0.2")
 	      .build());
 
       Firewall expected = Firewall.builder()

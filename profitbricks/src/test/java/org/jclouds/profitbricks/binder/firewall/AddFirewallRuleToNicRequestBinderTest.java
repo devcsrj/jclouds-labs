@@ -34,15 +34,13 @@ public class AddFirewallRuleToNicRequestBinderTest {
       Firewall.Request.AddRulePayload payload = Firewall.Request.ruleAddingBuilder()
 	      .nicId("nic-id")
 	      .newRule()
-	       .icmpCode("icmp-code")
-	       .icmpType("icmp-type")
 	       .name("name")
-	       .portRangeEnd("port-range-end")
-	       .portRangeStart("port-range-start")
+	       .portRangeEnd(45678)
+	       .portRangeStart(12345)
 	       .protocol(Protocol.TCP)
-	       .sourceIp("source-ip")
-	       .sourceMac("source-mac")
-	       .targetIp("target-ip")
+	       .sourceIp("192.168.0.1")
+	       .sourceMac("aa:bb:cc:dd:ee:ff")
+	       .targetIp("192.168.0.2")
 	      .endRule()
 	      .build();
 
@@ -54,15 +52,13 @@ public class AddFirewallRuleToNicRequestBinderTest {
    private final String expectedPayload = ("  <ws:addFirewallRulesToNic>\n"
 	   + "        <nicId>nic-id</nicId>\n"
 	   + "            <request>\n"
-	   + "                <icmpCode>icmp-code</icmpCode>\n"
-	   + "                <icmpType>icmp-type</icmpType>\n"
 	   + "                <name>name</name>\n"
-	   + "                <portRangeEnd>port-range-end</portRangeEnd>\n"
-	   + "                <portRangeStart>port-range-start</portRangeStart>\n"
+	   + "                <portRangeEnd>45678</portRangeEnd>\n"
+	   + "                <portRangeStart>12345</portRangeStart>\n"
 	   + "                <protocol>TCP</protocol>\n"
-	   + "                <sourceIp>source-ip</sourceIp>\n"
-	   + "                <sourceMac>source-mac</sourceMac>\n"
-	   + "                <targetIp>target-ip</targetIp>\n"
+	   + "                <sourceIp>192.168.0.1</sourceIp>\n"
+	   + "                <sourceMac>aa:bb:cc:dd:ee:ff</sourceMac>\n"
+	   + "                <targetIp>192.168.0.2</targetIp>\n"
 	   + "            </request>\n"
 	   + "        </ws:addFirewallRulesToNic>").replaceAll("\\s+", "");
 }

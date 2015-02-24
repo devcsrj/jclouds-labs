@@ -66,6 +66,9 @@ public class FirewallApiLiveTest extends BaseProfitBricksLiveTest {
 	 }
       }).orNull();
 
+      assertNotNull(nic, "No viable NIC for firewall testing was found (must be both AVAILABLE"
+	      + " and has no existing firewall");
+
       this.waitUntilAvailable = Predicates2.retry(
 	      new ProvisioningStatusPollingPredicate(api, ProvisioningStatusAware.NIC, ProvisioningState.AVAILABLE),
 	      2l * 60l, 2l, TimeUnit.SECONDS);
@@ -76,10 +79,10 @@ public class FirewallApiLiveTest extends BaseProfitBricksLiveTest {
       Firewall firewall = api.firewallApi().addFirewallRuleToNic(
 	      Firewall.Request.ruleAddingBuilder()
 	      .nicId(nic.id())
-	       .newRule()
-	       .name("TCP")
-	       .protocol(Protocol.ICMP)
-	       .endRule()
+	      .newRule()
+	      .name("test-rule-tcp")
+	      .protocol(Protocol.TCP)
+	      .endRule()
 	      .build());
 
       assertNotNull(firewall);
@@ -128,13 +131,17 @@ public class FirewallApiLiveTest extends BaseProfitBricksLiveTest {
    void testRemoveFirewallRule() {
       boolean result = api.firewallApi().removeFirewallRules(ImmutableList.of(createdFirewallRule.id()));
 
+      waitUntilAvailable.apply(nic.id());
+
       assertTrue(result);
    }
 
    @AfterClass(alwaysRun = true)
    public void testDeleteFirewall() {
-      boolean result = api.firewallApi().deleteFirewall(ImmutableList.of(createdFirewall.id()));
+      if (createdFirewall != null) {
+	 boolean result = api.firewallApi().deleteFirewall(ImmutableList.of(createdFirewall.id()));
 
-      assertTrue(result);
+	 assertTrue(result, "Created firewall was not deleted.");
+      }
    }
 }

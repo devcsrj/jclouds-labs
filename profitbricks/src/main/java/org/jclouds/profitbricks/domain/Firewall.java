@@ -16,12 +16,17 @@
  */
 package org.jclouds.profitbricks.domain;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.google.auto.value.AutoValue;
 
 import java.util.List;
+import java.util.regex.Pattern;
 
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.profitbricks.domain.internal.FirewallRuleCommonProperties;
+
+import com.google.common.collect.ImmutableList;
 
 import autovalue.shaded.com.google.common.common.collect.Lists;
 
@@ -56,7 +61,8 @@ public abstract class Firewall {
 
    public static Firewall create(String id, String nicId, boolean active, ProvisioningState provisioningState,
 	   List<Rule> rules) {
-      return new AutoValue_Firewall(id, nicId, active, provisioningState, rules);
+      return new AutoValue_Firewall(id, nicId, active, provisioningState,
+	      rules != null ? ImmutableList.copyOf(rules) : ImmutableList.<Rule>of());
    }
 
    public static Builder builder() {
@@ -157,9 +163,19 @@ public abstract class Firewall {
 
    public static abstract class RuleBuilder<B extends RuleBuilder, D extends FirewallRuleCommonProperties> {
 
+      private static final String IP_ADDR_REGEX
+	      = "^([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\."
+	      + "([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\."
+	      + "([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\."
+	      + "([01]?\\d\\d?|2[0-4]\\d|25[0-5])$";
+      private static final String MAC_ADDR_REGEX = "^([0-9a-f]{2}[:]){5}([0-9a-f]{2})$";
+
+      private static final Pattern IP_ADDR_PATTERN = Pattern.compile(IP_ADDR_REGEX);
+      private static final Pattern MAC_ADDR_PATTERN = Pattern.compile(MAC_ADDR_REGEX);
+
       protected String name;
-      protected String portRangeEnd;
-      protected String portRangeStart;
+      protected Integer portRangeEnd;
+      protected Integer portRangeStart;
       protected Protocol protocol;
       protected String sourceIp;
       protected String sourceMac;
@@ -170,12 +186,12 @@ public abstract class Firewall {
 	 return self();
       }
 
-      public B portRangeEnd(String portRangeEnd) {
+      public B portRangeEnd(Integer portRangeEnd) {
 	 this.portRangeEnd = portRangeEnd;
 	 return self();
       }
 
-      public B portRangeStart(String portRangeStart) {
+      public B portRangeStart(Integer portRangeStart) {
 	 this.portRangeStart = portRangeStart;
 	 return self();
       }
@@ -204,6 +220,35 @@ public abstract class Firewall {
 
       public abstract D build();
 
+      protected void checkPortRange() {
+	 checkArgument((portRangeEnd == null && portRangeStart == null)
+		 || (portRangeEnd != null && portRangeStart != null), "Port range must be both present or null");
+	 if (portRangeEnd != null) {
+	    checkArgument(protocol == Protocol.TCP || protocol == Protocol.UDP, "Port range can only be set for TCP or UDP");
+	    checkArgument(portRangeEnd > portRangeStart, "portRangeEnd must be greater than portRangeStart");
+	    checkArgument(portRangeEnd >= 1 && portRangeEnd <= 65534, "Port range end must be 1 to 65534");
+	    checkArgument(portRangeStart >= 1 && portRangeStart <= 65534, "Port range start must be 1 to 65534");
+	 }
+      }
+
+      protected void checkMac() {
+	 if (sourceMac != null)
+	    checkArgument(MAC_ADDR_PATTERN.matcher(sourceMac).matches(), "Source MAC must match pattern 'aa:bb:cc:dd:ee:ff'");
+      }
+
+      protected void checkIp() {
+	 if (sourceIp != null)
+	    checkArgument(IP_ADDR_PATTERN.matcher(sourceIp).matches(), "IP is invalid");
+	 if (targetIp != null)
+	    checkArgument(IP_ADDR_PATTERN.matcher(targetIp).matches(), "IP is invalid");
+      }
+
+      protected void checkFields() {
+	 checkMac();
+	 checkPortRange();
+	 checkIp();
+      }
+
    }
 
    @AutoValue
@@ -212,13 +257,13 @@ public abstract class Firewall {
       @Nullable
       public abstract String id();
 
-      public static Rule create(String id, String name, String portRangeEnd, String portRangeStart,
+      public static Rule create(String id, String name, Integer portRangeEnd, Integer portRangeStart,
 	      Protocol protocol, String sourceIp, String sourceMac, String targetIp) {
 	 return new AutoValue_Firewall_Rule(name, portRangeEnd, portRangeStart, protocol, sourceIp, sourceMac,
 		 targetIp, id);
       }
 
-      public static Builder describingBuilder() {
+      public static Builder builder() {
 	 return new Builder();
       }
 
@@ -238,24 +283,24 @@ public abstract class Firewall {
 
 	 @Override
 	 public Rule build() {
+	    checkFields();
 	    return Rule.create(id, name, portRangeEnd, portRangeStart, protocol, sourceIp, sourceMac, targetIp);
 	 }
 
       }
-
    }
 
    @AutoValue
    public static abstract class RuleWithIcmp implements FirewallRuleCommonProperties {
 
       @Nullable
-      public abstract String icmpCode();
+      public abstract Integer icmpCode();
 
       @Nullable
-      public abstract String icmpType();
+      public abstract Integer icmpType();
 
-      public static RuleWithIcmp create(String icmpCode, String icmpType, String name, String portRangeEnd,
-	      String portRangeStart, Protocol protocol, String sourceIp, String sourceMac, String targetIp) {
+      public static RuleWithIcmp create(Integer icmpCode, Integer icmpType, String name, Integer portRangeEnd,
+	      Integer portRangeStart, Protocol protocol, String sourceIp, String sourceMac, String targetIp) {
 	 return new AutoValue_Firewall_RuleWithIcmp(name, portRangeEnd, portRangeStart, protocol, sourceIp, sourceMac,
 		 targetIp, icmpCode, icmpType);
       }
@@ -268,8 +313,8 @@ public abstract class Firewall {
 
 	 private Request.AddRulePayload.Builder parentBuilder;
 
-	 private String icmpCode;
-	 private String icmpType;
+	 private Integer icmpCode;
+	 private Integer icmpType;
 
 	 public Builder() {
 
@@ -289,12 +334,12 @@ public abstract class Firewall {
 	    return parentBuilder;
 	 }
 
-	 public Builder icmpCode(String icmpCode) {
+	 public Builder icmpCode(Integer icmpCode) {
 	    this.icmpCode = icmpCode;
 	    return this;
 	 }
 
-	 public Builder icmpType(String icmpType) {
+	 public Builder icmpType(Integer icmpType) {
 	    this.icmpType = icmpType;
 	    return this;
 	 }
@@ -306,10 +351,25 @@ public abstract class Firewall {
 
 	 @Override
 	 public RuleWithIcmp build() {
+	    checkFields();
 	    return RuleWithIcmp.create(icmpCode, icmpType, name, portRangeEnd, portRangeStart, protocol,
 		    sourceIp, sourceMac, targetIp);
 	 }
 
+	 @Override
+	 protected void checkFields() {
+	    super.checkFields();
+	    checkIcmp();
+	 }
+
+	 private void checkIcmp() {
+	    if (icmpCode != null)
+	       checkArgument(icmpCode >= 1 && icmpCode <= 254, "ICMP code must be 1 to 254");
+	    if (icmpType != null)
+	       checkArgument(icmpType >= 1 && icmpType <= 254, "ICMP type must be 1 to 254");
+	    if (icmpCode != null || icmpType != null)
+	       checkArgument(protocol == Protocol.ICMP, "ICMP code and types can only be set for ICMP protocol");
+	 }
       }
    }
 }

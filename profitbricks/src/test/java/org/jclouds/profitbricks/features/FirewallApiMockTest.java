@@ -118,30 +118,26 @@ public class FirewallApiMockTest extends BaseProfitBricksMockTest {
       String content = "<ws:addFirewallRulesToNic>"
 	      + "<nicId>nic-id</nicId>"
 	      + "<request>"
-	      + "<icmpCode>icmp-code</icmpCode>"
-	      + "<icmpType>icmp-type</icmpType>"
 	      + "<name>name</name>"
-	      + "<portRangeEnd>port-range-end</portRangeEnd>"
-	      + "<portRangeStart>port-range-start</portRangeStart>"
+	      + "<portRangeEnd>45678</portRangeEnd>"
+	      + "<portRangeStart>12345</portRangeStart>"
 	      + "<protocol>TCP</protocol>"
-	      + "<sourceIp>source-ip</sourceIp>"
-	      + "<sourceMac>source-mac</sourceMac>"
-	      + "<targetIp>target-ip</targetIp>"
+	      + "<sourceIp>192.168.0.1</sourceIp>"
+	      + "<sourceMac>aa:bb:cc:dd:ee:ff</sourceMac>"
+	      + "<targetIp>192.168.0.2</targetIp>"
 	      + "</request>"
 	      + "</ws:addFirewallRulesToNic>";
       try {
 	 Firewall.Request.AddRulePayload payload = Firewall.Request.ruleAddingBuilder()
 		 .nicId("nic-id")
 		 .newRule()
-		  .icmpCode("icmp-code")
-		  .icmpType("icmp-type")
 		  .name("name")
-		  .portRangeEnd("port-range-end")
-		  .portRangeStart("port-range-start")
+		  .portRangeEnd(45678)
+		  .portRangeStart(12345)
 		  .protocol(Protocol.TCP)
-		  .sourceIp("source-ip")
-		  .sourceMac("source-mac")
-		  .targetIp("target-ip")
+		  .sourceIp("192.168.0.1")
+		  .sourceMac("aa:bb:cc:dd:ee:ff")
+		  .targetIp("192.168.0.2")
 		 .endRule()
 		 .build();
 	 Firewall response = api.addFirewallRuleToNic(payload);

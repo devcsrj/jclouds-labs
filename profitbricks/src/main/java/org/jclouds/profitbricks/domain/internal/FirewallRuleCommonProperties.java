@@ -29,10 +29,10 @@ public interface FirewallRuleCommonProperties {
    public abstract String name();
 
    @Nullable
-   public abstract String portRangeEnd();
+   public abstract Integer portRangeEnd();
 
    @Nullable
-   public abstract String portRangeStart();
+   public abstract Integer portRangeStart();
 
    @Nullable
    public abstract Firewall.Protocol protocol();

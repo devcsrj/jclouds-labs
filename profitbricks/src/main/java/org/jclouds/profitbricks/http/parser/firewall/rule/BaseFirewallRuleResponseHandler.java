@@ -29,7 +29,7 @@ public abstract class BaseFirewallRuleResponseHandler<T> extends BaseProfitBrick
 
    @Inject
    BaseFirewallRuleResponseHandler() {
-      this.builder = Firewall.Rule.describingBuilder();
+      this.builder = Firewall.Rule.builder();
    }
 
    @Override
@@ -39,9 +39,9 @@ public abstract class BaseFirewallRuleResponseHandler<T> extends BaseProfitBrick
       else if ("name".equals(qName))
 	 builder.name(textToStringValue());
       else if ("portRangeEnd".equals(qName))
-	 builder.portRangeEnd(textToStringValue());
+	 builder.portRangeEnd(textToIntValue());
       else if ("portRangeStart".equals(qName))
-	 builder.portRangeStart(textToStringValue());
+	 builder.portRangeStart(textToIntValue());
       else if ("protocol".equals(qName))
 	 builder.protocol(Protocol.fromValue(textToStringValue()));
       else if ("sourceIp".equals(qName))
