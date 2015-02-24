@@ -35,6 +35,8 @@ import org.jclouds.profitbricks.internal.BaseProfitBricksMockTest;
 
 import org.testng.annotations.Test;
 
+import com.google.common.collect.ImmutableList;
+
 @Test(groups = "live", testName = "FirewallApiMockTest", singleThreaded = true)
 public class FirewallApiMockTest extends BaseProfitBricksMockTest {
 
@@ -77,8 +79,8 @@ public class FirewallApiMockTest extends BaseProfitBricksMockTest {
 	 assertRequestHasCommonProperties(server.takeRequest(), content);
 	 assertNotNull(firewall);
 	 assertEquals(firewall.id(), id);
-	 assertFalse(firewall.firewallRules().isEmpty());
-	 assertEquals(firewall.firewallRules().get(0).id(), firewallruleid);
+	 assertFalse(firewall.rules().isEmpty());
+	 assertEquals(firewall.rules().get(0).id(), firewallruleid);
       } finally {
 	 pbApi.close();
 	 server.shutdown();
@@ -128,17 +130,19 @@ public class FirewallApiMockTest extends BaseProfitBricksMockTest {
 	      + "</request>"
 	      + "</ws:addFirewallRulesToNic>";
       try {
-	 Firewall.Rule.Request.CreatePayload payload = Firewall.Rule.creatingBuilder()
-		 .nicid("nic-id")
-		 .icmpCode("icmp-code")
-		 .icmpType("icmp-type")
-		 .name("name")
-		 .portRangeEnd("port-range-end")
-		 .portRangeStart("port-range-start")
-		 .protocol(Protocol.TCP)
-		 .sourceIp("source-ip")
-		 .sourceMac("source-mac")
-		 .targetIp("target-ip")
+	 Firewall.Request.AddRulePayload payload = Firewall.Request.ruleAddingBuilder()
+		 .nicId("nic-id")
+		 .newRule()
+		  .icmpCode("icmp-code")
+		  .icmpType("icmp-type")
+		  .name("name")
+		  .portRangeEnd("port-range-end")
+		  .portRangeStart("port-range-start")
+		  .protocol(Protocol.TCP)
+		  .sourceIp("source-ip")
+		  .sourceMac("source-mac")
+		  .targetIp("target-ip")
+		 .endRule()
 		 .build();
 	 Firewall response = api.addFirewallRuleToNic(payload);
 
@@ -164,7 +168,7 @@ public class FirewallApiMockTest extends BaseProfitBricksMockTest {
 	      + "</ws:removeFirewallRules>";
 
       try {
-	 boolean result = api.removeFirewall(firewallId);
+	 boolean result = api.removeFirewallRules(ImmutableList.of(firewallId));
 	 assertRequestHasCommonProperties(server.takeRequest(), content);
 	 assertTrue(result);
       } finally {
@@ -181,10 +185,10 @@ public class FirewallApiMockTest extends BaseProfitBricksMockTest {
       ProfitBricksApi pbApi = api(server.getUrl(rootUrl));
       FirewallApi api = pbApi.firewallApi();
 
-      String firewallId = "12345";
+      String firewallRuleId = "12345";
 
       try {
-	 boolean result = api.removeFirewall(firewallId);
+	 boolean result = api.removeFirewallRules(ImmutableList.of(firewallRuleId));
 	 assertRequestHasCommonProperties(server.takeRequest());
 	 assertFalse(result);
       } finally {
@@ -207,7 +211,7 @@ public class FirewallApiMockTest extends BaseProfitBricksMockTest {
 	      + "</ws:activateFirewalls>";
 
       try {
-	 boolean result = api.activateFirewall(firewallId);
+	 boolean result = api.activateFirewall(ImmutableList.of(firewallId));
 	 assertRequestHasCommonProperties(server.takeRequest(), content);
 	 assertTrue(result);
       } finally {
@@ -227,7 +231,7 @@ public class FirewallApiMockTest extends BaseProfitBricksMockTest {
       String firewallId = "12345";
 
       try {
-	 boolean result = api.activateFirewall(firewallId);
+	 boolean result = api.activateFirewall(ImmutableList.of(firewallId));
 	 assertRequestHasCommonProperties(server.takeRequest());
 	 assertFalse(result);
       } finally {
@@ -250,7 +254,7 @@ public class FirewallApiMockTest extends BaseProfitBricksMockTest {
 	      + "</ws:deactivateFirewalls>";
 
       try {
-	 boolean result = api.deactivateFirewall(firewallId);
+	 boolean result = api.deactivateFirewall(ImmutableList.of(firewallId));
 	 assertRequestHasCommonProperties(server.takeRequest(), content);
 	 assertTrue(result);
       } finally {
@@ -270,7 +274,7 @@ public class FirewallApiMockTest extends BaseProfitBricksMockTest {
       String firewallId = "12345";
 
       try {
-	 boolean result = api.deactivateFirewall(firewallId);
+	 boolean result = api.deactivateFirewall(ImmutableList.of(firewallId));
 	 assertRequestHasCommonProperties(server.takeRequest());
 	 assertFalse(result);
       } finally {
@@ -293,7 +297,7 @@ public class FirewallApiMockTest extends BaseProfitBricksMockTest {
 	      + "</ws:deleteFirewalls>";
 
       try {
-	 boolean result = api.deleteFirewall(firewallId);
+	 boolean result = api.deleteFirewall(ImmutableList.of(firewallId));
 	 assertRequestHasCommonProperties(server.takeRequest(), content);
 	 assertTrue(result);
       } finally {
@@ -313,7 +317,7 @@ public class FirewallApiMockTest extends BaseProfitBricksMockTest {
       String firewallId = "12345";
 
       try {
-	 boolean result = api.deleteFirewall(firewallId);
+	 boolean result = api.deleteFirewall(ImmutableList.of(firewallId));
 	 assertRequestHasCommonProperties(server.takeRequest());
 	 assertFalse(result);
       } finally {

@@ -17,8 +17,12 @@
 package org.jclouds.profitbricks.domain;
 
 import com.google.auto.value.AutoValue;
+
 import java.util.List;
+
 import org.jclouds.javax.annotation.Nullable;
+
+import com.google.common.collect.ImmutableList;
 
 @AutoValue
 public abstract class Nic {
@@ -67,7 +71,8 @@ public abstract class Nic {
 	   String ips, String macAddress, List<Firewall> firewalls,
 	   boolean dhcpActive, String gatewayIp, ProvisioningState state) {
       return new AutoValue_Nic(requestId, id, name, dataCenterId, dataCenterVersion, lanId, internetAccess, serverId,
-	      ips, macAddress, firewalls, dhcpActive, gatewayIp, state);
+	      ips, macAddress, (firewalls != null ? ImmutableList.copyOf(firewalls) : ImmutableList.<Firewall>of()),
+	      dhcpActive, gatewayIp, state);
    }
 
    public static Builder builder() {

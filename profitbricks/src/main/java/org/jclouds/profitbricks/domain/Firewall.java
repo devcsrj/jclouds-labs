@@ -23,6 +23,8 @@ import java.util.List;
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.profitbricks.domain.internal.FirewallRuleCommonProperties;
 
+import autovalue.shaded.com.google.common.common.collect.Lists;
+
 @AutoValue
 public abstract class Firewall {
 
@@ -50,15 +52,63 @@ public abstract class Firewall {
    public abstract ProvisioningState state();
 
    @Nullable
-   public abstract List<Rule> firewallRules();
+   public abstract List<Rule> rules();
 
    public static Firewall create(String id, String nicId, boolean active, ProvisioningState provisioningState,
-	   List<Rule> firewallRules) {
-      return new AutoValue_Firewall(id, nicId, active, provisioningState, firewallRules);
+	   List<Rule> rules) {
+      return new AutoValue_Firewall(id, nicId, active, provisioningState, rules);
    }
 
    public static Builder builder() {
       return new Builder();
+   }
+
+   public static final class Request {
+
+      public static AddRulePayload.Builder ruleAddingBuilder() {
+	 return new AddRulePayload.Builder();
+      }
+
+      @AutoValue
+      public static abstract class AddRulePayload {
+
+	 public abstract String nicId();
+
+	 public abstract List<RuleWithIcmp> rules();
+
+	 public static AddRulePayload create(String nicId, List<RuleWithIcmp> rules) {
+	    return new AutoValue_Firewall_Request_AddRulePayload(nicId, rules);
+	 }
+
+	 public static class Builder {
+
+	    private String nicId;
+	    private List<RuleWithIcmp> rules = Lists.newArrayList();
+
+	    public Builder nicId(String nicId) {
+	       this.nicId = nicId;
+	       return this;
+	    }
+
+	    public Builder rules(List<RuleWithIcmp> rules) {
+	       this.rules = rules;
+	       return this;
+	    }
+
+	    public RuleWithIcmp.Builder newRule() {
+	       return new RuleWithIcmp.Builder(this);
+	    }
+
+	    public Builder addRule(RuleWithIcmp rule) {
+	       this.rules.add(rule);
+	       return this;
+	    }
+
+	    public AddRulePayload build() {
+	       return AddRulePayload.create(nicId, rules);
+	    }
+	 }
+      }
    }
 
    public static class Builder {
@@ -68,7 +118,7 @@ public abstract class Firewall {
       private boolean active;
 
       private ProvisioningState state;
-      private List<Rule> firewallRules;
+      private List<Rule> rules;
 
       public Builder id(String id) {
 	 this.id = id;
@@ -90,19 +140,70 @@ public abstract class Firewall {
 	 return this;
       }
 
-      public Builder firewallRules(List<Rule> firewallRules) {
-	 this.firewallRules = firewallRules;
+      public Builder rules(List<Rule> firewallRules) {
+	 this.rules = firewallRules;
 	 return this;
       }
 
       public Builder fromFirewall(Firewall in) {
 	 return this.id(in.id()).nicId(in.nicId()).active(in.active()).state(in.state())
-		 .firewallRules(in.firewallRules());
+		 .rules(in.rules());
       }
 
       public Firewall build() {
-	 return Firewall.create(id, nicId, active, state, firewallRules);
+	 return Firewall.create(id, nicId, active, state, rules);
       }
+   }
+
+   public static abstract class RuleBuilder<B extends RuleBuilder, D extends FirewallRuleCommonProperties> {
+
+      protected String name;
+      protected String portRangeEnd;
+      protected String portRangeStart;
+      protected Protocol protocol;
+      protected String sourceIp;
+      protected String sourceMac;
+      protected String targetIp;
+
+      public B name(String name) {
+	 this.name = name;
+	 return self();
+      }
+
+      public B portRangeEnd(String portRangeEnd) {
+	 this.portRangeEnd = portRangeEnd;
+	 return self();
+      }
+
+      public B portRangeStart(String portRangeStart) {
+	 this.portRangeStart = portRangeStart;
+	 return self();
+      }
+
+      public B protocol(Protocol protocol) {
+	 this.protocol = protocol;
+	 return self();
+      }
+
+      public B sourceIp(String sourceIp) {
+	 this.sourceIp = sourceIp;
+	 return self();
+      }
+
+      public B sourceMac(String sourceMac) {
+	 this.sourceMac = sourceMac;
+	 return self();
+      }
+
+      public B targetIp(String targetIp) {
+	 this.targetIp = targetIp;
+	 return self();
+      }
+
+      public abstract B self();
+
+      public abstract D build();
+
    }
 
    @AutoValue
@@ -117,80 +218,21 @@ public abstract class Firewall {
 		 targetIp, id);
       }
 
-      public static DescribingBuilder describingBuilder() {
-	 return new DescribingBuilder();
+      public static Builder describingBuilder() {
+	 return new Builder();
       }
 
-      public static Request.CreatingBuilder creatingBuilder() {
-	 return new Request.CreatingBuilder();
-      }
-
-      public static abstract class Builder<B extends Builder, D extends FirewallRuleCommonProperties> {
-
-	 protected String name;
-	 protected String portRangeEnd;
-	 protected String portRangeStart;
-	 protected Protocol protocol;
-	 protected String sourceIp;
-	 protected String sourceMac;
-	 protected String targetIp;
-
-	 public B name(String name) {
-	    this.name = name;
-	    return self();
-	 }
-
-	 public B portRangeEnd(String portRangeEnd) {
-	    this.portRangeEnd = portRangeEnd;
-	    return self();
-	 }
-
-	 public B portRangeStart(String portRangeStart) {
-	    this.portRangeStart = portRangeStart;
-	    return self();
-	 }
-
-	 public B protocol(Protocol protocol) {
-	    this.protocol = protocol;
-	    return self();
-	 }
-
-	 public B sourceIp(String sourceIp) {
-	    this.sourceIp = sourceIp;
-	    return self();
-	 }
-
-	 public B sourceMac(String sourceMac) {
-	    this.sourceMac = sourceMac;
-	    return self();
-	 }
-
-	 public B targetIp(String targetIp) {
-	    this.targetIp = targetIp;
-	    return self();
-	 }
-
-	 public abstract B self();
-
-	 public abstract D build();
-
-//	 private B fromRule(Rule in) {
-//	    return this.id(in.id()).name(in.name()).portRangeEnd(in.portRangeEnd()).portRangeStart(in.portRangeStart())
-//		    .protocol(in.protocol()).sourceIp(in.sourceIp()).sourceMac(in.sourceMac()).targetIp(in.targetIp());
-//	 }
-      }
-
-      public static class DescribingBuilder extends Builder<DescribingBuilder, Rule> {
+      public static class Builder extends RuleBuilder<Builder, Rule> {
 
 	 private String id;
 
-	 public DescribingBuilder id(String id) {
+	 public Builder id(String id) {
 	    this.id = id;
 	    return self();
 	 }
 
 	 @Override
-	 public DescribingBuilder self() {
+	 public Builder self() {
 	    return this;
 	 }
 
@@ -201,61 +243,73 @@ public abstract class Firewall {
 
       }
 
-      public static class Request {
-
-	 @AutoValue
-	 public abstract static class CreatePayload implements FirewallRuleCommonProperties {
-
-	    public abstract String nicId();
-
-	    @Nullable
-	    public abstract String icmpCode();
-
-	    @Nullable
-	    public abstract String icmpType();
-
-	    public static CreatePayload create(String nicid, String icmpCode, String icmpType,
-		    String name, String portRangeEnd, String portRangeStart, Protocol protocol, String sourceIp,
-		    String sourceMAc, String targetIp) {
-	       return new AutoValue_Firewall_Rule_Request_CreatePayload(name, portRangeEnd, portRangeStart,
-		       protocol, sourceIp, sourceMAc, targetIp, nicid, icmpCode, icmpType);
-	    }
-	 }
-
-	 public static class CreatingBuilder extends Builder<CreatingBuilder, CreatePayload> {
-
-	    private String nicId;
-	    private String icmpCode;
-	    private String icmpType;
-
-	    public CreatingBuilder nicid(String nicId) {
-	       this.nicId = nicId;
-	       return this;
-	    }
-
-	    public CreatingBuilder icmpCode(String icmpCode) {
-	       this.icmpCode = icmpCode;
-	       return this;
-	    }
-
-	    public CreatingBuilder icmpType(String icmpType) {
-	       this.icmpType = icmpType;
-	       return this;
-	    }
-
-	    @Override
-	    public CreatingBuilder self() {
-	       return this;
-	    }
-
-	    @Override
-	    public CreatePayload build() {
-	       return CreatePayload.create(nicId, icmpCode, icmpType, name, portRangeEnd, portRangeStart,
-		       protocol, sourceIp, sourceMac, targetIp);
-	    }
-
-	 }
-      }
    }
 
+   @AutoValue
+   public static abstract class RuleWithIcmp implements FirewallRuleCommonProperties {
+
+      @Nullable
+      public abstract String icmpCode();
+
+      @Nullable
+      public abstract String icmpType();
+
+      public static RuleWithIcmp create(String icmpCode, String icmpType, String name, String portRangeEnd,
+	      String portRangeStart, Protocol protocol, String sourceIp, String sourceMac, String targetIp) {
+	 return new AutoValue_Firewall_RuleWithIcmp(name, portRangeEnd, portRangeStart, protocol, sourceIp, sourceMac,
+		 targetIp, icmpCode, icmpType);
+      }
+
+      public static Builder builder() {
+	 return new Builder();
+      }
+
+      public static class Builder extends RuleBuilder<Builder, RuleWithIcmp> {
+
+	 private Request.AddRulePayload.Builder parentBuilder;
+
+	 private String icmpCode;
+	 private String icmpType;
+
+	 public Builder() {
+
+	 }
+
+	 private Builder(Request.AddRulePayload.Builder parentBuilder) {
+	    this.parentBuilder = parentBuilder;
+	 }
+
+	 public Builder nextRule() {
+	    this.parentBuilder.addRule(build());
+	    return new Builder(parentBuilder);
+	 }
+
+	 public Request.AddRulePayload.Builder endRule() {
+	    this.parentBuilder.addRule(build());
+	    return parentBuilder;
+	 }
+
+	 public Builder icmpCode(String icmpCode) {
+	    this.icmpCode = icmpCode;
+	    return this;
+	 }
+
+	 public Builder icmpType(String icmpType) {
+	    this.icmpType = icmpType;
+	    return this;
+	 }
+
+	 @Override
+	 public Builder self() {
+	    return this;
+	 }
+
+	 @Override
+	 public RuleWithIcmp build() {
+	    return RuleWithIcmp.create(icmpCode, icmpType, name, portRangeEnd, portRangeStart, protocol,
+		    sourceIp, sourceMac, targetIp);
+	 }
+
+      }
+   }
 }

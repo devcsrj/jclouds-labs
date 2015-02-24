@@ -25,7 +25,7 @@ import org.jclouds.profitbricks.http.parser.BaseProfitBricksResponseHandler;
 
 public abstract class BaseFirewallRuleResponseHandler<T> extends BaseProfitBricksResponseHandler<T> {
 
-   protected Firewall.Rule.DescribingBuilder builder;
+   protected Firewall.Rule.Builder builder;
 
    @Inject
    BaseFirewallRuleResponseHandler() {

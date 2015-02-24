@@ -47,7 +47,7 @@ public class FirewallListResponseHandler extends BaseFirewallResponseHandler<Lis
       else {
 	 setPropertyOnEndTag(qName);
 	 if ("return".equals(qName)) {
-	    firewalls.add(builder.firewallRules(firewallRules).build());
+	    firewalls.add(builder.rules(firewallRules).build());
 	    builder = Firewall.builder();
 	 }
 	 clearTextBuffer();

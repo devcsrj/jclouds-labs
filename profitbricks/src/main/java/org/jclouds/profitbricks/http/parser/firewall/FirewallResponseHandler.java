@@ -46,7 +46,7 @@ public class FirewallResponseHandler extends BaseFirewallResponseHandler<Firewal
 	 setPropertyOnEndTag(qName);
 	 if ("return".equals(qName)) {
 	    done = true;
-	    builder.firewallRules(firewallRules);
+	    builder.rules(firewallRules);
 	 }
 	 clearTextBuffer();
       }

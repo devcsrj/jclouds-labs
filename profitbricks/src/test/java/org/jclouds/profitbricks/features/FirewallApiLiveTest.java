@@ -29,16 +29,28 @@ import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
 
+import java.util.concurrent.TimeUnit;
+
+import org.jclouds.profitbricks.compute.internal.ProvisioningStatusAware;
+import org.jclouds.profitbricks.compute.internal.ProvisioningStatusPollingPredicate;
 import org.jclouds.profitbricks.domain.Firewall.Protocol;
+import org.jclouds.profitbricks.domain.ProvisioningState;
+import org.jclouds.util.Predicates2;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.Test;
+
+import com.google.common.base.Predicate;
+
+import autovalue.shaded.com.google.common.common.collect.ImmutableList;
 
 @Test(groups = "live", testName = "FirewallApiLiveTest", singleThreaded = true)
 public class FirewallApiLiveTest extends BaseProfitBricksLiveTest {
 
-   Nic nic;
-   String firewallId;
-   String firewallRuleId;
+   private Predicate<String> waitUntilAvailable;
+   private Nic nic;
+
+   private Firewall createdFirewall;
+   private Firewall.Rule createdFirewallRule;
 
    @Override
    protected void initialize() {
@@ -46,64 +58,82 @@ public class FirewallApiLiveTest extends BaseProfitBricksLiveTest {
       List<Nic> nics = api.nicApi().getAllNics();
       assertFalse(nics.isEmpty(), "Must atleast have 1 NIC available for firewall testing.");
 
-      this.nic = Iterables.getFirst(nics, null);
-   }
+      this.nic = Iterables.tryFind(nics, new Predicate<Nic>() {
 
-   @Test
-   public void testGetAllFirewalls() {
-      List<Firewall> firewalls = api.firewallApi().getAllFirewalls();
+	 @Override
+	 public boolean apply(Nic input) {
+	    return input.state() == ProvisioningState.AVAILABLE && input.firewalls().isEmpty();
+	 }
+      }).orNull();
 
-      assertFalse(firewalls.isEmpty());
+      this.waitUntilAvailable = Predicates2.retry(
+	      new ProvisioningStatusPollingPredicate(api, ProvisioningStatusAware.NIC, ProvisioningState.AVAILABLE),
+	      2l * 60l, 2l, TimeUnit.SECONDS);
    }
 
    @Test
    public void testAddFirewallRuleToNic() {
-      Firewall firewall = api.firewallApi().addFirewallRuleToNic(Firewall.Rule.creatingBuilder()
-	      .nicid(nic.id())
-	      .name("TCP")
-	      .protocol(Protocol.ICMP)
+      Firewall firewall = api.firewallApi().addFirewallRuleToNic(
+	      Firewall.Request.ruleAddingBuilder()
+	      .nicId(nic.id())
+	       .newRule()
+	       .name("TCP")
+	       .protocol(Protocol.ICMP)
+	       .endRule()
 	      .build());
 
       assertNotNull(firewall);
-      assertNotNull(firewall.firewallRules());
+      assertNotNull(firewall.rules());
 
-      firewallId = firewall.id();
-      firewallRuleId = firewall.firewallRules().get(firewall.firewallRules().size() - 1).id();
+      waitUntilAvailable.apply(nic.id());
+      createdFirewall = firewall;
+      createdFirewallRule = Iterables.getOnlyElement(firewall.rules());
+   }
+
+   @Test(dependsOnMethods = "testAddFirewallRuleToNic")
+   public void testGetAllFirewalls() {
+      List<Firewall> firewalls = api.firewallApi().getAllFirewalls();
+
+      assertNotNull(firewalls);
+      assertFalse(firewalls.isEmpty());
    }
 
    @Test(dependsOnMethods = "testAddFirewallRuleToNic")
    public void testGetFirewall() {
-      Firewall firewall = api.firewallApi().getFirewall(firewallId);
+      Firewall firewall = api.firewallApi().getFirewall(createdFirewall.id());
 
       assertNotNull(firewall);
-      assertEquals(firewallId, firewall.id());
+      assertEquals(createdFirewall.id(), firewall.id());
    }
 
-   @Test
-   public void testActivateFirewall() {
-      boolean result = api.firewallApi().activateFirewall(firewallId);
-
-      assertTrue(result);
-   }
-
-   @Test
+   @Test(dependsOnMethods = "testAddFirewallRuleToNic")
    void testDeactivateFirewall() {
-      boolean result = api.firewallApi().deactivateFirewall(firewallRuleId);
+      boolean result = api.firewallApi().deactivateFirewall(ImmutableList.of(createdFirewall.id()));
+
+      waitUntilAvailable.apply(nic.id());
 
       assertTrue(result);
    }
 
-   @Test
+   @Test(dependsOnMethods = "testDeactivateFirewall")
+   public void testActivateFirewall() {
+      boolean result = api.firewallApi().activateFirewall(ImmutableList.of(createdFirewall.id()));
+
+      waitUntilAvailable.apply(nic.id());
+
+      assertTrue(result);
+   }
+
+   @Test(dependsOnMethods = "testActivateFirewall")
    void testRemoveFirewallRule() {
-      boolean result = api.firewallApi().removeFirewall(firewallRuleId);
+      boolean result = api.firewallApi().removeFirewallRules(ImmutableList.of(createdFirewallRule.id()));
 
       assertTrue(result);
    }
 
-   @Test
    @AfterClass(alwaysRun = true)
    public void testDeleteFirewall() {
-      boolean result = api.firewallApi().deleteFirewall(firewallId);
+      boolean result = api.firewallApi().deleteFirewall(ImmutableList.of(createdFirewall.id()));
 
       assertTrue(result);
    }

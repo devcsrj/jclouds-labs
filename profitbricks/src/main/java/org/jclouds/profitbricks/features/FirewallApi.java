@@ -17,14 +17,20 @@
 package org.jclouds.profitbricks.features;
 
 import java.util.List;
+
 import javax.inject.Named;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+
 import org.jclouds.Fallbacks;
 import org.jclouds.http.filters.BasicAuthentication;
 import org.jclouds.profitbricks.binder.firewall.AddFirewallRuleToNicRequestBinder;
+import org.jclouds.profitbricks.binder.firewall.FirewallBinder.ActivateFirewallRequestBinder;
+import org.jclouds.profitbricks.binder.firewall.FirewallBinder.DeactivateFirewallRequestBinder;
+import org.jclouds.profitbricks.binder.firewall.FirewallBinder.DeleteFirewallRequestBinder;
+import org.jclouds.profitbricks.binder.firewall.FirewallBinder.RemoveFirewallRuleRequestBinder;
 import org.jclouds.profitbricks.domain.Firewall;
 import org.jclouds.profitbricks.http.filters.ProfitBricksSoapMessageEnvelope;
 import org.jclouds.profitbricks.http.parser.firewall.FirewallListResponseHandler;
@@ -56,32 +62,32 @@ public interface FirewallApi {
    List<Firewall> getAllFirewalls();
 
    @POST
-   @Named("firewall:create")
+   @Named("firewall:addrule")
    @MapBinder(AddFirewallRuleToNicRequestBinder.class)
    @XMLResponseParser(FirewallResponseHandler.class)
-   Firewall addFirewallRuleToNic(@PayloadParam("firewall") Firewall.Rule.Request.CreatePayload payload);
+   Firewall addFirewallRuleToNic(@PayloadParam("firewall") Firewall.Request.AddRulePayload payload);
 
    @POST
-   @Named("firewall:remove")
-   @Payload("<ws:removeFirewallRules><firewallRuleIds>{id}</firewallRuleIds></ws:removeFirewallRules>")
+   @Named("firewall:removerule")
+   @MapBinder(RemoveFirewallRuleRequestBinder.class)
    @Fallback(Fallbacks.FalseOnNotFoundOr404.class)
-   boolean removeFirewall(@PayloadParam("id") String id);
-
-   @POST
-   @Named("firewall:activate")
-   @Payload("<ws:activateFirewalls><firewallIds>{id}</firewallIds></ws:activateFirewalls>")
-   @Fallback(Fallbacks.FalseOnNotFoundOr404.class)
-   boolean activateFirewall(@PayloadParam("id") String id);
+   boolean removeFirewallRules(@PayloadParam("ids") List<String> firewallRuleIds);
 
    @POST
    @Named("firewall:activate")
-   @Payload("<ws:deactivateFirewalls><firewallIds>{id}</firewallIds></ws:deactivateFirewalls>")
+   @MapBinder(ActivateFirewallRequestBinder.class)
    @Fallback(Fallbacks.FalseOnNotFoundOr404.class)
-   boolean deactivateFirewall(@PayloadParam("id") String id);
+   boolean activateFirewall(@PayloadParam("ids") List<String> firewallIds);
 
    @POST
    @Named("firewall:activate")
-   @Payload("<ws:deleteFirewalls><firewallIds>{id}</firewallIds></ws:deleteFirewalls>")
+   @MapBinder(DeactivateFirewallRequestBinder.class)
    @Fallback(Fallbacks.FalseOnNotFoundOr404.class)
-   boolean deleteFirewall(@PayloadParam("id") String id);
+   boolean deactivateFirewall(@PayloadParam("ids") List<String> firewallIds);
+
+   @POST
+   @Named("firewall:activate")
+   @MapBinder(DeleteFirewallRequestBinder.class)
+   @Fallback(Fallbacks.FalseOnNotFoundOr404.class)
+   boolean deleteFirewall(@PayloadParam("ids") List<String> firewallIds);
 }

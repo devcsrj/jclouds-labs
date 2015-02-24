@@ -61,7 +61,7 @@ public class FirewallResponseHandlerTest extends BaseResponseHandlerTest<Firewal
 	      .id("firewall-id")
 	      .nicId("nic-id")
 	      .state(ProvisioningState.AVAILABLE)
-	      .firewallRules(firewallRules)
+	      .rules(firewallRules)
 	      .build();
 
       assertEquals(expected, actual);

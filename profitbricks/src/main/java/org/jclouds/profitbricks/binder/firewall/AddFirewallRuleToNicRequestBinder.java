@@ -20,7 +20,7 @@ import org.jclouds.profitbricks.binder.BaseProfitBricksRequestBinder;
 import org.jclouds.profitbricks.domain.Firewall;
 import static java.lang.String.format;
 
-public class AddFirewallRuleToNicRequestBinder extends BaseProfitBricksRequestBinder<Firewall.Rule.Request.CreatePayload> {
+public class AddFirewallRuleToNicRequestBinder extends BaseProfitBricksRequestBinder<Firewall.Request.AddRulePayload> {
 
    private final StringBuilder requestBuilder;
 
@@ -30,21 +30,23 @@ public class AddFirewallRuleToNicRequestBinder extends BaseProfitBricksRequestBi
    }
 
    @Override
-   protected String createPayload(Firewall.Rule.Request.CreatePayload payload) {
+   protected String createPayload(Firewall.Request.AddRulePayload payload) {
       requestBuilder.append("<ws:addFirewallRulesToNic>")
-	      .append(format("<nicId>%s</nicId>", payload.nicId()))
-	      .append("<request>")
-	      .append(formatIfNotEmpty("<icmpCode>%s</icmpCode>", payload.icmpCode()))
-	      .append(formatIfNotEmpty("<icmpType>%s</icmpType>", payload.icmpType()))
-	      .append(formatIfNotEmpty("<name>%s</name>", payload.name()))
-	      .append(formatIfNotEmpty("<portRangeEnd>%s</portRangeEnd>", payload.portRangeEnd()))
-	      .append(formatIfNotEmpty("<portRangeStart>%s</portRangeStart>", payload.portRangeStart()))
-	      .append(formatIfNotEmpty("<protocol>%s</protocol>", payload.protocol()))
-	      .append(formatIfNotEmpty("<sourceIp>%s</sourceIp>", payload.sourceIp()))
-	      .append(formatIfNotEmpty("<sourceMac>%s</sourceMac>", payload.sourceMac()))
-	      .append(formatIfNotEmpty("<targetIp>%s</targetIp>", payload.targetIp()))
-	      .append("</request>")
-	      .append("</ws:addFirewallRulesToNic>");
+	      .append(format("<nicId>%s</nicId>", payload.nicId()));
+      for (Firewall.RuleWithIcmp rule : payload.rules())
+	 requestBuilder
+		 .append("<request>")
+		 .append(formatIfNotEmpty("<icmpCode>%s</icmpCode>", rule.icmpCode()))
+		 .append(formatIfNotEmpty("<icmpType>%s</icmpType>", rule.icmpType()))
+		 .append(formatIfNotEmpty("<name>%s</name>", rule.name()))
+		 .append(formatIfNotEmpty("<portRangeEnd>%s</portRangeEnd>", rule.portRangeEnd()))
+		 .append(formatIfNotEmpty("<portRangeStart>%s</portRangeStart>", rule.portRangeStart()))
+		 .append(formatIfNotEmpty("<protocol>%s</protocol>", rule.protocol()))
+		 .append(formatIfNotEmpty("<sourceIp>%s</sourceIp>", rule.sourceIp()))
+		 .append(formatIfNotEmpty("<sourceMac>%s</sourceMac>", rule.sourceMac()))
+		 .append(formatIfNotEmpty("<targetIp>%s</targetIp>", rule.targetIp()))
+		 .append("</request>");
+      requestBuilder.append("</ws:addFirewallRulesToNic>");
       return requestBuilder.toString();
    }
 

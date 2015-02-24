@@ -31,17 +31,19 @@ public class AddFirewallRuleToNicRequestBinderTest {
    public void testCreatePayload() {
       AddFirewallRuleToNicRequestBinder binder = new AddFirewallRuleToNicRequestBinder();
 
-      Firewall.Rule.Request.CreatePayload payload = Firewall.Rule.creatingBuilder()
-	      .nicid("nic-id")
-	      .icmpCode("icmp-code")
-	      .icmpType("icmp-type")
-	      .name("name")
-	      .portRangeEnd("port-range-end")
-	      .portRangeStart("port-range-start")
-	      .protocol(Protocol.TCP)
-	      .sourceIp("source-ip")
-	      .sourceMac("source-mac")
-	      .targetIp("target-ip")
+      Firewall.Request.AddRulePayload payload = Firewall.Request.ruleAddingBuilder()
+	      .nicId("nic-id")
+	      .newRule()
+	       .icmpCode("icmp-code")
+	       .icmpType("icmp-type")
+	       .name("name")
+	       .portRangeEnd("port-range-end")
+	       .portRangeStart("port-range-start")
+	       .protocol(Protocol.TCP)
+	       .sourceIp("source-ip")
+	       .sourceMac("source-mac")
+	       .targetIp("target-ip")
+	      .endRule()
 	      .build();
 
       String actual = binder.createPayload(payload);

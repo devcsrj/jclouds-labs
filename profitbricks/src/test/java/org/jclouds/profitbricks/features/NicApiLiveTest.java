@@ -52,7 +52,13 @@ public class NicApiLiveTest extends BaseProfitBricksLiveTest {
       List<Server> servers = api.serverApi().getAllServers();
       assertFalse(servers.isEmpty(), "Must atleast have 1 server available for NIC testing.");
 
-      this.server = Iterables.getFirst(servers, null);
+      this.server = Iterables.tryFind(servers, new Predicate<Server>() {
+
+	 @Override
+	 public boolean apply(Server input) {
+	    return input.state() == ProvisioningState.AVAILABLE;
+	 }
+      }).orNull();
 
       this.waitUntilAvailable = Predicates2.retry(
 	      new ProvisioningStatusPollingPredicate(api, ProvisioningStatusAware.NIC, ProvisioningState.AVAILABLE),
