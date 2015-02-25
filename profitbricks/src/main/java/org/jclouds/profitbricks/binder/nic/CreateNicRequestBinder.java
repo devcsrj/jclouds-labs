@@ -22,25 +22,25 @@ import org.jclouds.profitbricks.domain.Nic;
 
 public class CreateNicRequestBinder extends BaseProfitBricksRequestBinder<Nic.Request.CreatePayload> {
 
-    final StringBuilder requestBuilder;
+   private final StringBuilder requestBuilder;
 
-    CreateNicRequestBinder() {
-        super("nic");
-        this.requestBuilder = new StringBuilder(128 * 2);
-    }
+   CreateNicRequestBinder() {
+      super("nic");
+      this.requestBuilder = new StringBuilder(128 * 2);
+   }
 
-    @Override
-    protected String createPayload(Nic.Request.CreatePayload payload) {
-        requestBuilder.append("<ws:createNic>")
-                .append("<request>")
-                .append(formatIfNotEmpty("<ip>%s</ip>", payload.ip()))
-                .append(formatIfNotEmpty("<nicName>%s</nicName>", payload.name()))
-                .append(formatIfNotEmpty("<dhcpActive>%s</dhcpActive>", payload.dhcpActive()))
-                .append(format("<serverId>%s</serverId>", payload.serverId()))
-                .append(format("<lanId>%s</lanId>", payload.lanId()))
-                .append("</request>")
-                .append("</ws:createNic>");
-        return requestBuilder.toString();
+   @Override
+   protected String createPayload(Nic.Request.CreatePayload payload) {
+      requestBuilder.append("<ws:createNic>")
+	      .append("<request>")
+	      .append(formatIfNotEmpty("<ip>%s</ip>", payload.ip()))
+	      .append(formatIfNotEmpty("<nicName>%s</nicName>", payload.name()))
+	      .append(formatIfNotEmpty("<dhcpActive>%s</dhcpActive>", payload.dhcpActive()))
+	      .append(format("<serverId>%s</serverId>", payload.serverId()))
+	      .append(format("<lanId>%s</lanId>", payload.lanId()))
+	      .append("</request>")
+	      .append("</ws:createNic>");
+      return requestBuilder.toString();
 
-    }
+   }
 }

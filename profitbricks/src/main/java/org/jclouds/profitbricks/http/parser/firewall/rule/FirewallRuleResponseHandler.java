@@ -14,30 +14,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.profitbricks.http.parser.firewallrule;
+package org.jclouds.profitbricks.http.parser.firewall.rule;
 
-import org.jclouds.profitbricks.domain.FirewallRule;
+import org.jclouds.profitbricks.domain.Firewall;
 import org.xml.sax.SAXException;
 
-public class FirewallRuleResponseHandler extends BaseFirewallRuleResponseHandler<FirewallRule> {
+public class FirewallRuleResponseHandler extends BaseFirewallRuleResponseHandler<Firewall.Rule> {
 
-    private boolean done = false;
+   private boolean done = false;
 
-    @Override
-    public void endElement(String uri, String localName, String qName) throws SAXException {
-        if (done) {
-            return;
-        }
-        setPropertyOnEndTag(qName);
-        if ("return".equals(qName)) {
-            done = true;
-        }
-        clearTextBuffer();
-    }
+   @Override
+   public void endElement(String uri, String localName, String qName) throws SAXException {
+      if (done)
+	 return;
+      setPropertyOnEndTag(qName);
+      if ("return".equals(qName))
+	 done = true;
+      clearTextBuffer();
+   }
 
-    @Override
-    public FirewallRule getResult() {
-        return builder.build();
-    }
+   @Override
+   public Firewall.Rule getResult() {
+      return builder.build();
+   }
 
 }

@@ -14,17 +14,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.profitbricks.domain;
+package org.jclouds.profitbricks.domain.internal;
 
-public enum Protocol {
+import org.jclouds.javax.annotation.Nullable;
+import org.jclouds.profitbricks.domain.Firewall;
 
-    TCP, UDP, ICMP, ANY, UNRECOGNIZED;
+/**
+ *
+ * @author Reijhanniel Jearl Campos <rj.campos@toro.io>
+ */
+public interface FirewallRuleCommonProperties {
 
-    public static Protocol fromValue(String value) {
-        try {
-            return valueOf(value);
-        } catch (IllegalArgumentException e) {
-            return UNRECOGNIZED;
-        }
-    }
+   @Nullable
+   public abstract String name();
+
+   @Nullable
+   public abstract Integer portRangeEnd();
+
+   @Nullable
+   public abstract Integer portRangeStart();
+
+   @Nullable
+   public abstract Firewall.Protocol protocol();
+
+   @Nullable
+   public abstract String sourceIp();
+
+   @Nullable
+   public abstract String sourceMac();
+
+   @Nullable
+   public abstract String targetIp();
 }

@@ -16,188 +16,360 @@
  */
 package org.jclouds.profitbricks.domain;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.google.auto.value.AutoValue;
+
 import java.util.List;
+import java.util.regex.Pattern;
+
 import org.jclouds.javax.annotation.Nullable;
+import org.jclouds.profitbricks.domain.internal.FirewallRuleCommonProperties;
+
+import com.google.common.collect.ImmutableList;
+
+import autovalue.shaded.com.google.common.common.collect.Lists;
 
 @AutoValue
 public abstract class Firewall {
 
-    public abstract String id();
+   public enum Protocol {
 
-    @Nullable
-    public abstract String nicId();
+      TCP, UDP, ICMP, ANY, UNRECOGNIZED;
 
-    public abstract boolean active();
+      public static Protocol fromValue(String value) {
+	 try {
+	    return valueOf(value);
+	 } catch (IllegalArgumentException e) {
+	    return UNRECOGNIZED;
+	 }
+      }
+   }
 
-    @Nullable
-    public abstract ProvisioningState state();
+   public abstract String id();
 
-    @Nullable
-    public abstract List<FirewallRule> firewallRules();
+   @Nullable
+   public abstract String nicId();
 
-    public static Firewall create(String id, String nicId, boolean active, ProvisioningState provisioningState, List<FirewallRule> firewallRules) {
-        return new AutoValue_Firewall(id, nicId, active, provisioningState, firewallRules);
-    }
+   public abstract boolean active();
 
-    public static Builder builder() {
-        return new Builder();
-    }
+   @Nullable
+   public abstract ProvisioningState state();
 
-    public static class Builder {
+   @Nullable
+   public abstract List<Rule> rules();
 
-        private String id;
-        private String nicId;
-        private boolean active;
+   public static Firewall create(String id, String nicId, boolean active, ProvisioningState provisioningState,
+	   List<Rule> rules) {
+      return new AutoValue_Firewall(id, nicId, active, provisioningState,
+	      rules != null ? ImmutableList.copyOf(rules) : ImmutableList.<Rule>of());
+   }
 
-        private ProvisioningState state;
-        private List<FirewallRule> firewallRules;
+   public static Builder builder() {
+      return new Builder();
+   }
 
-        public Builder id(String id) {
-            this.id = id;
-            return this;
-        }
+   public static final class Request {
 
-        public Builder nicId(String nicId) {
-            this.nicId = nicId;
-            return this;
-        }
+      public static AddRulePayload.Builder ruleAddingBuilder() {
+	 return new AddRulePayload.Builder();
+      }
 
-        public Builder active(boolean active) {
-            this.active = active;
-            return this;
-        }
+      @AutoValue
+      public static abstract class AddRulePayload {
 
-        public Builder state(ProvisioningState state) {
-            this.state = state;
-            return this;
-        }
+	 public abstract String nicId();
 
-        public Builder firewallRules(List<FirewallRule> firewallRules) {
-            this.firewallRules = firewallRules;
-            return this;
-        }
+	 public abstract List<RuleWithIcmp> rules();
 
-        private Builder fromFirewall(Firewall in) {
-            return this.id(in.id()).nicId(in.nicId()).active(in.active()).state(in.state()).firewallRules(in.firewallRules());
-        }
+	 public static AddRulePayload create(String nicId, List<RuleWithIcmp> rules) {
+	    return new AutoValue_Firewall_Request_AddRulePayload(nicId, rules);
+	 }
 
-        public Firewall build() {
-            return Firewall.create(id, nicId, active, state, firewallRules);
-        }
-    }
+	 public static class Builder {
 
-    public static class Request {
+	    private String nicId;
+	    private List<RuleWithIcmp> rules = Lists.newArrayList();
 
-        public static AddFirewallRulePayload.Builder addFirewallRuleBuilder() {
-            return new AddFirewallRulePayload.Builder();
-        }
+	    public Builder nicId(String nicId) {
+	       this.nicId = nicId;
+	       return this;
+	    }
 
-        @AutoValue
-        public abstract static class AddFirewallRulePayload {
+	    public Builder rules(List<RuleWithIcmp> rules) {
+	       this.rules = rules;
+	       return this;
+	    }
 
-            public abstract String nicId();
+	    public RuleWithIcmp.Builder newRule() {
+	       return new RuleWithIcmp.Builder(this);
+	    }
 
-            @Nullable
-            public abstract String icmpCode();
+	    public Builder addRule(RuleWithIcmp rule) {
+	       this.rules.add(rule);
+	       return this;
+	    }
 
-            @Nullable
-            public abstract String icmpType();
+	    public AddRulePayload build() {
+	       return AddRulePayload.create(nicId, rules);
+	    }
+	 }
+      }
+   }
 
-            @Nullable
-            public abstract String name();
+   public static class Builder {
 
-            @Nullable
-            public abstract String portRangeEnd();
+      private String id;
+      private String nicId;
+      private boolean active;
 
-            @Nullable
-            public abstract String portRangeStart();
+      private ProvisioningState state;
+      private List<Rule> rules;
 
-            @Nullable
-            public abstract Protocol protocol();
+      public Builder id(String id) {
+	 this.id = id;
+	 return this;
+      }
 
-            @Nullable
-            public abstract String sourceIp();
+      public Builder nicId(String nicId) {
+	 this.nicId = nicId;
+	 return this;
+      }
 
-            @Nullable
-            public abstract String sourceMac();
+      public Builder active(boolean active) {
+	 this.active = active;
+	 return this;
+      }
 
-            @Nullable
-            public abstract String targetIp();
+      public Builder state(ProvisioningState state) {
+	 this.state = state;
+	 return this;
+      }
 
-            public static AddFirewallRulePayload create(String nicid, String icmpCode, String icmpType, String name, String portRangeEnd, String portRangeStart,
-                    Protocol protocol, String sourceIp, String sourceMAc, String targetIp) {
-                return new AutoValue_Firewall_Request_AddFirewallRulePayload(nicid, icmpCode, icmpType, name, portRangeEnd, portRangeStart, protocol, sourceIp, sourceMAc, targetIp);
-            }
+      public Builder rules(List<Rule> firewallRules) {
+	 this.rules = firewallRules;
+	 return this;
+      }
 
-            public static class Builder {
+      public Builder fromFirewall(Firewall in) {
+	 return this.id(in.id()).nicId(in.nicId()).active(in.active()).state(in.state())
+		 .rules(in.rules());
+      }
 
-                private String nicId;
-                private String icmpCode;
-                private String icmpType;
-                private String name;
-                private String portRangeEnd;
-                private String portRangeStart;
-                private Protocol protocol;
-                private String sourceIp;
-                private String sourceMac;
-                private String targetIp;
+      public Firewall build() {
+	 return Firewall.create(id, nicId, active, state, rules);
+      }
+   }
 
-                public Builder nicid(String nicId) {
-                    this.nicId = nicId;
-                    return this;
-                }
+   public static abstract class RuleBuilder<B extends RuleBuilder, D extends FirewallRuleCommonProperties> {
 
-                public Builder icmpCode(String icmpCode) {
-                    this.icmpCode = icmpCode;
-                    return this;
-                }
+      private static final String IP_ADDR_REGEX
+	      = "^([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\."
+	      + "([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\."
+	      + "([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\."
+	      + "([01]?\\d\\d?|2[0-4]\\d|25[0-5])$";
+      private static final String MAC_ADDR_REGEX = "^([0-9a-f]{2}[:]){5}([0-9a-f]{2})$";
 
-                public Builder icmpType(String icmpType) {
-                    this.icmpType = icmpType;
-                    return this;
-                }
+      private static final Pattern IP_ADDR_PATTERN = Pattern.compile(IP_ADDR_REGEX);
+      private static final Pattern MAC_ADDR_PATTERN = Pattern.compile(MAC_ADDR_REGEX);
 
-                public Builder name(String name) {
-                    this.name = name;
-                    return this;
-                }
+      protected String name;
+      protected Integer portRangeEnd;
+      protected Integer portRangeStart;
+      protected Protocol protocol;
+      protected String sourceIp;
+      protected String sourceMac;
+      protected String targetIp;
 
-                public Builder portRangeEnd(String portRangeEnd) {
-                    this.portRangeEnd = portRangeEnd;
-                    return this;
-                }
+      public B name(String name) {
+	 this.name = name;
+	 return self();
+      }
 
-                public Builder portRangeStart(String portRangeStart) {
-                    this.portRangeStart = portRangeStart;
-                    return this;
-                }
+      public B portRangeEnd(Integer portRangeEnd) {
+	 this.portRangeEnd = portRangeEnd;
+	 return self();
+      }
 
-                public Builder protocol(Protocol protocol) {
-                    this.protocol = protocol;
-                    return this;
-                }
+      public B portRangeStart(Integer portRangeStart) {
+	 this.portRangeStart = portRangeStart;
+	 return self();
+      }
 
-                public Builder sourceIp(String sourceIp) {
-                    this.sourceIp = sourceIp;
-                    return this;
-                }
+      public B protocol(Protocol protocol) {
+	 this.protocol = protocol;
+	 return self();
+      }
 
-                public Builder sourceMac(String sourceMac) {
-                    this.sourceMac = sourceMac;
-                    return this;
-                }
+      public B sourceIp(String sourceIp) {
+	 this.sourceIp = sourceIp;
+	 return self();
+      }
 
-                public Builder targetIp(String targetIp) {
-                    this.targetIp = targetIp;
-                    return this;
-                }
+      public B sourceMac(String sourceMac) {
+	 this.sourceMac = sourceMac;
+	 return self();
+      }
 
-                public AddFirewallRulePayload build() {
-                    return AddFirewallRulePayload.create(nicId, icmpCode, icmpType, name, portRangeEnd, portRangeStart, protocol, sourceIp, sourceMac, targetIp);
-                }
-            }
-        }
+      public B targetIp(String targetIp) {
+	 this.targetIp = targetIp;
+	 return self();
+      }
 
-    }
+      public abstract B self();
+
+      public abstract D build();
+
+      protected void checkPortRange() {
+	 checkArgument((portRangeEnd == null && portRangeStart == null)
+		 || (portRangeEnd != null && portRangeStart != null), "Port range must be both present or null");
+	 if (portRangeEnd != null) {
+	    checkArgument(protocol == Protocol.TCP || protocol == Protocol.UDP, "Port range can only be set for TCP or UDP");
+	    checkArgument(portRangeEnd > portRangeStart, "portRangeEnd must be greater than portRangeStart");
+	    checkArgument(portRangeEnd >= 1 && portRangeEnd <= 65534, "Port range end must be 1 to 65534");
+	    checkArgument(portRangeStart >= 1 && portRangeStart <= 65534, "Port range start must be 1 to 65534");
+	 }
+      }
+
+      protected void checkMac() {
+	 if (sourceMac != null)
+	    checkArgument(MAC_ADDR_PATTERN.matcher(sourceMac).matches(), "Source MAC must match pattern 'aa:bb:cc:dd:ee:ff'");
+      }
+
+      protected void checkIp() {
+	 if (sourceIp != null)
+	    checkArgument(IP_ADDR_PATTERN.matcher(sourceIp).matches(), "IP is invalid");
+	 if (targetIp != null)
+	    checkArgument(IP_ADDR_PATTERN.matcher(targetIp).matches(), "IP is invalid");
+      }
+
+      protected void checkFields() {
+	 checkMac();
+	 checkPortRange();
+	 checkIp();
+      }
+
+   }
+
+   @AutoValue
+   public static abstract class Rule implements FirewallRuleCommonProperties {
+
+      @Nullable
+      public abstract String id();
+
+      public static Rule create(String id, String name, Integer portRangeEnd, Integer portRangeStart,
+	      Protocol protocol, String sourceIp, String sourceMac, String targetIp) {
+	 return new AutoValue_Firewall_Rule(name, portRangeEnd, portRangeStart, protocol, sourceIp, sourceMac,
+		 targetIp, id);
+      }
+
+      public static Builder builder() {
+	 return new Builder();
+      }
+
+      public static class Builder extends RuleBuilder<Builder, Rule> {
+
+	 private String id;
+
+	 public Builder id(String id) {
+	    this.id = id;
+	    return self();
+	 }
+
+	 @Override
+	 public Builder self() {
+	    return this;
+	 }
+
+	 @Override
+	 public Rule build() {
+	    checkFields();
+	    return Rule.create(id, name, portRangeEnd, portRangeStart, protocol, sourceIp, sourceMac, targetIp);
+	 }
+
+      }
+   }
+
+   @AutoValue
+   public static abstract class RuleWithIcmp implements FirewallRuleCommonProperties {
+
+      @Nullable
+      public abstract Integer icmpCode();
+
+      @Nullable
+      public abstract Integer icmpType();
+
+      public static RuleWithIcmp create(Integer icmpCode, Integer icmpType, String name, Integer portRangeEnd,
+	      Integer portRangeStart, Protocol protocol, String sourceIp, String sourceMac, String targetIp) {
+	 return new AutoValue_Firewall_RuleWithIcmp(name, portRangeEnd, portRangeStart, protocol, sourceIp, sourceMac,
+		 targetIp, icmpCode, icmpType);
+      }
+
+      public static Builder builder() {
+	 return new Builder();
+      }
+
+      public static class Builder extends RuleBuilder<Builder, RuleWithIcmp> {
+
+	 private Request.AddRulePayload.Builder parentBuilder;
+
+	 private Integer icmpCode;
+	 private Integer icmpType;
+
+	 public Builder() {
+
+	 }
+
+	 private Builder(Request.AddRulePayload.Builder parentBuilder) {
+	    this.parentBuilder = parentBuilder;
+	 }
+
+	 public Builder nextRule() {
+	    this.parentBuilder.addRule(build());
+	    return new Builder(parentBuilder);
+	 }
+
+	 public Request.AddRulePayload.Builder endRule() {
+	    this.parentBuilder.addRule(build());
+	    return parentBuilder;
+	 }
+
+	 public Builder icmpCode(Integer icmpCode) {
+	    this.icmpCode = icmpCode;
+	    return this;
+	 }
+
+	 public Builder icmpType(Integer icmpType) {
+	    this.icmpType = icmpType;
+	    return this;
+	 }
+
+	 @Override
+	 public Builder self() {
+	    return this;
+	 }
+
+	 @Override
+	 public RuleWithIcmp build() {
+	    checkFields();
+	    return RuleWithIcmp.create(icmpCode, icmpType, name, portRangeEnd, portRangeStart, protocol,
+		    sourceIp, sourceMac, targetIp);
+	 }
+
+	 @Override
+	 protected void checkFields() {
+	    super.checkFields();
+	    checkIcmp();
+	 }
+
+	 private void checkIcmp() {
+	    if (icmpCode != null)
+	       checkArgument(icmpCode >= 1 && icmpCode <= 254, "ICMP code must be 1 to 254");
+	    if (icmpType != null)
+	       checkArgument(icmpType >= 1 && icmpType <= 254, "ICMP type must be 1 to 254");
+	    if (icmpCode != null || icmpType != null)
+	       checkArgument(protocol == Protocol.ICMP, "ICMP code and types can only be set for ICMP protocol");
+	 }
+      }
+   }
 }

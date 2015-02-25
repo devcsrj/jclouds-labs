@@ -24,30 +24,30 @@ import org.testng.annotations.Test;
 @Test(groups = "unit", testName = "CreateNicRequestBinderTest")
 public class CreateNicRequestBinderTest {
 
-    @Test
-    public void testCreatePayload() {
-        CreateNicRequestBinder binder = new CreateNicRequestBinder();
+   @Test
+   public void testCreatePayload() {
+      CreateNicRequestBinder binder = new CreateNicRequestBinder();
 
-        Nic.Request.CreatePayload payload = Nic.Request.creatingBuilder()
-                .ip("ip")
-                .name("nic-name")
-                .dhcpActive(true)
-                .serverId("server-id")
-                .lanId(1)
-                .build();
+      Nic.Request.CreatePayload payload = Nic.Request.creatingBuilder()
+	      .ip("ip")
+	      .name("nic-name")
+	      .dhcpActive(true)
+	      .serverId("server-id")
+	      .lanId(1)
+	      .build();
 
-        String actual = binder.createPayload(payload);
-        assertNotNull(actual, "Binder returned null payload");
-        assertEquals(expectedPayload, actual);
-    }
+      String actual = binder.createPayload(payload);
+      assertNotNull(actual, "Binder returned null payload");
+      assertEquals(expectedPayload, actual);
+   }
 
-    private final String expectedPayload = ("<ws:createNic>\n"
-            + "            <request>\n"
-            + "                <ip>ip</ip>\n"
-            + "                <nicName>nic-name</nicName>\n"
-            + "                <dhcpActive>true</dhcpActive>\n"
-            + "                <serverId>server-id</serverId>\n"
-            + "                <lanId>1</lanId>\n"
-            + "            </request>\n"
-            + "        </ws:createNic>").replaceAll("\\s+", "");
+   private final String expectedPayload = ("<ws:createNic>\n"
+	   + "            <request>\n"
+	   + "                <ip>ip</ip>\n"
+	   + "                <nicName>nic-name</nicName>\n"
+	   + "                <dhcpActive>true</dhcpActive>\n"
+	   + "                <serverId>server-id</serverId>\n"
+	   + "                <lanId>1</lanId>\n"
+	   + "            </request>\n"
+	   + "        </ws:createNic>").replaceAll("\\s+", "");
 }

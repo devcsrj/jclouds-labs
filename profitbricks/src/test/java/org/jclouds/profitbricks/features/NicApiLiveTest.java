@@ -16,26 +16,35 @@
  */
 package org.jclouds.profitbricks.features;
 
-import com.google.common.base.Predicate;
-import com.google.common.collect.Iterables;
-import java.util.List;
-import org.jclouds.profitbricks.BaseProfitBricksLiveTest;
-import org.jclouds.profitbricks.domain.Nic;
-import org.jclouds.profitbricks.domain.Server;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
+
+import com.google.common.collect.Iterables;
+
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+import org.jclouds.profitbricks.BaseProfitBricksLiveTest;
+import org.jclouds.profitbricks.compute.internal.ProvisioningStatusAware;
+import org.jclouds.profitbricks.compute.internal.ProvisioningStatusPollingPredicate;
+import org.jclouds.profitbricks.domain.Nic;
+import org.jclouds.profitbricks.domain.ProvisioningState;
+import org.jclouds.profitbricks.domain.Server;
+import org.jclouds.util.Predicates2;
+
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.Test;
+
+import com.google.common.base.Predicate;
 
 @Test(groups = "live", testName = "NicApiLiveTest", singleThreaded = true)
 public class NicApiLiveTest extends BaseProfitBricksLiveTest {
 
-   protected Predicate<String> nicWaitingPredicate;
-   String nicId;
-   String dataCenterId;
-   Server server;
+   private Predicate<String> waitUntilAvailable;
+   private Server server;
+   private Nic createdNic;
 
    @Override
    protected void initialize() {
@@ -43,21 +52,17 @@ public class NicApiLiveTest extends BaseProfitBricksLiveTest {
       List<Server> servers = api.serverApi().getAllServers();
       assertFalse(servers.isEmpty(), "Must atleast have 1 server available for NIC testing.");
 
-      this.server = Iterables.getFirst(servers, null);
-   }
+      this.server = Iterables.tryFind(servers, new Predicate<Server>() {
 
-   @Test
-   public void testGetAllNics() {
-      List<Nic> nics = api.nicApi().getAllNics();
+	 @Override
+	 public boolean apply(Server input) {
+	    return input.state() == ProvisioningState.AVAILABLE;
+	 }
+      }).orNull();
 
-      assertNotNull(nics);
-   }
-
-   @Test
-   public void testGetNic() {
-      Nic nic = api.nicApi().getNic(nicId);
-
-      assertNotNull(nic);
+      this.waitUntilAvailable = Predicates2.retry(
+	      new ProvisioningStatusPollingPredicate(api, ProvisioningStatusAware.NIC, ProvisioningState.AVAILABLE),
+	      2l * 60l, 2l, TimeUnit.SECONDS);
    }
 
    @Test
@@ -70,47 +75,62 @@ public class NicApiLiveTest extends BaseProfitBricksLiveTest {
 	      .build();
 
       Nic nic = api.nicApi().createNic(payload);
+      assertNotNull(nic);
 
-      assertNotNull(nic.id());
-
-      dataCenterId = nic.dataCenterId();
-      dcWaitingPredicate.apply(dataCenterId);
-      nicId = nic.id();
+      waitUntilAvailable.apply(nic.id());
+      this.createdNic = nic;
    }
 
-   @Test
+   @Test(dependsOnMethods = "testCreateNic")
+   public void testGetAllNics() {
+      List<Nic> nics = api.nicApi().getAllNics();
+
+      assertNotNull(nics);
+   }
+
+   @Test(dependsOnMethods = "testCreateNic")
+   public void testGetNic() {
+      Nic nic = api.nicApi().getNic(createdNic.id());
+
+      assertNotNull(nic);
+      assertEquals(nic.id(), createdNic.id());
+   }
+
+   @Test(dependsOnMethods = "testCreateNic")
    public void testUpdateNic() {
-      Nic.Request.UpdatePayload toUpdate = Nic.Request.updatingBuilder()
+      Nic.Request.UpdatePayload payload = Nic.Request.updatingBuilder()
 	      .name("name nr2")
-	      .id(nicId)
+	      .id(createdNic.id())
 	      .build();
 
-      api.nicApi().updateNic(toUpdate);
-      
-      dcWaitingPredicate.apply(dataCenterId);
-      
-      Nic updatedNic = api.nicApi().getNic(toUpdate.id());
+      Nic updatedNic = api.nicApi().updateNic(payload);
+      assertNotNull(updatedNic);
+      waitUntilAvailable.apply(payload.id());
 
-      assertEquals(updatedNic.name(), toUpdate.name());
+      updatedNic = api.nicApi().getNic(payload.id());
+
+      assertEquals(updatedNic.name(), payload.name());
    }
 
-   @Test
-   void testSetInternetAccess() {
+   @Test(dependsOnMethods = "testUpdateNic")
+   public void testSetInternetAccess() {
 
-      Nic.Request.SetInternetAccessPayload toUpdate = Nic.Request.setInternetAccessBuilder()
-	      .dataCenterId(dataCenterId)
+      Nic.Request.SetInternetAccessPayload payload = Nic.Request.setInternetAccessBuilder()
+	      .dataCenterId(createdNic.dataCenterId())
 	      .lanId(1)
 	      .internetAccess(true)
 	      .build();
 
-      Nic result = api.nicApi().setInternetAccess(toUpdate);
-
+      Nic result = api.nicApi().setInternetAccess(payload);
       assertNotNull(result);
    }
 
    @AfterClass(alwaysRun = true)
-   void testDeleteNic() {
-      boolean result = api.nicApi().deleteNic(nicId);
-      assertTrue(result);
+   public void testDeleteNic() {
+      if (createdNic != null) {
+	 boolean result = api.nicApi().deleteNic(createdNic.id());
+
+	 assertTrue(result, "Created test NIC was not deleted.");
+      }
    }
 }

@@ -17,52 +17,55 @@
 package org.jclouds.profitbricks.http.parser.firewall;
 
 import com.google.common.collect.Lists;
+
 import java.util.List;
+
 import org.jclouds.http.functions.ParseSax;
 import org.jclouds.profitbricks.domain.Firewall;
-import org.jclouds.profitbricks.domain.FirewallRule;
-import org.jclouds.profitbricks.domain.Protocol;
 import org.jclouds.profitbricks.domain.ProvisioningState;
 import org.jclouds.profitbricks.http.parser.BaseResponseHandlerTest;
+
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
+
+import org.jclouds.profitbricks.domain.Firewall.Protocol;
 import org.testng.annotations.Test;
 
 @Test(groups = "unit", testName = "FirewallResponseHandlerTest")
 public class FirewallResponseHandlerTest extends BaseResponseHandlerTest<Firewall> {
 
-    @Override
-    protected ParseSax<Firewall> createParser() {
-        return factory.create(injector.getInstance(FirewallResponseHandler.class));
-    }
+   @Override
+   protected ParseSax<Firewall> createParser() {
+      return factory.create(injector.getInstance(FirewallResponseHandler.class));
+   }
 
-    @Test
-    public void testParseResponseFromGetFirewall() {
-        ParseSax<Firewall> parser = createParser();
-        Firewall actual = parser.parse(payloadFromResource("/firewall/firewall.xml"));
-        assertNotNull(actual, "Parsed content returned null");
-        List<FirewallRule> firewallRules = Lists.newArrayList();
-        firewallRules.add(FirewallRule.builder()
-                .id("firewall-rule-id")
-                .name("name")
-                .portRangeEnd("port-range-end")
-                .portRangeStart("port-range-start")
-                .protocol(Protocol.TCP)
-                .sourceIp("source-ip")
-                .sourceMac("source-mac")
-                .targetIp("target-ip")
-                .build());
+   @Test
+   public void testParseResponseFromGetFirewall() {
+      ParseSax<Firewall> parser = createParser();
+      Firewall actual = parser.parse(payloadFromResource("/firewall/firewall.xml"));
+      assertNotNull(actual, "Parsed content returned null");
+      List<Firewall.Rule> firewallRules = Lists.newArrayList();
+      firewallRules.add(Firewall.Rule.builder()
+	      .id("firewall-rule-id")
+	      .name("name")
+	      .portRangeEnd(45678)
+	      .portRangeStart(12345)
+	      .protocol(Protocol.TCP)
+	      .sourceIp("192.168.0.1")
+	      .sourceMac("aa:bb:cc:dd:ee:ff")
+	      .targetIp("192.168.0.2")
+	      .build());
 
-        Firewall expected = Firewall.builder()
-                .active(true)
-                .id("firewall-id")
-                .nicId("nic-id")
-                .state(ProvisioningState.AVAILABLE)
-                .firewallRules(firewallRules)
-                .build();
+      Firewall expected = Firewall.builder()
+	      .active(true)
+	      .id("firewall-id")
+	      .nicId("nic-id")
+	      .state(ProvisioningState.AVAILABLE)
+	      .rules(firewallRules)
+	      .build();
 
-        assertEquals(expected, actual);
+      assertEquals(expected, actual);
 
-    }
+   }
 
 }

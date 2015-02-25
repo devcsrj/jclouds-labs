@@ -17,48 +17,48 @@
 package org.jclouds.profitbricks.binder.firewall;
 
 import org.jclouds.profitbricks.domain.Firewall;
-import org.jclouds.profitbricks.domain.Protocol;
+
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
+
+import org.jclouds.profitbricks.domain.Firewall.Protocol;
 import org.testng.annotations.Test;
 
 @Test(groups = "unit", testName = "AddFirewallRuleToNicRequestBinderTest")
 public class AddFirewallRuleToNicRequestBinderTest {
 
-    @Test
-    public void testCreatePayload() {
-        AddFirewallRuleToNicRequestBinder binder = new AddFirewallRuleToNicRequestBinder();
+   @Test
+   public void testCreatePayload() {
+      AddFirewallRuleToNicRequestBinder binder = new AddFirewallRuleToNicRequestBinder();
 
-        Firewall.Request.AddFirewallRulePayload payload = Firewall.Request.addFirewallRuleBuilder()
-                .nicid("nic-id")
-                .icmpCode("icmp-code")
-                .icmpType("icmp-type")
-                .name("name")
-                .portRangeEnd("port-range-end")
-                .portRangeStart("port-range-start")
-                .protocol(Protocol.TCP)
-                .sourceIp("source-ip")
-                .sourceMac("source-mac")
-                .targetIp("target-ip")
-                .build();
+      Firewall.Request.AddRulePayload payload = Firewall.Request.ruleAddingBuilder()
+	      .nicId("nic-id")
+	      .newRule()
+	       .name("name")
+	       .portRangeEnd(45678)
+	       .portRangeStart(12345)
+	       .protocol(Protocol.TCP)
+	       .sourceIp("192.168.0.1")
+	       .sourceMac("aa:bb:cc:dd:ee:ff")
+	       .targetIp("192.168.0.2")
+	      .endRule()
+	      .build();
 
-        String actual = binder.createPayload(payload);
-        assertNotNull(actual, "Binder returned null payload");
-        assertEquals(expectedPayload, actual);
-    }
+      String actual = binder.createPayload(payload);
+      assertNotNull(actual, "Binder returned null payload");
+      assertEquals(expectedPayload, actual);
+   }
 
-    private final String expectedPayload = ("  <ws:addFirewallRulesToNic>\n"
-            + "        <nicId>nic-id</nicId>\n"
-            + "            <request>\n"
-            + "                <icmpCode>icmp-code</icmpCode>\n"
-            + "                <icmpType>icmp-type</icmpType>\n"
-            + "                <name>name</name>\n"
-            + "                <portRangeEnd>port-range-end</portRangeEnd>\n"
-            + "                <portRangeStart>port-range-start</portRangeStart>\n"
-            + "                <protocol>TCP</protocol>\n"
-            + "                <sourceIp>source-ip</sourceIp>\n"
-            + "                <sourceMac>source-mac</sourceMac>\n"
-            + "                <targetIp>target-ip</targetIp>\n"
-            + "            </request>\n"
-            + "        </ws:addFirewallRulesToNic>").replaceAll("\\s+", "");
+   private final String expectedPayload = ("  <ws:addFirewallRulesToNic>\n"
+	   + "        <nicId>nic-id</nicId>\n"
+	   + "            <request>\n"
+	   + "                <name>name</name>\n"
+	   + "                <portRangeEnd>45678</portRangeEnd>\n"
+	   + "                <portRangeStart>12345</portRangeStart>\n"
+	   + "                <protocol>TCP</protocol>\n"
+	   + "                <sourceIp>192.168.0.1</sourceIp>\n"
+	   + "                <sourceMac>aa:bb:cc:dd:ee:ff</sourceMac>\n"
+	   + "                <targetIp>192.168.0.2</targetIp>\n"
+	   + "            </request>\n"
+	   + "        </ws:addFirewallRulesToNic>").replaceAll("\\s+", "");
 }
