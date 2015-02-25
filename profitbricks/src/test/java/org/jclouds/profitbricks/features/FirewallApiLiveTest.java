@@ -62,12 +62,11 @@ public class FirewallApiLiveTest extends BaseProfitBricksLiveTest {
 
 	 @Override
 	 public boolean apply(Nic input) {
-	    return input.state() == ProvisioningState.AVAILABLE && input.firewalls().isEmpty();
+	    return input.state() == ProvisioningState.AVAILABLE;
 	 }
       }).orNull();
 
-      assertNotNull(nic, "No viable NIC for firewall testing was found (must be both AVAILABLE"
-	      + " and has no existing firewall");
+      assertNotNull(nic, "No available NIC for firewall testing was found.");
 
       this.waitUntilAvailable = Predicates2.retry(
 	      new ProvisioningStatusPollingPredicate(api, ProvisioningStatusAware.NIC, ProvisioningState.AVAILABLE),
@@ -110,17 +109,17 @@ public class FirewallApiLiveTest extends BaseProfitBricksLiveTest {
    }
 
    @Test(dependsOnMethods = "testAddFirewallRuleToNic")
-   void testDeactivateFirewall() {
-      boolean result = api.firewallApi().deactivateFirewall(ImmutableList.of(createdFirewall.id()));
+   public void testActivateFirewall() {
+      boolean result = api.firewallApi().activateFirewall(ImmutableList.of(createdFirewall.id()));
 
       waitUntilAvailable.apply(nic.id());
 
       assertTrue(result);
    }
 
-   @Test(dependsOnMethods = "testDeactivateFirewall")
-   public void testActivateFirewall() {
-      boolean result = api.firewallApi().activateFirewall(ImmutableList.of(createdFirewall.id()));
+   @Test(dependsOnMethods = "testActivateFirewall")
+   void testDeactivateFirewall() {
+      boolean result = api.firewallApi().deactivateFirewall(ImmutableList.of(createdFirewall.id()));
 
       waitUntilAvailable.apply(nic.id());
 
