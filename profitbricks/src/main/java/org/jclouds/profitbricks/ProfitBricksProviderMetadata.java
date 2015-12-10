@@ -18,6 +18,9 @@ package org.jclouds.profitbricks;
 
 import static org.jclouds.Constants.PROPERTY_CONNECTION_TIMEOUT;
 import static org.jclouds.Constants.PROPERTY_SO_TIMEOUT;
+import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_RUNNING;
+import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_SUSPENDED;
+import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_TERMINATED;
 import static org.jclouds.profitbricks.config.ProfitBricksComputeProperties.POLL_PERIOD;
 import static org.jclouds.profitbricks.config.ProfitBricksComputeProperties.POLL_MAX_PERIOD;
 import static org.jclouds.profitbricks.config.ProfitBricksComputeProperties.POLL_TIMEOUT;
@@ -59,6 +62,12 @@ public class ProfitBricksProviderMetadata extends BaseProviderMetadata {
 
       properties.put(PROPERTY_SO_TIMEOUT, 60000 * 5);
       properties.put(PROPERTY_CONNECTION_TIMEOUT, 60000 * 5);
+
+      // Node might still not be available even after DataCenter is done provisioning
+      // Use 5-minute timeout by default
+      properties.put(TIMEOUT_NODE_RUNNING, 5 * 60 * 1000);
+      properties.put(TIMEOUT_NODE_SUSPENDED, 5 * 60 * 1000);
+      properties.put(TIMEOUT_NODE_TERMINATED, 5 * 60 * 1000);
 
       return properties;
    }

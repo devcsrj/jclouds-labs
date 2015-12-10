@@ -36,6 +36,7 @@ import org.jclouds.compute.config.ComputeServiceAdapterContextModule;
 import org.jclouds.compute.domain.Hardware;
 import org.jclouds.compute.domain.Image;
 import org.jclouds.compute.domain.NodeMetadata;
+import org.jclouds.compute.domain.TemplateBuilder;
 import org.jclouds.compute.domain.Volume;
 import org.jclouds.domain.Location;
 import org.jclouds.functions.IdentityFunction;
@@ -49,6 +50,7 @@ import org.jclouds.profitbricks.compute.concurrent.ProvisioningManager;
 import org.jclouds.profitbricks.domain.DataCenter;
 import org.jclouds.profitbricks.domain.Server;
 import org.jclouds.profitbricks.domain.Storage;
+import org.jclouds.profitbricks.compute.ProfitBricksTemplateBuilderImpl;
 import org.jclouds.profitbricks.compute.function.DataCenterToLocation;
 import org.jclouds.profitbricks.compute.function.LocationToLocation;
 import org.jclouds.profitbricks.compute.function.ProvisionableToImage;
@@ -64,6 +66,7 @@ import com.google.inject.Provides;
 import com.google.inject.TypeLiteral;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 
+
 public class ProfitBricksComputeServiceContextModule extends
         ComputeServiceAdapterContextModule<Server, Hardware, Provisionable, DataCenter> {
 
@@ -78,6 +81,8 @@ public class ProfitBricksComputeServiceContextModule extends
 
       bind(ImplicitLocationSupplier.class).to(OnlyLocationOrFirstZone.class).in(Singleton.class);
 
+      bind(new TypeLiteral<TemplateBuilder>(){}).to(ProfitBricksTemplateBuilderImpl.class);
+      
       bind(new TypeLiteral<ComputeServiceAdapter<Server, Hardware, Provisionable, DataCenter>>() {
       }).to(ProfitBricksComputeServiceAdapter.class);
 
