@@ -20,9 +20,9 @@ import static org.jclouds.Constants.PROPERTY_SO_TIMEOUT;
 import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_RUNNING;
 import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_SUSPENDED;
 import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_TERMINATED;
-import static org.jclouds.profitbricks.config.ProfitBricksComputeProperties.POLL_PERIOD;
+import static org.jclouds.profitbricks.config.ProfitBricksComputeProperties.POLL_INITIAL_PERIOD;
 import static org.jclouds.profitbricks.config.ProfitBricksComputeProperties.POLL_MAX_PERIOD;
-import static org.jclouds.profitbricks.config.ProfitBricksComputeProperties.POLL_TIMEOUT;
+import static org.jclouds.profitbricks.config.ProfitBricksComputeProperties.TIMEOUT_DATACENTER_AVAILABLE;
 
 import com.google.auto.service.AutoService;
 
@@ -54,18 +54,17 @@ public class ProfitBricksProviderMetadata extends BaseProviderMetadata {
 
    public static Properties defaultProperties() {
       Properties properties = ProfitBricksApiMetadata.defaultProperties();
-      long defaultTimeout = 60l * 60l; // 1 hour
-      properties.put(POLL_TIMEOUT, defaultTimeout);
-      properties.put(POLL_PERIOD, 2l);
-      properties.put(POLL_MAX_PERIOD, 2l * 10l);
+      properties.put(TIMEOUT_DATACENTER_AVAILABLE, 30L * 60L); // 30 minutes
+      properties.put(POLL_INITIAL_PERIOD, 5L);
+      properties.put(POLL_MAX_PERIOD, 60L);
 
       properties.put(PROPERTY_SO_TIMEOUT, 10 * 60 * 1000);
 
       // Node might still not be available even after DataCenter is done provisioning
-      // Use 10-minute timeout by default
-      properties.put(TIMEOUT_NODE_RUNNING, 10 * 60 * 1000);
-      properties.put(TIMEOUT_NODE_SUSPENDED, 10 * 60 * 1000);
-      properties.put(TIMEOUT_NODE_TERMINATED, 10 * 60 * 1000);
+      // Use 5-minute timeout by default
+      properties.put(TIMEOUT_NODE_RUNNING, 5 * 60 * 1000);
+      properties.put(TIMEOUT_NODE_SUSPENDED, 5 * 60 * 1000);
+      properties.put(TIMEOUT_NODE_TERMINATED, 5 * 60 * 1000);
 
       return properties;
    }

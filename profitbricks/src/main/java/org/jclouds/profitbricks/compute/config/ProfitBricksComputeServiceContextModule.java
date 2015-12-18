@@ -19,11 +19,11 @@ package org.jclouds.profitbricks.compute.config;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_RUNNING;
 import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_SUSPENDED;
-import static org.jclouds.profitbricks.config.ProfitBricksComputeProperties.POLL_PERIOD;
+import static org.jclouds.profitbricks.config.ProfitBricksComputeProperties.POLL_INITIAL_PERIOD;
 import static org.jclouds.profitbricks.config.ProfitBricksComputeProperties.POLL_MAX_PERIOD;
 import static org.jclouds.profitbricks.config.ProfitBricksComputeProperties.POLL_PREDICATE_DATACENTER;
 import static org.jclouds.profitbricks.config.ProfitBricksComputeProperties.POLL_PREDICATE_SNAPSHOT;
-import static org.jclouds.profitbricks.config.ProfitBricksComputeProperties.POLL_TIMEOUT;
+import static org.jclouds.profitbricks.config.ProfitBricksComputeProperties.TIMEOUT_DATACENTER_AVAILABLE;
 import static org.jclouds.util.Predicates2.retry;
 
 import java.util.concurrent.TimeUnit;
@@ -207,11 +207,11 @@ public class ProfitBricksComputeServiceContextModule extends
    public static class ComputeConstants {
 
       @Inject
-      @Named(POLL_TIMEOUT)
+      @Named(TIMEOUT_DATACENTER_AVAILABLE)
       private String pollTimeout;
 
       @Inject
-      @Named(POLL_PERIOD)
+      @Named(POLL_INITIAL_PERIOD)
       private String pollPeriod;
 
       @Inject
