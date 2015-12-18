@@ -58,6 +58,9 @@ public class ProfitBricksProviderMetadata extends BaseProviderMetadata {
       properties.put(POLL_INITIAL_PERIOD, 5L);
       properties.put(POLL_MAX_PERIOD, 60L);
 
+      properties.put("jclouds.ssh.max-retries", "7");
+      properties.put("jclouds.ssh.retry-auth", "true");
+      
       properties.put(PROPERTY_SO_TIMEOUT, 10 * 60 * 1000);
 
       // Node might still not be available even after DataCenter is done provisioning
