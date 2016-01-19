@@ -41,7 +41,7 @@ import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.base.Supplier;
 
-public class ProfitBricksTemplateBuilderImpl extends TemplateBuilderImpl {
+public class ProfitBricksTemplateBuilderImpl extends TemplateBuilderImpl<ProfitBricksTemplateBuilderImpl> {
 
    private final Function<org.jclouds.profitbricks.domain.Location, Location> fnLocation;
 
@@ -56,7 +56,7 @@ public class ProfitBricksTemplateBuilderImpl extends TemplateBuilderImpl {
    }
 
    @Override
-   public TemplateBuilder locationId(final String locationId) {
+   public ProfitBricksTemplateBuilderImpl locationId(final String locationId) {
       org.jclouds.profitbricks.domain.Location nativeLocation
               = org.jclouds.profitbricks.domain.Location.fromId(locationId);
 
@@ -98,4 +98,20 @@ public class ProfitBricksTemplateBuilderImpl extends TemplateBuilderImpl {
       return template;
    }
 
+   @Override
+   public ProfitBricksTemplateBuilderImpl fixedCores(double cores) {
+      // do something
+      return self();
+   }
+
+   @Override
+   public ProfitBricksTemplateBuilderImpl fixedRam(int megabytes) {
+      // do something 
+      return self();
+   }
+   
+   @Override
+   public ProfitBricksTemplateBuilderImpl self() {
+      return this;
+   }
 }
